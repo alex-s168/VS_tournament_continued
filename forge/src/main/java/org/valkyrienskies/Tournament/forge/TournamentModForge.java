@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.valkyrienskies.core.impl.config.VSConfigClass;
-import org.valkyrienskies.Tournament.TournamentBlockEntities;
+import org.valkyrienskies.tournament.TournamentBlockEntities;
 import org.valkyrienskies.Tournament.TournamentConfig;
 import org.valkyrienskies.Tournament.TournamentMod;
 import org.valkyrienskies.Tournament.block.WoodType;

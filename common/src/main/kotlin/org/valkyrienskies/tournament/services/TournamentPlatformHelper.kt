@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.services
+package org.valkyrienskies.tournament.services
 
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab

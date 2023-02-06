@@ -107,6 +107,7 @@ allprojects {
                 }
             }
         }
+        maven { url 'https://jitpack.io' }
     }
 
     tasks.withType(JavaCompile) {
@@ -118,4 +119,7 @@ allprojects {
     java {
         withSourcesJar()
     }
+}
+dependencies {
+    implementation 'com.github.M-Marvin:LIBRARY-UnifiedVectors:4100b13c4458a5d5950f9d235f504bbf0511aa25'
 }

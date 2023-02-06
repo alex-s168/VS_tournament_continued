@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.util
+package org.valkyrienskies.tournament.util
 
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.minecraft.world.entity.player.Inventory

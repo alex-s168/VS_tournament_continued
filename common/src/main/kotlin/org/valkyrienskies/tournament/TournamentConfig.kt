@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament
+package org.valkyrienskies.tournament
 
 import com.github.imifou.jsonschema.module.addon.annotation.JsonSchema
 

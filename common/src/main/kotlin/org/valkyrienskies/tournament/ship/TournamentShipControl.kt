@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.ship
+package org.valkyrienskies.tournament.ship
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -18,10 +18,12 @@ import org.valkyrienskies.core.impl.api.Ticked
 import org.valkyrienskies.core.impl.api.shipValue
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.core.impl.pipelines.SegmentUtils
-import org.valkyrienskies.Tournament.TournamentConfig
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.mod.api.SeatedControllingPlayer
 import org.valkyrienskies.mod.common.util.toJOMLD
 import kotlin.math.*
+
+//TODO: copy from tournament + cleaner + use marvin vector
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -148,16 +150,6 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
             forcesApplier.applyInvariantTorque(idealTorque)
         }
         // endregion
-
-        stabilize(
-            physShip,
-            omega,
-            vel,
-            segment,
-            forcesApplier,
-            controllingPlayer == null && !aligning,
-            controllingPlayer == null
-        )
 
         var idealUpwardVel = Vector3d(0.0, 0.0, 0.0)
 

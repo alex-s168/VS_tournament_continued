@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.block
+package org.valkyrienskies.tournament.block
 
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
@@ -10,9 +10,11 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties.POWER
 import net.minecraft.world.level.material.Material
 import org.valkyrienskies.core.api.ships.getAttachment
-import org.valkyrienskies.Tournament.ship.TournamentShipControl
+import org.valkyrienskies.tournament.ship.TournamentShipControl
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
+
+//todo: add in new base
 
 class FloaterBlock : Block(
     Properties.of(Material.WOOD)

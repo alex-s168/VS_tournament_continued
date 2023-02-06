@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament
+package org.valkyrienskies.tournament
 
 import net.minecraft.Util
 import net.minecraft.core.BlockPos
@@ -8,27 +8,12 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
-import org.valkyrienskies.Tournament.blockentity.EngineBlockEntity
-import org.valkyrienskies.Tournament.blockentity.ShipHelmBlockEntity
-import org.valkyrienskies.Tournament.registry.DeferredRegister
-import org.valkyrienskies.Tournament.registry.RegistrySupplier
+import org.valkyrienskies.tournament.registry.DeferredRegister
+import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 @Suppress("unused")
 object TournamentBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
-
-    val SHIP_HELM = setOf(
-        TournamentBlocks.OAK_SHIP_HELM,
-        TournamentBlocks.SPRUCE_SHIP_HELM,
-        TournamentBlocks.BIRCH_SHIP_HELM,
-        TournamentBlocks.JUNGLE_SHIP_HELM,
-        TournamentBlocks.ACACIA_SHIP_HELM,
-        TournamentBlocks.DARK_OAK_SHIP_HELM,
-        TournamentBlocks.CRIMSON_SHIP_HELM,
-        TournamentBlocks.WARPED_SHIP_HELM
-    ) withBE ::ShipHelmBlockEntity byName "ship_helm"
-
-    val ENGINE = TournamentBlocks.ENGINE withBE ::EngineBlockEntity byName "engine"
 
     fun register() {
         BLOCKENTITIES.applyAll()

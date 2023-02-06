@@ -1,8 +1,8 @@
-package org.valkyrienskies.Tournament.registry
+package org.valkyrienskies.tournament.registry
 
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
-import org.valkyrienskies.Tournament.services.DeferredRegisterBackend
+import org.valkyrienskies.tournament.services.DeferredRegisterBackend
 import java.util.ServiceLoader
 
 interface DeferredRegister<T> : Iterable<RegistrySupplier<T>> {

@@ -9,7 +9,8 @@ version = "${version}"
 displayName = "VS Tournament Mod"
 authors = ["ConstantDust", "Alex"]
 description = '''
-E!
+Credit:
+- M_Marvin: API stuff
 '''
 logoFile = "icon.png"
 

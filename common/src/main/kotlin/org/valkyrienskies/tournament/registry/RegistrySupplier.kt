@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.registry
+package org.valkyrienskies.tournament.registry
 
 interface RegistrySupplier<T> {
 

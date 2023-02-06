@@ -5,8 +5,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
-import org.valkyrienskies.Tournament.registry.DeferredRegister;
-import org.valkyrienskies.Tournament.registry.RegistrySupplier;
+import org.valkyrienskies.tournament.registry.DeferredRegister;
+import org.valkyrienskies.tournament.registry.RegistrySupplier;
 
 import java.util.Iterator;
 

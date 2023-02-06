@@ -6,11 +6,11 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
-import org.valkyrienskies.Tournament.TournamentScreens.ENGINE
-import org.valkyrienskies.Tournament.TournamentScreens.SHIP_HELM
+import org.valkyrienskies.tournament.TournamentScreens.ENGINE
+import org.valkyrienskies.tournament.TournamentScreens.SHIP_HELM
 import org.valkyrienskies.Tournament.gui.engine.EngineScreen
 import org.valkyrienskies.Tournament.gui.shiphelm.ShipHelmScreen
-import org.valkyrienskies.Tournament.registry.RegistrySupplier
+import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 private typealias SFactory<T> = (handler: T, playerInv: Inventory, text: Component) -> AbstractContainerScreen<T>
 

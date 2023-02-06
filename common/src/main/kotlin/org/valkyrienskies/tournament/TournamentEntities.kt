@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament
+package org.valkyrienskies.tournament
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRenderers
@@ -7,8 +7,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MobCategory
 import net.minecraft.world.level.Level
-import org.valkyrienskies.Tournament.registry.DeferredRegister
-import org.valkyrienskies.Tournament.registry.RegistrySupplier
+import org.valkyrienskies.tournament.registry.DeferredRegister
+import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 private typealias EFactory<T> = (EntityType<T>, Level) -> T
 private typealias RFactory<T> = EntityRendererProvider<T>
@@ -25,7 +25,7 @@ object TournamentEntities {
     private val ENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.ENTITY_TYPE_REGISTRY)
     private val ENTITY_RENDERERS = mutableListOf<ToRegEntityRenderer<*>>()
 
-    // val SEAT = ::SeatEntity category MobCategory.MISC byName "seat" registerRenderer ::EmptyRenderer
+
 
     fun register() {
         ENTITIES.applyAll()

@@ -1,6 +1,5 @@
-package org.valkyrienskies.Tournament.util
+package org.valkyrienskies.tournament.util
 
-import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import net.minecraft.core.BlockPos
@@ -15,7 +14,7 @@ import org.valkyrienskies.core.impl.datastructures.DenseBlockPosSet
 import org.valkyrienskies.core.impl.game.ships.ShipObjectServer
 import org.valkyrienskies.core.impl.networking.simple.sendToClient
 import org.valkyrienskies.core.impl.util.logger
-import org.valkyrienskies.Tournament.TournamentConfig
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.mod.common.assembly.createNewShipWithBlocks
 import org.valkyrienskies.mod.common.executeIf
 import org.valkyrienskies.mod.common.isTickingChunk
@@ -25,6 +24,8 @@ import org.valkyrienskies.mod.common.playerWrapper
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.util.relocateBlock
 import org.valkyrienskies.mod.util.updateBlock
+
+//TODO: replace with marvins assembly code
 
 object ShipAssembler {
     fun collectBlocks(level: ServerLevel, center: BlockPos, predicate: (BlockState) -> Boolean): ServerShip {

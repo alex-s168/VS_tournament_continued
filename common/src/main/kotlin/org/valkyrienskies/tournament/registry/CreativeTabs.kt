@@ -1,9 +1,9 @@
-package org.valkyrienskies.Tournament.registry
+package org.valkyrienskies.tournament.registry
 
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
-import org.valkyrienskies.Tournament.services.TournamentPlatformHelper
+import org.valkyrienskies.tournament.services.TournamentPlatformHelper
 import java.util.ServiceLoader
 
 class CreativeTabs {

@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.valkyrienskies.Tournament.services.TournamentPlatformHelper;
+import org.valkyrienskies.tournament.services.TournamentPlatformHelper;
 
 public class TournamentPlatformHelperForge implements TournamentPlatformHelper {
     @NotNull

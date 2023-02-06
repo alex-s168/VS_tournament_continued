@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.util
+package org.valkyrienskies.tournament.util
 
 import net.minecraft.core.Direction
 import net.minecraft.world.phys.shapes.Shapes
