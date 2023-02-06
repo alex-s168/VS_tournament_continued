@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+issueTrackerURL = "https://github.com/ValkyrienSkies/Valkyrien-Skies-2/issues"
+license = "Apache-2.0"
+
+[[mods]]
+modId = "vs_tournament"
+version = "${version}"
+displayName = "VS Tournament Mod"
+authors = ["ConstantDust", "Alex"]
+description = '''
+E!
+'''
+logoFile = "icon.png"
+
+[[dependencies.vs_tournament]]
+modId = "forge"
+mandatory = true
+versionRange = "[40.1.69,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.vs_tournament]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.vs_tournament]]
+modId = "valkyrienskies"
+mandatory = true
+versionRange = "[2,)"
+ordering = "AFTER"
+side = "BOTH"

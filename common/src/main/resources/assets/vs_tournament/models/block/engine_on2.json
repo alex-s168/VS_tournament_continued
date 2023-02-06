@@ -1,0 +1,6 @@
+{
+  "parent": "vs_tournament:block/engine",
+  "textures": {
+    "front": "vs_tournament:block/engine_front_on_2"
+  }
+}

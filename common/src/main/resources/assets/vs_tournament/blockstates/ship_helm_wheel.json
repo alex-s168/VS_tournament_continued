@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "": {
+      "model": "vs_tournament:block/oak_ship_helm_wheel"
+    },
+    "wood=oak": {
+      "model": "vs_tournament:block/oak_ship_helm_wheel"
+    },
+    "wood=acacia": {
+      "model": "vs_tournament:block/acacia_ship_helm_wheel"
+    },
+    "wood=birch": {
+      "model": "vs_tournament:block/birch_ship_helm_wheel"
+    },
+    "wood=crimson": {
+      "model": "vs_tournament:block/crimson_ship_helm_wheel"
+    },
+    "wood=dark_oak": {
+      "model": "vs_tournament:block/dark_oak_ship_helm_wheel"
+    },
+    "wood=jungle": {
+      "model": "vs_tournament:block/jungle_ship_helm_wheel"
+    },
+    "wood=spruce": {
+      "model": "vs_tournament:block/spruce_ship_helm_wheel"
+    },
+    "wood=warped": {
+      "model": "vs_tournament:block/warped_ship_helm_wheel"
+    }
+  }
+}

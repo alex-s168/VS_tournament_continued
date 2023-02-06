@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "vs_tournament:balloon",
+    "vs_tournament:white_balloon",
+    "vs_tournament:light_gray_balloon",
+    "vs_tournament:gray_balloon",
+    "vs_tournament:black_balloon",
+    "vs_tournament:red_balloon",
+    "vs_tournament:orange_balloon",
+    "vs_tournament:yellow_balloon",
+    "vs_tournament:lime_balloon",
+    "vs_tournament:green_balloon",
+    "vs_tournament:light_blue_balloon",
+    "vs_tournament:cyan_balloon",
+    "vs_tournament:blue_balloon",
+    "vs_tournament:purple_balloon",
+    "vs_tournament:magenta_balloon",
+    "vs_tournament:pink_balloon",
+    "vs_tournament:brown_balloon"
+  ]
+}

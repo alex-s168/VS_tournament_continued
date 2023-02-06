@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "vs_tournament:ballast",
+    "vs_tournament:engine",
+    "vs_tournament:anchor"
+  ]
+}
