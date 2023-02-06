@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#N#",
+        " / ",
+        " / "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:diamond"
+        },
+        "N": {
+            "item": "minecraft:nether_star"
+        },
+        "/": {
+            "item": "minecraft:stick"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:grab_gun",
+        "count": 1
+    }
+}

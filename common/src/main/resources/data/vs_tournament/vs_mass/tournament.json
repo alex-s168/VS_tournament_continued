@@ -1,2 +1,30 @@
 [
+  {
+    "block": "vs_tournament:spinner",
+    "mass": 350.0
+  },
+  {
+    "block": "vs_tournament:thruster",
+    "mass": 400.0
+  },
+  {
+    "block": "vs_tournament:ionthruster",
+    "mass": 150.0
+  },
+  {
+    "block": "vs_tournament:shipifier",
+    "mass": 300.0
+  },
+  {
+    "block": "vs_tournament:seat",
+    "mass": 150.0
+  },
+  {
+    "block": "vs_tournament:rope_hook",
+    "mass": 200.0
+  },
+  {
+    "block": "vs_tournament:sensor",
+    "mass": 200.0
+  }
 ]

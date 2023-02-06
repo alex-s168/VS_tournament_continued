@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "   ",
+        "#O#",
+        "OOO"
+    ],
+    "key": {
+        "#": {
+            "tag": "minecraft:wool"
+        },
+        "O": {
+            "tag": "minecraft:planks"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:seat",
+        "count": 1
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#T#",
+        "TTT",
+        "iTi"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:redstone"
+        },
+        "T": {
+            "item": "minecraft:tnt"
+        },
+        "i": {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:instantexplosive_big",
+        "count": 1
+    }
+}

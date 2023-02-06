@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        " / ",
+        " / "
+    ],
+    "key": {
+        "#": {
+            "item": "vs_tournament:thruster"
+        },
+        "/": {
+            "item": "minecraft:stick"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:pulse_gun",
+        "count": 1
+    }
+}

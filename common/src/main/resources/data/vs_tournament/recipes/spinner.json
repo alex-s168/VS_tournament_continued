@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "iCi",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:redstone"
+        },
+        "i": {
+            "item": "minecraft:iron_ingot"
+        },
+        "C": {
+            "item": "minecraft:cobblestone"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:spinner",
+        "count": 1
+    }
+}

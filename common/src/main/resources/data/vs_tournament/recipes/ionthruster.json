@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "   ",
+        "   ",
+        "iFi"
+    ],
+    "key": {
+        "i": {
+            "item": "minecraft:iron_ingot"
+        },
+        "F": {
+            "item": "minecraft:firework_rocket"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:ionthruster",
+        "count": 1
+    }
+}

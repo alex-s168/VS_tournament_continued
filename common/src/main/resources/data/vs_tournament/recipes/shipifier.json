@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "ODO",
+        "OCO"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:redstone"
+        },
+        "O": {
+            "tag": "minecraft:planks"
+        },
+        "D": {
+            "item": "minecraft:diamond_block"
+        },
+        "C": {
+            "item": "minecraft:cobblestone"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:shipifier",
+        "count": 1
+    }
+}

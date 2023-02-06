@@ -1,3 +1,25 @@
 {
+  "block.vs_tournament.ballast": "Ballast",
+  "block.vs_tournament.balloon": "Balloon",
+  "block.vs_tournament.spinner": "Spinner",
+  "block.vs_tournament.thruster": "Thruster",
+  "block.vs_tournament.ionthruster": "Tiny Thruster",
+  "block.vs_tournament.shipifier": "Ship Assembler",
+  "block.vs_tournament.hinge": "Hinge",
+  "block.vs_tournament.seat": "Seat",
+  "block.vs_tournament.sensor": "Distance Sensor",
+  "block.vs_tournament.rope_hook": "Rope Hook",
 
+  "block.vs_tournament.instantexplosive": "Instant Explosive (small)",
+  "block.vs_tournament.instantexplosive_big": "Instant Explosive (big)",
+  "block.vs_tournament.stagedexplosive": "Staged Explosive (medium)",
+  "block.vs_tournament.stagedexplosive_big": "Staged Explosive (big)",
+
+  "itemGroup.vs_tournament.tournament_tab": "VS Tournament",
+
+  "item.vs_tournament.pulse_gun": "Pulse Gun",
+  "item.vs_tournament.delete_gun": "Deleting Tool",
+  "item.vs_tournament.grab_gun": "Gravity Gun",
+  "item.vs_tournament.upgrade_thruster": "Thruster Upgrade",
+  "item.vs_tournament.rope": "Rope"
 }

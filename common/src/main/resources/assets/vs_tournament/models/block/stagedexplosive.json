@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "vs_tournament:block/stagedexplosive_top",
+    "bottom": "vs_tournament:block/stagedexplosive_bottom",
+    "side": "vs_tournament:block/stagedexplosive_side"
+  }
+}

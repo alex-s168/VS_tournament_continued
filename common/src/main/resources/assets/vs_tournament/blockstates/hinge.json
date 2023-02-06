@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vs_tournament:block/hinge",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "vs_tournament:block/hinge",
+      "x": 270
+    },
+    "facing=south": {
+      "model": "vs_tournament:block/hinge",
+      "x": 0
+    },
+    "facing=west": {
+      "model": "vs_tournament:block/hinge",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "vs_tournament:block/hinge",
+      "y": 90
+    },
+    "facing=down": {
+      "model": "vs_tournament:block/hinge",
+      "y": 270
+    }
+  }
+}
