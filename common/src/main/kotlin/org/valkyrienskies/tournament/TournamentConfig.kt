@@ -13,76 +13,35 @@ object TournamentConfig {
 
     class Server {
 
-        @JsonSchema(description = "Movement power per engine heated fully")
-        val enginePower: Float = 2000000f
+        @JsonSchema(description = "The Force a balloon will output")
+        var BaseHeight = 100.0
 
-        @JsonSchema(description = "Movement power per engine with minimal heat")
-        val minEnginePower: Float = 700000f
+        @JsonSchema(description = "The Force a spinner will output")
+        var SpinnerSpeed = 5000.0
 
-        @JsonSchema(description = "The amount of heat a engine loses per tick")
-        val engineHeatLoss = 0.01f
+        @JsonSchema(description = "The Force a balloon will output")
+        var BalloonPower = 30.0
 
-        @JsonSchema(description = "The amount of heat a gain per tick (when burning)")
-        val engineHeatGain = 0.03f
+        @JsonSchema(description = "how much stronger a baloon will get when powered (1.0 is 15x stronger at max power)")
+        var BalloonAnalogStrength = 1.0
 
-        @JsonSchema(description = "Max speed of a ship without boosting")
-        val maxCasualSpeed = 20f
+        @JsonSchema(description = "The Force a spinner will output")
+        var ThrusterSpeed = 10000.0
 
-        @JsonSchema(description = "The speed at which the ship stabilizes")
-        var stabilizationSpeed = 10.0
+        @JsonSchema(description = "Whether the ship helm assembles diagonally connected blocks or not")
+        var diagonals = true
 
-        @JsonSchema(description = "The amount extra that each floater will make the ship float, per kg mass")
-        var floaterBuoyantFactorPerKg = 50_000.0
+        @JsonSchema(description = "Weight of ballast when lowest redstone power")
+        var ballastWeight = 10000.0
 
-        @JsonSchema(description = "The maximum amount extra each floater will multiply the buoyant force by, irrespective of mass")
-        var maxFloaterBuoyantFactor = 1.0
+        @JsonSchema(description = "Weight of ballast when highest redstone power")
+        var ballastNoWeight = 10.0
 
-        // The velocity any ship at least can move at.
-        @JsonSchema(description = "The speed a ship with no engines can move at")
-        var baseSpeed = 3.0
+        @JsonSchema(description = "The Force the Pulse Gun applies")
+        var pulseGunForce = 300.0
 
-        // Sensitivity of the up/down impulse buttons.
-        // TODO maybe should be moved to VS2 client-side config?
-        @JsonSchema(description = "Vertical sensitivity up ascend/descend")
-        var impulseElevationRate = 7
-
-        // If a ship with weight 0 and 0 balloons would exist in the world, it would have this max attitude.
-        @JsonSchema(description = "The Y level that a ship with 0 mass would naturally float to")
-        var neutralLimit = 80.0
-
-        // Allow Tournament controlled ships to be affected by fluid drag
-        @JsonSchema(description = "Allow Tournament controlled ships to be affected by fluid drag")
-        var doFluidDrag = false
-
-        // Do i need to explain? the mass 1 baloon gets to float
-        @JsonSchema(description = "Amount of mass in kg a balloon can lift")
-        var massPerBalloon = 5000.0
-
-        // The amount of speed that the ship can move at when the left/right impulse button is held down.
-        @JsonSchema(description = "Turn sensitivity of the ship helm")
-        var turnSpeed = 3.0
-
-        // The strength used when trying to level the ship
-        @JsonSchema(description = "How much torque a ship will apply to try and keep level")
-        var stabilizationTorqueConstant = 15.0
-
-        // Max anti-velocity used when trying to stop the ship
-        @JsonSchema(description = "How fast a ship will stop. 1 = fast stop, 0 = slow stop")
-        var linearStabilizeMaxAntiVelocity = 1.0
-
-        // Anti-velocity mass relevance when stopping the ship
-        // Max 10.0 (means no mass irrelevance)
-        @JsonSchema(description = "How much inertia affects Tournament ships. Max 10 = full inertia")
-        var antiVelocityMassRelevance = 0.8
-
-        // Chance that if side will pop, its this chance per side
-        @JsonSchema(description = "Chance for popped balloons to pop adjacent balloons, per side")
-        var popSideBalloonChance = 0.3
-
-        // Blacklist of blocks that don't get added for ship building
         @JsonSchema(description = "Blacklist of blocks that don't get assembled")
         var blockBlacklist = setOf(
-            "vs_tournament:ship_helm",
             "minecraft:dirt",
             "minecraft:grass_block",
             "minecraft:grass_path",
@@ -160,23 +119,5 @@ object TournamentConfig {
             "minecraft:end_gateway",
             "minecraft:portal"
         )
-
-        @JsonSchema(description = "Whether the ship helm assembles diagonally connected blocks or not")
-        val diagonals = true
-
-        @JsonSchema(description = "How many blocks to assemble per tick")
-        val assembliesPerTick = 1000
-
-        @JsonSchema(description = "Weight of ballast when lowest redstone power")
-        val ballastWeight: Double = 10000.0
-
-        @JsonSchema(description = "Weight of ballast when highest redstone power")
-        val ballastNoWeight: Double = 1000.0
-
-        @JsonSchema(description = "Max speed an anchor will pull a ship back to the anchor point")
-        val anchorSpeed: Double = 100000.0
-
-        @JsonSchema(description = "Disassembly is broken ATM, enable at ur own risk.")
-        val enableDisassembly = false
     }
 }

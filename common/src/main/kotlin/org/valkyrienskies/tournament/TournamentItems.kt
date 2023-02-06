@@ -18,7 +18,7 @@ object TournamentItems {
             TournamentMod.MOD_ID,
             "tournament_tab"
         )
-    ) { ItemStack(TournamentBlocks.OAK_SHIP_HELM.get()) }
+    ) { ItemStack(TournamentBlocks.FLOATER.get()) }
 
     fun register() {
         TournamentBlocks.registerItems(ITEMS)

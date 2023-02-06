@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament
+package org.valkyrienskies.tournament
 
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -6,10 +6,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
-import org.valkyrienskies.tournament.TournamentScreens.ENGINE
-import org.valkyrienskies.tournament.TournamentScreens.SHIP_HELM
-import org.valkyrienskies.Tournament.gui.engine.EngineScreen
-import org.valkyrienskies.Tournament.gui.shiphelm.ShipHelmScreen
 import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 private typealias SFactory<T> = (handler: T, playerInv: Inventory, text: Component) -> AbstractContainerScreen<T>
@@ -25,8 +21,7 @@ object TournamentClientScreens {
     private val SCREENS_CLIENT = mutableListOf<ClientScreenRegistar<*>>()
 
     init {
-        SHIP_HELM withScreen ::ShipHelmScreen
-        ENGINE withScreen ::EngineScreen
+
     }
 
     fun register() {

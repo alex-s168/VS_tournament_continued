@@ -1,6 +1,5 @@
 package org.valkyrienskies.tournament
 
-import org.valkyrienskies.Tournament.*
 import org.valkyrienskies.core.impl.config.VSConfigClass
 
 
