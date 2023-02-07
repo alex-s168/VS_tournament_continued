@@ -121,5 +121,5 @@ allprojects {
     }
 }
 dependencies {
-    implementation 'com.github.M-Marvin:LIBRARY-UnifiedVectors:41236ed39df7345be739cd67486b97b71a4a553a'
+    implementation 'com.github.SuperCraftAlex:LIBRARY-UnifiedVectors:8ded7155748ee493a120b8762e7230753eb09ce5'
 }
