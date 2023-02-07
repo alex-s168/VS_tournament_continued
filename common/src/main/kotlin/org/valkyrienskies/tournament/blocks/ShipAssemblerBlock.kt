@@ -26,7 +26,6 @@ import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
-import java.util.*
 import java.util.function.Predicate
 
 class ShipAssemblerBlock : DirectionalBlock (
@@ -56,18 +55,15 @@ class ShipAssemblerBlock : DirectionalBlock (
 
     private fun asm(level: Level, pos: BlockPos): InteractionResult {
         if (level as? ServerLevel == null) return InteractionResult.PASS
-        if(level.getShipManagingPos(pos) != null) return InteractionResult.PASS
 
         val level = level as ServerLevel
 
         val blacklist = TournamentConfig.SERVER.blockBlacklist
 
-        //todo: find maximum block amount of assembler
-
         val struct = StructureFinder.findStructure(
             level,
             pos,
-            4000,
+            6000,
             Predicate { blockState ->
                 !blacklist.contains(blockState.block.builtInRegistryHolder().key().location().toString())
             }

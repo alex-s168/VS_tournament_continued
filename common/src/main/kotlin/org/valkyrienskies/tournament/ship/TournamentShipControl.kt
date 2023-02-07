@@ -78,7 +78,11 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
             val tForce = Vec3d(physShip.transform.shipToWorld.transformDirection(force.conv(), Vec3d().conv()))
             val tPos = Vec3d(pos).add(0.5, 0.5, 0.5).sub(Vec3d().readFrom(physShip.transform.positionInShip))
 
-            if (force.isFinite && physShip.poseVel.vel.length() < 50) {
+            //todo: use after isFinite bug fixed:
+            //if (force.isFinite && physShip.poseVel.vel.length() < 50) {
+            //    physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.ThrusterSpeed * tier).conv(), tPos.conv())
+            //}
+            if (physShip.poseVel.vel.length() < 50) {
                 physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.ThrusterSpeed * tier).conv(), tPos.conv())
             }
         }

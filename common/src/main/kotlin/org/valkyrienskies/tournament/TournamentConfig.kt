@@ -28,9 +28,6 @@ object TournamentConfig {
         @JsonSchema(description = "The Force a spinner will output")
         var ThrusterSpeed = 10000.0
 
-        @JsonSchema(description = "Whether the ship helm assembles diagonally connected blocks or not")
-        var diagonals = true
-
         @JsonSchema(description = "Weight of ballast when lowest redstone power")
         var ballastWeight = 10000.0
 
