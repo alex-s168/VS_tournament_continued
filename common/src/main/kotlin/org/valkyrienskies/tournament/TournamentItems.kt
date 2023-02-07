@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.Blocks
 import org.valkyrienskies.tournament.registry.CreativeTabs
 import org.valkyrienskies.tournament.registry.DeferredRegister
 
@@ -18,7 +19,7 @@ object TournamentItems {
             TournamentMod.MOD_ID,
             "tournament_tab"
         )
-    ) { ItemStack(TournamentBlocks.FLOATER.get()) }
+    ) { ItemStack(Blocks.IRON_BLOCK) }
 
     fun register() {
         TournamentBlocks.registerItems(ITEMS)

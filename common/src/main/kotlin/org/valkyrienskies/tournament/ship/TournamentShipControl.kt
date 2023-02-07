@@ -2,9 +2,9 @@ package org.valkyrienskies.tournament.ship
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
-import de.m_marvin.univec.impl.*
+import de.m_marvin.univec.impl.Vec3d
+import de.m_marvin.univec.impl.Vec3i
 import net.minecraft.core.BlockPos
-import org.joml.Vector3d
 import org.valkyrienskies.core.api.ships.PhysShip
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.getAttachment
@@ -13,12 +13,10 @@ import org.valkyrienskies.core.impl.api.ServerShipUser
 import org.valkyrienskies.core.impl.api.ShipForcesInducer
 import org.valkyrienskies.core.impl.api.Ticked
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.TournamentConfig
 import java.util.concurrent.CopyOnWriteArrayList
 
-//TODO: cleaner
+//TODO: clean code
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -62,14 +60,14 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
                     0.0,
                     (BalloonsPower),
                     0.0
-                ).writeTo(Vector3d()), centerOfLift.writeTo(Vector3d())
+                ).conv(), centerOfLift.conv()
             )
         }
 
         Spinners.forEach {
             val (pos, torque) = it
 
-            val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque.writeTo(Vector3d()), Vector3d())
+            val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque.conv(), Vec3d().conv())
 
             physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.SpinnerSpeed ))
 
@@ -78,21 +76,21 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
         Thrusters.forEach {
             val (pos, force, tier) = it
 
-            val tForce = physShip.transform.shipToWorld.transformDirection(force.writeTo(Vector3d()), Vector3d()) //.shipToWorld.transformDirection(force, Vector3d())
+            val tForce = Vec3d(physShip.transform.shipToWorld.transformDirection(force.conv(), Vec3d().conv()))
             val tPos = Vec3d(pos).add(0.5, 0.5, 0.5).sub(Vec3d().readFrom(physShip.transform.positionInShip))
 
             if (force.isFinite && physShip.poseVel.vel.length() < 50) {
-                physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.ThrusterSpeed * tier, Vector3d()), tPos)
+                physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.ThrusterSpeed * tier).conv(), tPos.conv())
             }
         }
 
         //Pulse Gun
         Pulses.forEach {
             val (pos, force) = it
-            val tPos = Vector3d(pos).add( 0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
-            val tForce = physShip.transform.worldToShip.transformDirection(force, Vector3d())
+            val tPos = Vec3d(pos).add( 0.5, 0.5, 0.5).sub(Vec3d(physShip.transform.positionInShip))
+            val tForce = Vec3d(physShip.transform.worldToShip.transformDirection(force.conv()))
 
-            physShip.applyRotDependentForceToPos(tForce, tPos)
+            physShip.applyRotDependentForceToPos(tForce.conv(), tPos.conv())
         }
 
         Pulses.clear()
@@ -109,7 +107,6 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
         power = 0.0
         consumed = physConsumption *0.1f
         physConsumption = 0.0f
-//        balloonTick()
     }
 
     private fun deleteIfEmpty() {
@@ -120,30 +117,30 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
 
 
     fun addBalloon(pos: BlockPos, pow: Double) {
-        weightedCenterOfLift = weightedCenterOfLift.add(pos.toJOMLD().mul(pow))
+        weightedCenterOfLift = weightedCenterOfLift.add(Vec3d(pos).mul(pow))
         BalloonsPower += pow
     }
 
     fun removeBalloon(pos: BlockPos, pow: Double) {
-        weightedCenterOfLift = weightedCenterOfLift.sub(pos.toJOMLD().mul(pow))
+        weightedCenterOfLift = weightedCenterOfLift.sub(Vec3d(pos).mul(pow))
         BalloonsPower -= pow
     }
 
-    fun addThruster(pos: BlockPos, tier: Double, force: Vector3dc) {
-        Thrusters.add(Triple(pos.toJOML(), force, tier))
+    fun addThruster(pos: BlockPos, tier: Double, force: Vec3d) {
+        Thrusters.add(Triple(Vec3i(pos), force, tier))
     }
-    fun removeThruster(pos: BlockPos, tier: Double, force: Vector3dc) {
-        Thrusters.remove(Triple(pos.toJOML(), force, tier))
+    fun removeThruster(pos: BlockPos, tier: Double, force: Vec3d) {
+        Thrusters.remove(Triple(Vec3i(pos), force, tier))
     }
 
-    fun addSpinner(pos: Vector3ic, torque: Vector3dc) {
+    fun addSpinner(pos: Vec3i, torque: Vec3d) {
         Spinners.add(pos to torque)
     }
-    fun removeSpinner(pos: Vector3ic, torque: Vector3dc) {
+    fun removeSpinner(pos: Vec3i, torque: Vec3d) {
         Spinners.remove(pos to torque)
     }
 
-    fun addPulse(pos: Vector3d, force: Vector3d) {
+    fun addPulse(pos: Vec3d, force: Vec3d) {
         Pulses.add(pos to force)
     }
 

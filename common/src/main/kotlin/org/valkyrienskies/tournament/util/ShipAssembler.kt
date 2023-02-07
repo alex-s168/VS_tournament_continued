@@ -1,6 +1,7 @@
 package org.valkyrienskies.tournament.util
 
 import com.google.common.collect.Sets
+import de.m_marvin.univec.impl.Vec3d
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -8,7 +9,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.state.BlockState
-import org.joml.Vector3d
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.impl.datastructures.DenseBlockPosSet
 import org.valkyrienskies.core.impl.game.ships.ShipObjectServer
@@ -41,7 +41,7 @@ object ShipAssembler {
         ship.shipData.isStatic = true
 
         val shipToWorld = ship.shipToWorld
-        val alloc0 = Vector3d()
+        val alloc0 = Vec3d()
         val alloc1 = BlockPos.MutableBlockPos()
         val alloc2 = BlockPos.MutableBlockPos()
 
@@ -61,7 +61,7 @@ object ShipAssembler {
 
         ship.shipActiveChunksSet.iterateChunkPos { chunkX, chunkZ ->
             val chunkBlockPos = BlockPos(chunkX shl 4, 0, chunkZ shl 4)
-            val worldChunkPos = shipToWorld.transformPosition(alloc0.set(chunkBlockPos.x.toDouble(), chunkBlockPos.y.toDouble(), chunkBlockPos.z.toDouble()))
+            val worldChunkPos = shipToWorld.transformPosition(alloc0.setI(chunkBlockPos.x.toDouble(), chunkBlockPos.y.toDouble(), chunkBlockPos.z.toDouble()).conv())
             val worldChunkBlockPos = BlockPos(worldChunkPos.x, 0.0, worldChunkPos.z)
 
             chunksToBeUpdated[ChunkPos(chunkX, chunkZ)] = Pair(ChunkPos(chunkX, chunkZ), level.getChunkAt(worldChunkBlockPos).pos)
@@ -79,7 +79,7 @@ object ShipAssembler {
 
         val toUpdate = Sets.newHashSet<Triple<BlockPos, BlockPos, BlockState>>()
 
-        ship.shipActiveChunksSet.iterateChunkPos { chunkX, chunkZ ->
+        ship.activeChunksSet.forEach { chunkX, chunkZ ->
             val chunk = level.getChunk(chunkX, chunkZ)
             for (section in chunk.sections) {
                 if (section == null) continue
@@ -94,7 +94,7 @@ object ShipAssembler {
                             val realZ = (chunkZ shl 4) + z
 
                             val inWorldPos = shipToWorld.transformPosition(
-                                alloc0.set(realX.toDouble() + 0.5, realY.toDouble() + 0.5, realZ.toDouble() + 0.5)
+                                alloc0.setI(realX.toDouble() + 0.5, realY.toDouble() + 0.5, realZ.toDouble() + 0.5).conv()
                             ).round()
 
                             val inWorldBlockPos =
@@ -102,7 +102,13 @@ object ShipAssembler {
                             val inShipPos =
                                 alloc2.set(realX, realY, realZ)
 
-                            toUpdate.add(Triple<BlockPos, BlockPos, BlockState>(inShipPos.immutable(), inWorldBlockPos.immutable(), state))
+                            toUpdate.add(
+                                Triple<BlockPos, BlockPos, BlockState>(
+                                    inShipPos.immutable(),
+                                    inWorldBlockPos.immutable(),
+                                    state
+                                )
+                            )
                             level.relocateBlock(inShipPos, inWorldBlockPos, false, null, rotation)
                         }
                     }

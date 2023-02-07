@@ -119,7 +119,8 @@ allprojects {
     java {
         withSourcesJar()
     }
-}
-dependencies {
-    implementation 'com.github.SuperCraftAlex:LIBRARY-UnifiedVectors:0bc8b2f1a00c6b63cc3ee7f303f0e5e8b7603948'
+
+    dependencies {
+        implementation 'com.github.SuperCraftAlex:LIBRARY-UnifiedVectors:0bc8b2f1a00c6b63cc3ee7f303f0e5e8b7603948'
+    }
 }

@@ -13,16 +13,6 @@ object TournamentWeights : BlockStateInfoProvider {
         get() = 200
 
     override fun getBlockStateMass(blockState: BlockState): Double? {
-        if (blockState.block == TournamentBlocks.FLOATER.get()) {
-            return TournamentConfig.SERVER.ballastWeight + (TournamentConfig.SERVER.ballastNoWeight - TournamentConfig.SERVER.ballastWeight) * (
-                    (
-                            blockState.getValue(
-                                BlockStateProperties.POWER
-                            ) + 1
-                            ) / 16.0
-                    )
-        }
-
         return null
     }
 
