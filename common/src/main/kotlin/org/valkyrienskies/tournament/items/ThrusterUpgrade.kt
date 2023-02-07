@@ -1,10 +1,10 @@
-package org.valkyrienskies.tournament.item
+package org.valkyrienskies.tournament.items
 
 import net.minecraft.world.item.Item
-import org.valkyrienskies.tournament.tournamentItems
+import org.valkyrienskies.tournament.TournamentItems
 
 class ThrusterUpgrade  : Item(
-        Properties().stacksTo(16).tab(tournamentItems.getTab())
+        Properties().stacksTo(16).tab(TournamentItems.TAB)
 ){
 
 }

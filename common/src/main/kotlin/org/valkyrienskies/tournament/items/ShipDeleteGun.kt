@@ -1,35 +1,24 @@
-package org.valkyrienskies.tournament.item
+package org.valkyrienskies.tournament.items
 
+import de.m_marvin.industria.core.physics.PhysicUtility
+import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.context.UseOnContext
-import org.joml.Vector3d
-import org.valkyrienskies.core.api.ships.PhysShip
-import org.valkyrienskies.core.apigame.constraints.*
-import org.valkyrienskies.mod.common.allShips
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.shipWorldNullable
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.tournament.ship.tournamentShipControl
-import org.valkyrienskies.tournament.tournamentConfig
-import org.valkyrienskies.tournament.tournamentItems
+import org.valkyrienskies.tournament.TournamentItems
 
 class ShipDeleteGun : Item(
-        Properties().stacksTo(1).tab(tournamentItems.getTab())
+        Properties().stacksTo(1).tab(TournamentItems.TAB)
 ){
-    private var deletionForce : Vector3d? = null
 
     override fun useOn(context: UseOnContext): InteractionResult {
-        val force = tournamentConfig.SERVER.pulseGunForce
-
         val player = context.player
         val blockPosition = context.clickedPos
-        val blockLocation = context.clickLocation.toJOML()
+        val blockLocation = Vec3d(context.clickLocation)
 
-        if(blockPosition == null || context.level.isClientSide || player == null) {
+        if(context.level.isClientSide || player == null) {
             return InteractionResult.PASS
         }
 
@@ -38,14 +27,9 @@ class ShipDeleteGun : Item(
             return InteractionResult.PASS
         }
 
-        val ship = level.getShipObjectManagingPos(blockPosition)
-        if(ship == null) {
-            return InteractionResult.PASS
-        }
+        val ship = level.getShipObjectManagingPos(blockPosition) ?: return InteractionResult.PASS
 
-        deletionForce = player.lookAngle.toJOML().normalize().mul(1e+12)
-
-        tournamentShipControl.getOrCreate(ship).addPulse(blockLocation, deletionForce!!)
+        PhysicUtility.removeContraption(level, ship)
 
         return super.useOn(context)
     }

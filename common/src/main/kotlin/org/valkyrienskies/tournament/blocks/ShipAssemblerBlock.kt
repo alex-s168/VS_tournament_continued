@@ -1,10 +1,9 @@
 package org.valkyrienskies.tournament.blocks
 
 import de.m_marvin.industria.core.physics.PhysicUtility
+import de.m_marvin.industria.core.util.StructureFinder
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.core.Registry
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -28,6 +27,7 @@ import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import java.util.*
+import java.util.function.Predicate
 
 class ShipAssemblerBlock : DirectionalBlock (
     Properties.of(Material.STONE)
@@ -60,13 +60,25 @@ class ShipAssemblerBlock : DirectionalBlock (
 
         val level = level as ServerLevel
 
-        //TODO: use PhysicsUtility to assemble ship
-        //PhysicUtility.
+        val blacklist = TournamentConfig.SERVER.blockBlacklist
 
-        // OLD:
-        //ShipAssembler.collectBlocks(level,pos) {
-        //    !it.isAir && !TournamentConfig.SERVER.blockBlacklist.contains(Registry.BLOCK.getKey(it.block).toString())
-        //}
+        //todo: find maximum block amount of assembler
+
+        val struct = StructureFinder.findStructure(
+            level,
+            pos,
+            4000,
+            Predicate { blockState ->
+                !blacklist.contains(blockState.block.builtInRegistryHolder().key().location().toString())
+            }
+        ).orElse(emptyList())
+
+        PhysicUtility.assembleToContraption(
+            level,
+            struct,
+            true,
+            1f
+        )
 
         return InteractionResult.SUCCESS
     }
@@ -90,28 +102,14 @@ class ShipAssemblerBlock : DirectionalBlock (
         if (level as? ServerLevel == null) return
 
         val signal = level.getBestNeighborSignal(pos)
-        level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
+        if (signal > 0) {
+            asm(level, pos)
+        }
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
         return defaultBlockState()
             .setValue(FACING, ctx.nearestLookingDirection)
-    }
-
-    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
-        super.animateTick(state, level, pos, random)
-        if (state.getValue(BlockStateProperties.POWER) > 0) {
-            val dir = state.getValue(FACING)
-
-            val x = pos.x.toDouble() + (0.5 * (dir.stepX + 1));
-            val y = pos.y.toDouble() + (0.5 * (dir.stepY + 1));
-            val z = pos.z.toDouble() + (0.5 * (dir.stepZ + 1));
-            val speedX = dir.stepX * -0.4
-            val speedY = dir.stepY * -0.4
-            val speedZ = dir.stepZ * -0.4
-
-            level.addParticle(ParticleTypes.FIREWORK, x, y, z, speedX, speedY, speedZ)
-        }
     }
 
 }

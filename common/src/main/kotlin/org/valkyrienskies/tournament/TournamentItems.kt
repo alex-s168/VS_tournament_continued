@@ -6,6 +6,7 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
+import org.valkyrienskies.tournament.items.*
 import org.valkyrienskies.tournament.registry.CreativeTabs
 import org.valkyrienskies.tournament.registry.DeferredRegister
 
@@ -13,6 +14,11 @@ import org.valkyrienskies.tournament.registry.DeferredRegister
 object TournamentItems {
     private val ITEMS = DeferredRegister.create(TournamentMod.MOD_ID, Registry.ITEM_REGISTRY)
 
+    val ROPE                    = ITEMS.register("rope", ::Rope)
+    val TOOL_PULSEGUN           = ITEMS.register("pulse_gun", ::PulseGun)
+    val TOOL_DELETEWAND         = ITEMS.register("delete_wand", ::ShipDeleteGun)
+    val TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GrabGun)
+    val UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster", ::ThrusterUpgrade)
 
     val TAB: CreativeModeTab = CreativeTabs.create(
         ResourceLocation(

@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
-import org.joml.Quaterniond
 import org.valkyrienskies.core.api.ships.properties.ShipId
 import org.valkyrienskies.core.apigame.constraints.*
 import org.valkyrienskies.mod.common.dimensionId
@@ -24,24 +23,24 @@ import org.valkyrienskies.tournament.TournamentItems
 
 
 class GrabGun : Item(
-        Properties().stacksTo(1).tab(TournamentItems.getTab())
+        Properties().stacksTo(1).tab(TournamentItems.TAB)
 ) {
 
-    var CurrentPlayer : Player? = null
-    var thisShipID : ShipId? = null
-    var grabbing : Boolean = false
+    private var CurrentPlayer : Player? = null
+    private var thisShipID : ShipId? = null
+    private var grabbing : Boolean = false
 
-    var SettingRot : Quaternion? = null
-    var CurrentPlayerPitch : Double = 0.0
-    var CurrentPlayerYaw : Double = 0.0
+    private var SettingRot : Quaternion? = null
+    private var CurrentPlayerPitch : Double = 0.0
+    private var CurrentPlayerYaw : Double = 0.0
 
-    var SettingPos : Vec3d? = null
-    var thisAttachPoint : Vec3d? = null
+    private var SettingPos : Vec3d? = null
+    private var thisAttachPoint : Vec3d? = null
 
-    var thisAttachConstraintID : ConstraintId? = null
-    var thisRotationConstraintID : ConstraintId? = null
-    var thisPosDampingConstraintID : ConstraintId? = null
-    var thisRotDampingConstraintID : ConstraintId? = null
+    private var thisAttachConstraintID : ConstraintId? = null
+    private var thisRotationConstraintID : ConstraintId? = null
+    private var thisPosDampingConstraintID : ConstraintId? = null
+    private var thisRotDampingConstraintID : ConstraintId? = null
 
     override fun canAttackBlock(state: BlockState, level: Level, pos: BlockPos, player: Player): Boolean {
         return false
@@ -86,14 +85,14 @@ class GrabGun : Item(
 
             if(tempShip != null && grabbing) {
                 val MinVec = Vec3d(
-                        tempShip!!.shipAABB!!.minX().toDouble(),
-                        tempShip!!.shipAABB!!.minY().toDouble(),
-                        tempShip!!.shipAABB!!.minZ().toDouble()
+                        tempShip.shipAABB!!.minX().toDouble(),
+                        tempShip.shipAABB!!.minY().toDouble(),
+                        tempShip.shipAABB!!.minZ().toDouble()
                 )
                 val MaxVec = Vec3d(
-                        tempShip!!.shipAABB!!.maxX().toDouble(),
-                        tempShip!!.shipAABB!!.maxY().toDouble(),
-                        tempShip!!.shipAABB!!.maxZ().toDouble()
+                        tempShip.shipAABB!!.maxX().toDouble(),
+                        tempShip.shipAABB!!.maxY().toDouble(),
+                        tempShip.shipAABB!!.maxZ().toDouble()
                 )
                 val totalScale = MinVec.sub(MaxVec).length() + 0.75
 
@@ -128,10 +127,11 @@ class GrabGun : Item(
                 val newCurrentPlayerYaw = CurrentPlayer!!.yRot.toDouble()
 
                 //todo: univec quaternion and matrix default constructors
-                val ogPlayerRot = Quaternion(playerRotToQuaternion(CurrentPlayerPitch,CurrentPlayerYaw).normalize())
-                val newPlayerRot = Quaternion(playerRotToQuaternion(newCurrentPlayerPitch, newCurrentPlayerYaw).normalize())
-                val deltaPlayerRot = newPlayerRot.mul(ogPlayerRot.conjugate()).normalize()
-                val newRot = deltaPlayerRot.mul(SettingRot).normalize()
+                //todo: univec quaternion conjugate and normalize
+                val ogPlayerRot = Quaternion(playerRotToQuaternion(CurrentPlayerPitch,CurrentPlayerYaw).conv().normalize())
+                val newPlayerRot = Quaternion( playerRotToQuaternion(newCurrentPlayerPitch, newCurrentPlayerYaw).conv().normalize() )
+                val deltaPlayerRot = Quaternion(newPlayerRot.conv().mul(ogPlayerRot.conv().conjugate()).normalize())
+                val newRot = Quaternion(deltaPlayerRot.mul(SettingRot).conv().normalize())
 
                 // Update Pos Values
                 SettingPos = Vec3d(CurrentPlayer!!.position()).add(0.0, CurrentPlayer!!.eyeHeight.toDouble(), 0.0) .add(CurrentPlayer!!.lookAngle.toJOML().normalize().mul(Distance))
@@ -152,7 +152,7 @@ class GrabGun : Item(
                 val RotationCompliance = 1e-6 / Mass
                 val RotationMaxForce = 1e10 * Mass
                 val RotationConstraint = VSFixedOrientationConstraint(
-                        thisShipID!!, otherShipId, RotationCompliance, Quaternion(0f,0f,0f,0f).convD(), newRot!!,
+                        thisShipID!!, otherShipId, RotationCompliance, Quaternion(0f,0f,0f,0f).convD(), newRot.convD(),
                         RotationMaxForce
                 )
 
@@ -168,7 +168,7 @@ class GrabGun : Item(
                 val RotDampingMaxForce = 0.0
                 val RotDampingEff = 0.0
                 val RotDampingConstraint = VSRotDampingConstraint(
-                        thisShipID!!, otherShipId, RotDampingCompliance, Quaternion(0f,0f,0f,0f).convD(), newRot!!,
+                        thisShipID!!, otherShipId, RotDampingCompliance, Quaternion(0f,0f,0f,0f).convD(), newRot.convD(),
                         RotDampingMaxForce, RotDampingEff, VSRotDampingAxes.ALL_AXES
                 )
 
@@ -191,7 +191,7 @@ class GrabGun : Item(
         }
     }
 
-    fun playerRotToQuaternion(pitch:Double, yaw:Double) : Quaternion {
-        return Quaternion(0f,0f,0f,0f).rotateY(Math.toRadians(-yaw))//.rotateX(Math.toRadians(pitch))
+    private fun playerRotToQuaternion(pitch:Double, yaw:Double) : Quaternion {
+        return Quaternion(0f,0f,0f,0f).rotateY(Math.toRadians(-yaw))
     }
 }

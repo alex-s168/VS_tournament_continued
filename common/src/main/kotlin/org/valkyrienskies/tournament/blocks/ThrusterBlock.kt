@@ -54,7 +54,7 @@ class ThrusterBlock : DirectionalBlock (
     }
 
     override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): InteractionResult {
-        if (player.mainHandItem.item.asItem().equals(TournamentItems.THRUSTERUPGRADE?.get())) {
+        if (player.mainHandItem.item.asItem().equals(TournamentItems.UPGRADE_THRUSTER?.get())) {
             if (level.isClientSide) return InteractionResult.SUCCESS
             level as ServerLevel
 

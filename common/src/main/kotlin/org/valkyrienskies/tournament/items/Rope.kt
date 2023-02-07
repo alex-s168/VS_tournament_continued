@@ -1,7 +1,6 @@
-// aded back from 15a9250 for test stuff
+package org.valkyrienskies.tournament.items
 
-package org.valkyrienskies.tournament.item
-
+import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
@@ -11,7 +10,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
-import org.joml.Vector3d
 import org.valkyrienskies.core.api.ships.properties.ShipId
 import org.valkyrienskies.core.apigame.constraints.*
 import org.valkyrienskies.mod.common.dimensionId
@@ -20,13 +18,13 @@ import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.physics_api.ConstraintId
-import org.valkyrienskies.tournament.block.RopeHookBlock
-import org.valkyrienskies.tournament.tournamentBlocks
-import org.valkyrienskies.tournament.tournamentItems
+import org.valkyrienskies.tournament.blocks.RopeHookBlock
+import org.valkyrienskies.tournament.TournamentBlocks
+import org.valkyrienskies.tournament.TournamentItems
 
 
 class Rope : Item(
-        Properties().stacksTo(1).tab(tournamentItems.TAB)
+        Properties().stacksTo(1).tab(TournamentItems.TAB)
 ) {
 
     private var clickedPosition: BlockPos? = null
@@ -51,15 +49,15 @@ class Rope : Item(
         if (level is ServerLevel) {
 
             // if its a hook block
-            if (level.getBlockState(blockPos).block == tournamentBlocks.ROPEHOOK.get()) {
+            if (level.getBlockState(blockPos).block == TournamentBlocks.ROPE_HOOK.get()) {
 
                 //hook it up
                 ConnectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
 
 
-                println("  ROPE --> " + tournamentBlocks.ROPEHOOK.get() + " < == > " + level.getBlockState(blockPos).block)
+                println("  ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < == > " + level.getBlockState(blockPos).block)
             } else {
-                println(" !ROPE --> " + tournamentBlocks.ROPEHOOK.get() + " < != > " + level.getBlockState(blockPos).block)
+                println(" !ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < != > " + level.getBlockState(blockPos).block)
             }
         }
         return super.useOn(context)
@@ -80,17 +78,17 @@ class Rope : Item(
 
             if(clickedPosition == null){clickedPosition = blockPos}
 
-            var PosA = clickedPosition!!.toJOMLD().add(0.5, 0.5, 0.5)
-            var PosB = blockPos.toJOMLD().add(0.5, 0.5, 0.5)
+            var PosA = Vec3d(clickedPosition!!).add(0.5, 0.5, 0.5)
+            var PosB = Vec3d(blockPos).add(0.5, 0.5, 0.5)
 
-            var PosC = clickedPosition!!.toJOMLD().add(0.5, 0.5, 0.5)
-            var PosD = blockPos.toJOMLD().add(0.5, 0.5, 0.5)
+            var PosC = Vec3d(clickedPosition!!).add(0.5, 0.5, 0.5)
+            var PosD = Vec3d(blockPos).add(0.5, 0.5, 0.5)
 
             if(level.getShipObjectManagingPos(clickedPosition!!) != null){
-                PosC = level.getShipObjectManagingPos(clickedPosition!!)!!.transform.shipToWorld.transformPosition(clickedPosition!!.toJOMLD()) }
+                PosC = Vec3d(level.getShipObjectManagingPos(clickedPosition!!)!!.transform.shipToWorld.transformPosition(clickedPosition!!.toJOMLD()) )}
 
             if(level.getShipObjectManagingPos(blockPos) != null){
-                PosD = level.getShipObjectManagingPos(blockPos)!!.transform.shipToWorld.transformPosition(blockPos.toJOMLD()) }
+                PosD = Vec3d(level.getShipObjectManagingPos(blockPos)!!.transform.shipToWorld.transformPosition(blockPos.toJOMLD()) )}
 
             println("A1" + PosA)
             println("B1" + PosB)
@@ -100,11 +98,11 @@ class Rope : Item(
             val RopeCompliance = 1e-5 / (level.getShipObjectManagingPos(blockPos)?.inertiaData?.mass ?: 1).toDouble()
             val RopeMaxForce = 1e10
             val RopeConstraint = VSRopeConstraint(
-                thisShipId, otherShipId, RopeCompliance, PosA, PosB,
-                RopeMaxForce, PosC.sub(PosD, Vector3d()).length() + 1.0
+                thisShipId, otherShipId, RopeCompliance, PosA.conv(), PosB.conv(),
+                RopeMaxForce, PosC.sub(PosD).length() + 1.0
             )
 
-            println("Legnth: "+ PosC.sub(PosD, Vector3d()).length())
+            println("Legnth: "+ PosC.sub(PosD).length())
             println(RopeConstraint)
 
             val RopeConstraintId = level.shipObjectWorld.createNewConstraint(RopeConstraint)

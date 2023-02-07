@@ -1,32 +1,29 @@
-package org.valkyrienskies.tournament.item
+package org.valkyrienskies.tournament.items
 
+import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.context.UseOnContext
-import org.joml.Vector3d
-import org.valkyrienskies.core.apigame.constraints.*
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.tournament.ship.tournamentShipControl
-import org.valkyrienskies.tournament.tournamentConfig
-import org.valkyrienskies.tournament.tournamentItems
+import org.valkyrienskies.tournament.ship.TournamentShipControl
+import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.TournamentItems
 
 class PulseGun : Item(
-    Properties().stacksTo(1).tab(tournamentItems.getTab())
+    Properties().stacksTo(1).tab(TournamentItems.TAB)
 ){
 
-    private var pulseForce : Vector3d? = null
+    private var pulseForce : Vec3d? = null
 
     override fun useOn(context: UseOnContext): InteractionResult {
-        val force = tournamentConfig.SERVER.pulseGunForce
+        val force = TournamentConfig.SERVER.pulseGunForce
 
         val player = context.player
         val blockPosition = context.clickedPos
-        val blockLocation = context.clickLocation.toJOML()
+        val blockLocation = Vec3d(context.clickLocation)
 
-        if(blockPosition == null || context.level.isClientSide || player == null) {
+        if(context.level.isClientSide || player == null) {
             return InteractionResult.PASS
         }
 
@@ -35,14 +32,11 @@ class PulseGun : Item(
             return InteractionResult.PASS
         }
 
-        val ship = level.getShipObjectManagingPos(blockPosition)
-        if(ship == null) {
-            return InteractionResult.PASS
-        }
+        val ship = level.getShipObjectManagingPos(blockPosition) ?: return InteractionResult.PASS
 
-        pulseForce = player.lookAngle.toJOML().normalize().mul(force * ship.inertiaData.mass)
+        pulseForce = Vec3d(player.lookAngle).normalize().mul(force * ship.inertiaData.mass)
 
-        tournamentShipControl.getOrCreate(ship).addPulse(blockLocation, pulseForce!!)
+        TournamentShipControl.getOrCreate(ship).addPulse(blockLocation, pulseForce!!)
 
         return super.useOn(context)
     }
