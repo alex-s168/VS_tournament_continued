@@ -16,8 +16,6 @@ import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.tournament.TournamentConfig
 import java.util.concurrent.CopyOnWriteArrayList
 
-//TODO: clean code
-
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
     getterVisibility = JsonAutoDetect.Visibility.NONE,
@@ -34,6 +32,7 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
 
     private var weightedCenterOfLift: Vec3d = Vec3d()
     private var BalloonsPower = 0.0
+
     private val Spinners = mutableListOf<Pair<Vec3i, Vec3d>>()
     private val Thrusters = mutableListOf<Triple<Vec3i, Vec3d, Double>>()
     private val Pulses = CopyOnWriteArrayList<Pair<Vec3d, Vec3d>>()
