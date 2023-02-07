@@ -121,6 +121,6 @@ allprojects {
     }
 
     dependencies {
-        implementation 'com.github.SuperCraftAlex:LIBRARY-UnifiedVectors:25a8d0e8ca9084731b712ba0d28ee3e93961514c'
+        implementation 'com.github.SuperCraftAlex:LIBRARY-UnifiedVectors:cac439d176'
     }
 }
