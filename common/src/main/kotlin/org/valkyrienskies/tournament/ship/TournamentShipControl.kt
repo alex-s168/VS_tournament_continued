@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import de.m_marvin.univec.impl.Vec3d
 import de.m_marvin.univec.impl.Vec3i
 import net.minecraft.core.BlockPos
+import org.joml.Vector3d
+import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.PhysShip
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.getAttachment
@@ -13,6 +15,7 @@ import org.valkyrienskies.core.impl.api.ServerShipUser
 import org.valkyrienskies.core.impl.api.ShipForcesInducer
 import org.valkyrienskies.core.impl.api.Ticked
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
+import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TournamentConfig
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -33,9 +36,12 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
     private var weightedCenterOfLift: Vec3d = Vec3d()
     private var BalloonsPower = 0.0
 
-    private val Spinners = mutableListOf<Pair<Vec3i, Vec3d>>()
-    private val Thrusters = mutableListOf<Triple<Vec3i, Vec3d, Double>>()
-    private val Pulses = CopyOnWriteArrayList<Pair<Vec3d, Vec3d>>()
+    @JsonIgnore
+    private val Spinners = mutableListOf<Pair<Vector3i, Vector3d>>()
+    @JsonIgnore
+    private val Thrusters = mutableListOf<Triple<Vector3i, Vector3d, Double>>()
+    @JsonIgnore
+    private val Pulses = CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
 
     var consumed = 0f
         private set
@@ -48,8 +54,6 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
         if (physShip.poseVel.vel.y() < 2 || physShip.transform.positionInWorld.y() > TournamentConfig.SERVER.BaseHeight)    {
             BalloonsPower = 0.0
         }
-
-        println(physShip.transform.positionInWorld.y())
 
         if(BalloonsPower != 0.0) {
 
@@ -66,7 +70,7 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
         Spinners.forEach {
             val (pos, torque) = it
 
-            val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque.conv(), Vec3d().conv())
+            val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vec3d().conv())
 
             physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.SpinnerSpeed ))
 
@@ -75,14 +79,10 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
         Thrusters.forEach {
             val (pos, force, tier) = it
 
-            val tForce = Vec3d(physShip.transform.shipToWorld.transformDirection(force.conv(), Vec3d().conv()))
+            val tForce = Vec3d(physShip.transform.shipToWorld.transformDirection(force, Vec3d().conv()))
             val tPos = Vec3d(pos).add(0.5, 0.5, 0.5).sub(Vec3d().readFrom(physShip.transform.positionInShip))
 
-            //todo: use after isFinite bug fixed:
-            //if (force.isFinite && physShip.poseVel.vel.length() < 50) {
-            //    physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.ThrusterSpeed * tier).conv(), tPos.conv())
-            //}
-            if (physShip.poseVel.vel.length() < 50) {
+            if (force.isFinite && physShip.poseVel.vel.length() < 50) {
                 physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.ThrusterSpeed * tier).conv(), tPos.conv())
             }
         }
@@ -91,7 +91,7 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
         Pulses.forEach {
             val (pos, force) = it
             val tPos = Vec3d(pos).add( 0.5, 0.5, 0.5).sub(Vec3d(physShip.transform.positionInShip))
-            val tForce = Vec3d(physShip.transform.worldToShip.transformDirection(force.conv()))
+            val tForce = Vec3d(physShip.transform.worldToShip.transformDirection(force))
 
             physShip.applyRotDependentForceToPos(tForce.conv(), tPos.conv())
         }
@@ -130,21 +130,21 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser, Ticked {
     }
 
     fun addThruster(pos: BlockPos, tier: Double, force: Vec3d) {
-        Thrusters.add(Triple(Vec3i(pos), force, tier))
+        Thrusters.add(Triple(pos.toJOML(), force.conv(), tier))
     }
     fun removeThruster(pos: BlockPos, tier: Double, force: Vec3d) {
-        Thrusters.remove(Triple(Vec3i(pos), force, tier))
+        Thrusters.remove(Triple(pos.toJOML(), force.conv(), tier))
     }
 
     fun addSpinner(pos: Vec3i, torque: Vec3d) {
-        Spinners.add(pos to torque)
+        Spinners.add(pos.conv() to torque.conv())
     }
     fun removeSpinner(pos: Vec3i, torque: Vec3d) {
-        Spinners.remove(pos to torque)
+        Spinners.remove(pos.conv() to torque.conv())
     }
 
     fun addPulse(pos: Vec3d, force: Vec3d) {
-        Pulses.add(pos to force)
+        Pulses.add(pos.conv() to force.conv())
     }
 
     fun forceStopThruster(pos: BlockPos) {

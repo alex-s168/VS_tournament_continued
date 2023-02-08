@@ -8,12 +8,15 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
+import org.valkyrienskies.tournament.blockentity.*
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 @Suppress("unused")
 object TournamentBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
+
+    val TARGETER = TournamentBlocks.TARGETER withBE ::TargeterBlockEntity byName "targeter"
 
     fun register() {
         BLOCKENTITIES.applyAll()

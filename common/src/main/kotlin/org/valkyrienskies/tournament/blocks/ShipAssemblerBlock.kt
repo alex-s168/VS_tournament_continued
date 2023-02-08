@@ -2,6 +2,7 @@ package org.valkyrienskies.tournament.blocks
 
 import de.m_marvin.industria.core.physics.PhysicUtility
 import de.m_marvin.industria.core.util.StructureFinder
+import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
@@ -55,19 +56,17 @@ class ShipAssemblerBlock : DirectionalBlock (
 
     private fun asm(level: Level, pos: BlockPos): InteractionResult {
         if (level as? ServerLevel == null) return InteractionResult.PASS
-
-        val level = level as ServerLevel
+        if(level.getShipManagingPos(pos) != null) return InteractionResult.PASS
 
         val blacklist = TournamentConfig.SERVER.blockBlacklist
 
         val struct = StructureFinder.findStructure(
             level,
             pos,
-            6000,
-            Predicate { blockState ->
-                !blacklist.contains(blockState.block.builtInRegistryHolder().key().location().toString())
-            }
-        ).orElse(emptyList())
+            6000
+        ) { blockState ->
+            !blacklist.contains(blockState.block.builtInRegistryHolder().key().location().toString())
+        }.orElse(emptyList())
 
         PhysicUtility.assembleToContraption(
             level,

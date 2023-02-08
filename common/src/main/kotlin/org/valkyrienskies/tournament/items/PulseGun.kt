@@ -9,6 +9,8 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.ship.TournamentShipControl
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
+import org.valkyrienskies.tournament.api.extension.fromPos
+import org.valkyrienskies.tournament.api.extension.fromVVec
 
 class PulseGun : Item(
     Properties().stacksTo(1).tab(TournamentItems.TAB)
@@ -21,7 +23,7 @@ class PulseGun : Item(
 
         val player = context.player
         val blockPosition = context.clickedPos
-        val blockLocation = Vec3d(context.clickLocation)
+        val blockLocation = Vec3d().fromVVec(context.clickLocation)
 
         if(context.level.isClientSide || player == null) {
             return InteractionResult.PASS
@@ -34,7 +36,7 @@ class PulseGun : Item(
 
         val ship = level.getShipObjectManagingPos(blockPosition) ?: return InteractionResult.PASS
 
-        pulseForce = Vec3d(player.lookAngle).normalize().mul(force * ship.inertiaData.mass)
+        pulseForce = Vec3d().fromVVec(player.lookAngle).normalize().mul(force * ship.inertiaData.mass)
 
         TournamentShipControl.getOrCreate(ship).addPulse(blockLocation, pulseForce!!)
 

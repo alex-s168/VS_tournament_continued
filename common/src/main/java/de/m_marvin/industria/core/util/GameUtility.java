@@ -10,6 +10,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.phys.Vec3;
 
 public class GameUtility {
@@ -32,7 +34,13 @@ public class GameUtility {
     public static void copyBlock(Level level, BlockPos from, BlockPos to) {
         BlockState state = level.getBlockState(from);
         BlockEntity blockentity = level.getBlockEntity(from);
-        level.setBlock(to, state, 50);
+
+        // Hacky way to set a block without causing any updates
+        LevelChunk chunk = (LevelChunk) level.getChunk(to);
+        LevelChunkSection section = chunk.getSection(chunk.getSectionIndex(to.getY()));
+        chunk.setBlockState(to, Blocks.STONE.defaultBlockState(), false);
+        section.setBlockState(to.getX() & 15, to.getY() & 15, to.getZ() & 15, state);
+
         if (state.hasBlockEntity() && blockentity != null) {
             CompoundTag data = blockentity.saveWithoutMetadata();
             level.setBlockEntity(blockentity);
