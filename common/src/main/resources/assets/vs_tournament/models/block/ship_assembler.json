@@ -3,8 +3,8 @@
 	"parent": "vs_tournament",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "vs_tournament:block/shipifier",
-		"particle": "vs_tournament:block/shipifier"
+		"0": "vs_tournament:block/ship_assembler",
+		"particle": "vs_tournament:block/ship_assembler"
 	},
 	"elements": [
 		{

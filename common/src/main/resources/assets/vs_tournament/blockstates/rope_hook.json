@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vs_tournament:block/rope_hook",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "vs_tournament:block/rope_hook",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "vs_tournament:block/rope_hook",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "vs_tournament:block/rope_hook",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "vs_tournament:block/rope_hook",
+      "x": 90
+    },
+    "facing=down": {
+      "model": "vs_tournament:block/rope_hook",
+      "x": 270
+    }
+  }
+}

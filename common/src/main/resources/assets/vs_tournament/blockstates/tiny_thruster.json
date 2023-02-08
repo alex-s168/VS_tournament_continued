@@ -1,0 +1,29 @@
+
+{
+  "variants": {
+    "facing=north": {
+      "model": "vs_tournament:block/tiny_thruster",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "vs_tournament:block/tiny_thruster",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "vs_tournament:block/tiny_thruster",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "vs_tournament:block/tiny_thruster",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "vs_tournament:block/tiny_thruster",
+      "x": 90
+    },
+    "facing=down": {
+      "model": "vs_tournament:block/tiny_thruster",
+      "x": 270
+    }
+  }
+}
