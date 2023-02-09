@@ -11,32 +11,32 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class StructureFinder {
-
-    public static Optional<List<BlockPos>> findStructure(Level level, BlockPos startPos, int maxBlocks, Predicate<BlockState> blockPredicate) {
-        List<BlockPos> posList = new ArrayList<>();
-        if (checkBlock(level, startPos, maxBlocks, posList, blockPredicate)) {
-            return Optional.of(posList);
-        }
-        return Optional.empty();
-    }
-
-    protected static boolean checkBlock(Level level, BlockPos pos, int scanDepth, List<BlockPos> posList, Predicate<BlockState> blockPredicate) {
-        if (!posList.contains(pos)) {
-            BlockState state = level.getBlockState(pos);
-            if (blockPredicate.test(state)) {
-                posList.add(pos);
-                if (scanDepth > 0) {
-                    for (Direction d : Direction.values()) {
-                        if (!checkBlock(level, pos.relative(d), scanDepth - 1, posList, blockPredicate)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                return false;
-            }
-        }
-        return true;
-    }
-
+	
+	public static Optional<List<BlockPos>> findStructure(Level level, BlockPos startPos, int maxBlocks, Predicate<BlockState> blockPredicate) {
+		List<BlockPos> posList = new ArrayList<>();
+		if (checkBlock(level, startPos, maxBlocks, posList, blockPredicate)) {
+			return Optional.of(posList);
+		}
+		return Optional.empty();
+	}
+	
+	protected static boolean checkBlock(Level level, BlockPos pos, int scanDepth, List<BlockPos> posList, Predicate<BlockState> blockPredicate) {
+		if (!posList.contains(pos)) {
+			BlockState state = level.getBlockState(pos);
+			if (blockPredicate.test(state)) {
+				posList.add(pos);
+				if (scanDepth > 0) {
+					for (Direction d : Direction.values()) {
+						if (!checkBlock(level, pos.relative(d), scanDepth - 1, posList, blockPredicate)) {
+							return false;
+						}
+					}
+					return true;
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }

@@ -69,10 +69,10 @@ class ShipAssemblerBlock : DirectionalBlock (
         }.orElse(emptyList())
 
         PhysicUtility.assembleToContraption(
-            level,
             struct,
             true,
-            1f
+            1f,
+            level
         )
 
         return InteractionResult.SUCCESS
