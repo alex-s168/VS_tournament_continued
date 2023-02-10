@@ -17,6 +17,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.physics_api.ConstraintId
+import org.valkyrienskies.tournament.TournamentDebugHelper
 import org.valkyrienskies.tournament.api.Helper3d
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
@@ -52,6 +53,8 @@ class RopeHookBlock : DirectionalBlock(
             val p2 = Helper3d.VecBlockMid(Helper3d.MaybeShipToWorldspace(level, OtherPos!!))
 
             Helper3d.drawQuadraticParticleCurve(p1, p2, maxLen, 5.0, level, ParticleTypes.CLOUD)
+
+            TournamentDebugHelper.updateIDDebugLine(ropeId!!+1, p1, p2, 20)
         }
     }
 
@@ -88,6 +91,8 @@ class RopeHookBlock : DirectionalBlock(
 
         state.setValue(BlockStateProperties.POWER, 0)
 
+        TournamentDebugHelper.removeIDDebugLine(ropeId!!+1)
+
         // delets any existing ropes
         ropeId?.let { level.shipObjectWorld.removeConstraint(it) }
         ropeId = null
@@ -99,10 +104,13 @@ class RopeHookBlock : DirectionalBlock(
     // sets the rope for deletion purposes
     fun SetRopeId(rope: ConstraintId, main:Vec3d?, other:Vec3d?) {
         println("Block>> " + rope)
+
         ropeId = rope
         OtherPos = other
         MainPos = main
         maxLen = 0.0
+
+        TournamentDebugHelper.addTickedIDDebugLine(main!!, other!!, 20, ropeId!!+1)
     }
 
 

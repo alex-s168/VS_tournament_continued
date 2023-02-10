@@ -38,7 +38,7 @@ class TargeterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
 
             if (level.isClientSide) {
 
-                TournamentDebugHelper.renderDebugLine(worldPos, rotn.mul(1e10))
+                TournamentDebugHelper.addTickDebugLine(worldPos, rotn.mul(1e10), 20)
 
             } else {
 
