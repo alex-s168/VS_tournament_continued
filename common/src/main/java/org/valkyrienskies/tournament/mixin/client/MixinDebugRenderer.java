@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.m_marvin.univec.impl.Vec3d;
 import de.m_marvin.univec.impl.Vec3f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;

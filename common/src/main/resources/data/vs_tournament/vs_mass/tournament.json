@@ -27,4 +27,9 @@
     "block": "vs_tournament:sensor",
     "mass": 200.0
   }
+,
+  {
+    "block": "vs_tournament:targeter",
+    "mass": 200.0
+  }
 ]

@@ -18,6 +18,8 @@ object TournamentBlocks {
     val SPINNER                  = BLOCKS.register("spinner", ::SpinnerBlock)
     val SEAT                     = BLOCKS.register("seat", ::SeatBlock)
     val ROPE_HOOK                = BLOCKS.register("rope_hook", ::RopeHookBlock)
+
+    // DEBUG BLOCKS:
     val TARGETER                 = BLOCKS.register("targeter", ::TargeterBlock)
 
     fun register() {
