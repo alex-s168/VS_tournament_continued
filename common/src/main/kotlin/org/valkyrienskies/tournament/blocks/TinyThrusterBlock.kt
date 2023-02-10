@@ -21,8 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.mod.common.util.toJOMLD
-import org.valkyrienskies.tournament.ship.TournamentShipControl
+import org.valkyrienskies.tournament.ship.ThrusterShipControl
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import java.util.*
@@ -65,7 +64,7 @@ class TinyThrusterBlock : DirectionalBlock (
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
-        TournamentShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
+        ThrusterShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
         )?.addThruster(pos, ionpower, Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
     }
 
@@ -76,8 +75,8 @@ class TinyThrusterBlock : DirectionalBlock (
         level as ServerLevel
 
         state.setValue(BlockStateProperties.POWER, 0)
-        level.getShipManagingPos(pos)?.getAttachment<TournamentShipControl>()?.removeThruster(pos, ionpower,Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
-        level.getShipManagingPos(pos)?.getAttachment<TournamentShipControl>()?.forceStopThruster( pos )
+        level.getShipManagingPos(pos)?.getAttachment<ThrusterShipControl>()?.removeThruster(pos, ionpower,Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
+        level.getShipManagingPos(pos)?.getAttachment<ThrusterShipControl>()?.forceStopThruster( pos )
     }
 
     override fun neighborChanged(

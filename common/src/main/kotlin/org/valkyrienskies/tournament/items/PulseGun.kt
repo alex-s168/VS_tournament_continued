@@ -6,11 +6,10 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.context.UseOnContext
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.tournament.ship.TournamentShipControl
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
-import org.valkyrienskies.tournament.api.extension.fromPos
 import org.valkyrienskies.tournament.api.extension.fromVVec
+import org.valkyrienskies.tournament.ship.PulseShipControl
 
 class PulseGun : Item(
     Properties().stacksTo(1).tab(TournamentItems.TAB)
@@ -38,7 +37,7 @@ class PulseGun : Item(
 
         pulseForce = Vec3d().fromVVec(player.lookAngle).normalize().mul(force * ship.inertiaData.mass)
 
-        TournamentShipControl.getOrCreate(ship).addPulse(blockLocation, pulseForce!!)
+        PulseShipControl.getOrCreate(ship).addPulse(blockLocation, pulseForce!!)
 
         return super.useOn(context)
     }

@@ -18,7 +18,7 @@ import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
-import org.valkyrienskies.tournament.ship.TournamentShipControl
+import org.valkyrienskies.tournament.ship.BalloonShipControl
 
 class BalloonBlock : Block(
     Properties.of(Material.WOOL)
@@ -59,7 +59,7 @@ class BalloonBlock : Block(
         if (level.isClientSide) return
         level as ServerLevel
 
-        TournamentShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
+        BalloonShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
             ).addBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.BalloonAnalogStrength)
     }
 
@@ -69,7 +69,7 @@ class BalloonBlock : Block(
         if (level.isClientSide) return
         level as ServerLevel
 
-        level.getShipManagingPos(pos)?.getAttachment<TournamentShipControl>()?.removeBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble())
+        level.getShipManagingPos(pos)?.getAttachment<BalloonShipControl>()?.removeBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble())
     }
 
     override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {

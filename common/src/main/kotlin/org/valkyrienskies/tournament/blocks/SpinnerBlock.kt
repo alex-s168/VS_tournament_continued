@@ -21,7 +21,8 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.tournament.ship.TournamentShipControl
+import org.valkyrienskies.tournament.ship.BalloonShipControl
+import org.valkyrienskies.tournament.ship.SpinnerShipControl
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 
@@ -61,7 +62,7 @@ class SpinnerBlock : DirectionalBlock(
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
-        TournamentShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
+        SpinnerShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
             ).addSpinner(Vec3i(pos), Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
     }
 
@@ -72,7 +73,7 @@ class SpinnerBlock : DirectionalBlock(
         level as ServerLevel
 
         state.setValue(BlockStateProperties.POWER, 0)
-        level.getShipManagingPos(pos)?.getAttachment<TournamentShipControl>()?.removeSpinner(Vec3i(pos), Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
+        level.getShipManagingPos(pos)?.getAttachment<SpinnerShipControl>()?.removeSpinner(Vec3i(pos), Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
     }
 
     override fun neighborChanged(
