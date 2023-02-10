@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api
+package org.valkyrienskies.tournament.api.helper
 
 import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos

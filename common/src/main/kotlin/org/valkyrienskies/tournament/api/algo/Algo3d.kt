@@ -1,6 +1,7 @@
-package org.valkyrienskies.tournament.api
+package org.valkyrienskies.tournament.api.algo
 
 import de.m_marvin.univec.impl.Vec3d
+import org.valkyrienskies.tournament.api.helper.Helper2d
 import kotlin.math.absoluteValue
 
 object Algo3d {
@@ -10,7 +11,12 @@ object Algo3d {
 
         var y = pos.y
         for (i in 0..height.absoluteValue.toInt()) {
-            result.addAll( Helper2d.vec2listTo3(Algo2d.filledCircleDirty(Helper2d.vec3to2(pos), radius / i.toDouble())!!, y) )
+            result.addAll(
+                Helper2d.vec2listTo3(
+                    Algo2d.filledCircleDirty(Helper2d.vec3to2(pos), radius / i.toDouble())!!,
+                    y
+                )
+            )
 
             if (height < 0) {y -= 1}
             else {y += 1}
@@ -24,7 +30,14 @@ object Algo3d {
 
         var y = pos.y
         for (i in 0..height.absoluteValue.toInt()) {
-            result.addAll( Helper2d.vec2listTo3(Algo2d.filledCircleDirty(Helper2d.vec3to2(pos), i.toDouble() / y + (pos.y / 2))!! , y) )
+            result.addAll(
+                Helper2d.vec2listTo3(
+                    Algo2d.filledCircleDirty(
+                        Helper2d.vec3to2(pos),
+                        i.toDouble() / y + (pos.y / 2)
+                    )!!, y
+                )
+            )
 
             if (height < 0) {y -= 1}
             else {y += 1}

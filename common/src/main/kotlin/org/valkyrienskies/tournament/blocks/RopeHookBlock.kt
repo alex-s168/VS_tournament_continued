@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.TournamentDebugHelper
-import org.valkyrienskies.tournament.api.Helper3d
+import org.valkyrienskies.tournament.api.helper.Helper3d
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import java.util.*
@@ -54,7 +54,7 @@ class RopeHookBlock : DirectionalBlock(
 
             Helper3d.drawQuadraticParticleCurve(p1, p2, maxLen, 5.0, level, ParticleTypes.CLOUD)
 
-            TournamentDebugHelper.updateIDDebugLine(ropeId!!+1, p1, p2, 20)
+            TournamentDebugHelper.updateIDDebugLine(ropeId!!+1, p1, p2, 45)
         }
     }
 

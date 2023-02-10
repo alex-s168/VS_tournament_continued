@@ -77,9 +77,9 @@ class TournamentDebugHelper {
                 tickDebugLines.forEach {
                     try {
                         val (p1, p2, tick) = it
-                        lines.add(Tuple(p1, p2))
                         tickDebugLines.remove(it)
                         if (tick > 0) {
+                            lines.add(Tuple(p1, p2))
                             tickDebugLines.add(Triple(p1, p2, tick))
                         }
                     } catch (e : Exception) {}
@@ -89,9 +89,9 @@ class TournamentDebugHelper {
                 tickIDDebugLines.forEach {
                     try {
                         val (p1, p2, tick, id) = it
-                        lines.add(Tuple(p1, p2))
                         tickIDDebugLines.remove(it)
                         if (tick > 0) {
+                            lines.add(Tuple(p1, p2))
                             tickIDDebugLines.add(Quadruple(p1, p2, tick, id))
                         }
                     } catch (e : Exception) {}

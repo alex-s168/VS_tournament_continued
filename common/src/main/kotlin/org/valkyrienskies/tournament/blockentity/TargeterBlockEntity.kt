@@ -10,9 +10,9 @@ import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentDebugHelper
-import org.valkyrienskies.tournament.api.Helper3d
+import org.valkyrienskies.tournament.api.helper.Helper3d
 import org.valkyrienskies.tournament.api.extension.fromPos
-import org.valkyrienskies.tournament.ship.PulseShipControl
+import org.valkyrienskies.tournament.ship.SimpleShipControl
 
 class TargeterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(TournamentBlockEntities.TARGETER.get(), pos, state) {
 
@@ -29,24 +29,20 @@ class TargeterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
             val pos = Vec3d().fromPos(pos)
 
             val worldPos = Helper3d.MaybeShipToWorldspace(level, pos)
-
             println("worldPos: $worldPos")
 
-            val rotn = worldPos.sub(be.TargetVec).normalize()
-
+            val rotn = be.TargetVec.sub(worldPos).normalize()
             println("rotn: $rotn")
 
-            if (level.isClientSide) {
-
-                TournamentDebugHelper.addTickDebugLine(worldPos, rotn.mul(1e10), 20)
-
-            } else {
-
+            if (!level.isClientSide) {
                 ship as ServerShip
 
-                val force = rotn.mul(0.01 * ship.inertiaData.mass)
+                val force = rotn.mul(1e4 * ship.inertiaData.mass)
                 println("force: $force")
-                PulseShipControl.getOrCreate(ship).addPulse(worldPos, force)
+
+                TournamentDebugHelper.addTickDebugLine(worldPos, force.add(worldPos), 20)
+
+                SimpleShipControl.getOrCreate(ship).addInvariantForce(force)
             }
         }
     }

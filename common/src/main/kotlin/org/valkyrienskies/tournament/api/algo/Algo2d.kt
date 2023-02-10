@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api
+package org.valkyrienskies.tournament.api.algo
 
 import de.m_marvin.univec.impl.Vec2d
 
