@@ -15,7 +15,6 @@ import org.valkyrienskies.core.apigame.constraints.*
 import org.valkyrienskies.mod.common.dimensionId
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.blocks.RopeHookBlock
@@ -23,7 +22,7 @@ import org.valkyrienskies.tournament.TournamentBlocks
 import org.valkyrienskies.tournament.TournamentItems
 
 
-class Rope : Item(
+class RopeItem : Item(
         Properties().stacksTo(1).tab(TournamentItems.TAB)
 ) {
 

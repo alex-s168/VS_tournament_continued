@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResult
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
@@ -19,7 +18,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import org.valkyrienskies.tournament.TournamentItems
 import java.util.*
 
-class ShipSpawner : Item(
+class ShipSpawnerItem : Item(
     Properties().stacksTo(1).tab(TournamentItems.TAB)
 ) {
 

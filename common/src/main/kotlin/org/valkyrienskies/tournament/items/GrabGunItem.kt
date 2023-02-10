@@ -22,7 +22,7 @@ import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.TournamentItems
 
 
-class GrabGun : Item(
+class GrabGunItem : Item(
         Properties().stacksTo(1).tab(TournamentItems.TAB)
 ) {
 
