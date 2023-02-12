@@ -9,12 +9,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.util.Tuple;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.tournament.TournamentDebugHelper;
+import org.valkyrienskies.tournament.api.debug.DebugLine;
+import org.valkyrienskies.tournament.api.debug.DebugObject;
+
+import java.awt.*;
 
 @Mixin(DebugRenderer.class)
 public class MixinDebugRenderer {
@@ -26,17 +29,23 @@ public class MixinDebugRenderer {
                 MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
         if (Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes()) {
-            for (Tuple<Vec3d, Vec3d> line : TournamentDebugHelper.Companion.queryLines()) {
+            for (DebugObject obj : TournamentDebugHelper.Companion.query()) {
                 VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.lines());
 
                 Vec3d cam = new Vec3d(cameraX, cameraY, cameraZ);
 
-                Vec3d A = line.getA().sub(cam);
-                Vec3d B = line.getB().sub(cam);
-                Vec3f normal = new Vec3f(A.sub(B).normalize());
+                if (obj instanceof DebugLine) {
+                    DebugLine line = (DebugLine) obj;
 
-                vertexConsumer.vertex(A.x, A.y, A.z).color(255, 0, 0, 255).normal(normal.x, normal.y, normal.z).endVertex();
-                vertexConsumer.vertex(B.x, B.y, B.z).color(255, 0, 0, 255).normal(normal.x, normal.y, normal.z).endVertex();
+                    Vec3d A = line.getA().sub(cam);
+                    Vec3d B = line.getB().sub(cam);
+                    Vec3f normal = new Vec3f(A.sub(B).normalize());
+
+                    Color c = line.getColor();
+
+                    vertexConsumer.vertex(A.x, A.y, A.z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).normal(normal.x, normal.y, normal.z).endVertex();
+                    vertexConsumer.vertex(B.x, B.y, B.z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).normal(normal.x, normal.y, normal.z).endVertex();
+                }
             }
             bufferSource.endBatch();
         }

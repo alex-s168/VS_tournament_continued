@@ -10,13 +10,18 @@ import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentDebugHelper
+import org.valkyrienskies.tournament.api.debug.DebugLine
+import org.valkyrienskies.tournament.api.debug.DebugObjectID
 import org.valkyrienskies.tournament.api.helper.Helper3d
 import org.valkyrienskies.tournament.api.extension.fromPos
 import org.valkyrienskies.tournament.ship.SimpleShipControl
+import java.awt.Color
 
 class TargeterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(TournamentBlockEntities.TARGETER.get(), pos, state) {
 
     val TargetVec = Vec3d(200.0, 200.0, 200.0)
+
+    var debugID : DebugObjectID = -1
 
     companion object {
         fun tick(level: Level, pos: BlockPos, state: BlockState, be: BlockEntity) {
@@ -40,7 +45,7 @@ class TargeterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
                 val force = rotn.mul(1e4 * ship.inertiaData.mass)
                 println("force: $force")
 
-                TournamentDebugHelper.addTickDebugLine(worldPos, force.add(worldPos), 20)
+                be.debugID = TournamentDebugHelper.updateObject(be.debugID, DebugLine(worldPos, force.add(worldPos), Color.RED))
 
                 SimpleShipControl.getOrCreate(ship).addInvariantForce(force)
             }

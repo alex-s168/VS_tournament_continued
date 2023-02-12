@@ -18,9 +18,12 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.TournamentDebugHelper
+import org.valkyrienskies.tournament.api.debug.DebugLine
+import org.valkyrienskies.tournament.api.debug.DebugObjectID
 import org.valkyrienskies.tournament.api.helper.Helper3d
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
+import java.awt.Color
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -38,6 +41,8 @@ class RopeHookBlock : DirectionalBlock(
 
     private var maxLen: Double = 0.0
 
+    private var debugID: DebugObjectID = -1
+
     init {
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(BlockStateProperties.POWER, 0))
     }
@@ -54,7 +59,7 @@ class RopeHookBlock : DirectionalBlock(
 
             Helper3d.drawQuadraticParticleCurve(p1, p2, maxLen, 5.0, level, ParticleTypes.CLOUD)
 
-            TournamentDebugHelper.updateIDDebugLine(ropeId!!+1, p1, p2, 45)
+            TournamentDebugHelper.updateObject(debugID, DebugLine(p1, p2, Color.RED))
         }
     }
 
@@ -91,7 +96,7 @@ class RopeHookBlock : DirectionalBlock(
 
         state.setValue(BlockStateProperties.POWER, 0)
 
-        TournamentDebugHelper.removeIDDebugLine(ropeId!!+1)
+        TournamentDebugHelper.removeObject(debugID)
 
         // delets any existing ropes
         ropeId?.let { level.shipObjectWorld.removeConstraint(it) }
@@ -110,7 +115,7 @@ class RopeHookBlock : DirectionalBlock(
         MainPos = main
         maxLen = 0.0
 
-        TournamentDebugHelper.addTickedIDDebugLine(main!!, other!!, 20, ropeId!!+1)
+        debugID = TournamentDebugHelper.addObject(DebugLine(main!!, other!!, Color.RED))
     }
 
 
