@@ -9,8 +9,9 @@ class TournamentDebugHelper {
         private var objects = ArrayList<DebugObject?>()
 
         fun addObject(obj : DebugObject) : DebugObjectID {
+            val id = objects.size
             objects.add(obj)
-            return (objects.size - 1).toLong()
+            return (id).toLong()
         }
 
         fun updateObject(id : DebugObjectID, obj : DebugObject) : DebugObjectID {
