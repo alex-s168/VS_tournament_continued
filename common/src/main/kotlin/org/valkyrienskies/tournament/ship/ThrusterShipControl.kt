@@ -1,5 +1,6 @@
 package org.valkyrienskies.tournament.ship
 
+import com.fasterxml.jackson.annotation.JacksonAnnotation
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
@@ -14,6 +15,7 @@ import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.core.impl.pipelines.SegmentUtils
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TournamentConfig
+import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -23,7 +25,7 @@ import org.valkyrienskies.tournament.TournamentConfig
 )
 class ThrusterShipControl : ShipForcesInducer {
 
-    private val Thrusters = mutableListOf<Triple<Vector3i, Vector3d, Double>>()
+    private val thrusters = CopyOnWriteArrayList<Triple<Vector3i, Vector3d, Double>>()
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
@@ -32,7 +34,7 @@ class ThrusterShipControl : ShipForcesInducer {
         val segment = physShip.segments.segments[0]?.segmentDisplacement!!
         val vel = SegmentUtils.getVelocity(physShip.poseVel, segment, Vector3d())
 
-        Thrusters.forEach {
+        thrusters.forEach {
             val (pos, force, tier) = it
 
             val tForce = Vec3d(physShip.transform.shipToWorld.transformDirection(force, Vec3d().conv()))
@@ -45,15 +47,15 @@ class ThrusterShipControl : ShipForcesInducer {
     }
 
     fun addThruster(pos: BlockPos, tier: Double, force: Vec3d) {
-        Thrusters.add(Triple(pos.toJOML(), force.conv(), tier))
+        thrusters.add(Triple(pos.toJOML(), force.conv(), tier))
     }
 
     fun removeThruster(pos: BlockPos, tier: Double, force: Vec3d) {
-        Thrusters.remove(Triple(pos.toJOML(), force.conv(), tier))
+        thrusters.remove(Triple(pos.toJOML(), force.conv(), tier))
     }
 
     fun forceStopThruster(pos: BlockPos) {
-        Thrusters.removeAll { it.first == pos }
+        thrusters.removeAll { it.first == pos }
     }
 
     companion object {

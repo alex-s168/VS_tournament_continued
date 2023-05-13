@@ -13,6 +13,7 @@ import org.valkyrienskies.core.impl.api.ShipForcesInducer
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.core.impl.pipelines.SegmentUtils
 import org.valkyrienskies.tournament.TournamentConfig
+import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -22,7 +23,7 @@ import org.valkyrienskies.tournament.TournamentConfig
 )
 class SpinnerShipControl : ShipForcesInducer {
 
-    private val Spinners = mutableListOf<Pair<Vector3i, Vector3d>>()
+    private val spinners = CopyOnWriteArrayList<Pair<Vector3i, Vector3d>>()
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
@@ -31,7 +32,7 @@ class SpinnerShipControl : ShipForcesInducer {
         val segment = physShip.segments.segments[0]?.segmentDisplacement!!
         val vel = SegmentUtils.getVelocity(physShip.poseVel, segment, Vector3d())
 
-        Spinners.forEach {
+        spinners.forEach {
             val (pos, torque) = it
 
             val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vec3d().conv())
@@ -42,10 +43,10 @@ class SpinnerShipControl : ShipForcesInducer {
     }
 
     fun addSpinner(pos: Vec3i, torque: Vec3d) {
-        Spinners.add(pos.conv() to torque.conv())
+        spinners.add(pos.conv() to torque.conv())
     }
     fun removeSpinner(pos: Vec3i, torque: Vec3d) {
-        Spinners.remove(pos.conv() to torque.conv())
+        spinners.remove(pos.conv() to torque.conv())
     }
 
     companion object {

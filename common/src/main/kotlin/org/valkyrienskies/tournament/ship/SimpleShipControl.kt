@@ -9,7 +9,6 @@ import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.api.ShipForcesInducer
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.tournament.api.extension.conv
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
@@ -20,24 +19,24 @@ import java.util.concurrent.CopyOnWriteArrayList
 )
 class SimpleShipControl : ShipForcesInducer {
 
-    private val Forces = CopyOnWriteArrayList<Vector3d>()
+    private val forces = CopyOnWriteArrayList<Vector3d>()
 
     override fun applyForces(physShip: PhysShip) {
         if (physShip == null) return
         physShip as PhysShipImpl
 
-        Forces.forEach {
+        forces.forEach {
             val force = it
 
             println("force to apply: $force")
 
             physShip.applyInvariantForce(force)
         }
-        Forces.clear()
+        forces.clear()
     }
 
     fun addInvariantForce(force: Vec3d) {
-        Forces.add(force.conv())
+        forces.add(force.conv())
     }
 
     companion object {
