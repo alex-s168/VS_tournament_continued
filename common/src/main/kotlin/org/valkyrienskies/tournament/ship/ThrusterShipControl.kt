@@ -40,7 +40,7 @@ class ThrusterShipControl : ShipForcesInducer {
             val tForce = Vec3d(physShip.transform.shipToWorld.transformDirection(force, Vec3d().conv()))
             val tPos = Vec3d(pos).add(0.5, 0.5, 0.5).sub(Vec3d().readFrom(physShip.transform.positionInShip))
 
-            if (force.isFinite && physShip.poseVel.vel.length() < 50) {
+            if (force.isFinite && physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed) {
                 physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.thrusterSpeed * tier).conv(), tPos.conv())
             }
         }

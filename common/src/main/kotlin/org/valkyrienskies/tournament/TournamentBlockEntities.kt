@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import org.valkyrienskies.tournament.blockentity.*
+import org.valkyrienskies.tournament.blockentity.explosive.ExplosiveBlockEntity
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
 
@@ -16,8 +17,14 @@ import org.valkyrienskies.tournament.registry.RegistrySupplier
 object TournamentBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
 
-    val TARGETER = TournamentBlocks.TARGETER withBE ::TargeterBlockEntity byName "targeter"
-    val SENSOR = TournamentBlocks.SENSOR withBE ::SensorBlockEntity byName "sensor"
+    val TARGETER            = TournamentBlocks.TARGETER withBE ::TargeterBlockEntity byName "targeter"
+    val SENSOR              = TournamentBlocks.SENSOR   withBE ::SensorBlockEntity   byName "sensor"
+
+    // explosives:
+    val EXPLOSIVE           = TournamentBlocks.EXPLOSIVE_INSTANT_SMALL withBE ::ExplosiveBlockEntity byName "explosive_s"
+    val EXPLOSIVE_M         = TournamentBlocks.EXPLOSIVE_INSTANT_MEDIUM withBE ::ExplosiveBlockEntity byName "explosive_m"
+    val EXPLOSIVE_L         = TournamentBlocks.EXPLOSIVE_INSTANT_LARGE withBE ::ExplosiveBlockEntity byName "explosive_l"
+    val EXPLOSIVE_STAGED_S  = TournamentBlocks.EXPLOSIVE_STAGED_SMALL withBE ::ExplosiveBlockEntity byName "explosive_staged_s"
 
     fun register() {
         BLOCKENTITIES.applyAll()

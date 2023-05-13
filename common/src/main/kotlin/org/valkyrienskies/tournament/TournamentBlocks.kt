@@ -4,6 +4,7 @@ import net.minecraft.core.Registry
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import org.valkyrienskies.tournament.blocks.*
+import org.valkyrienskies.tournament.blocks.explosive.*
 import org.valkyrienskies.tournament.registry.DeferredRegister
 
 @Suppress("unused")
@@ -18,10 +19,17 @@ object TournamentBlocks {
     val SPINNER                  = BLOCKS.register("spinner", ::SpinnerBlock)
     val SEAT                     = BLOCKS.register("seat", ::SeatBlock)
     val ROPE_HOOK                = BLOCKS.register("rope_hook", ::RopeHookBlock)
-    val SENSOR                 = BLOCKS.register("sensor", ::SensorBlock)
+    val SENSOR                   = BLOCKS.register("sensor", ::SensorBlock)
 
     // DEBUG BLOCKS:
     val TARGETER                 = BLOCKS.register("targeter", ::TargeterBlock)
+
+    // EXPLOSIVES:
+    val EXPLOSIVE_INSTANT_SMALL  = BLOCKS.register("explosive_instant_small", ::ExplosiveInstantBlockSmall)
+    val EXPLOSIVE_INSTANT_MEDIUM = BLOCKS.register("explosive_instant_medium", ::ExplosiveInstantBlockMedium)
+    val EXPLOSIVE_INSTANT_LARGE  = BLOCKS.register("explosive_instant_large", ::ExplosiveInstantBlockLarge)
+
+    val EXPLOSIVE_STAGED_SMALL   = BLOCKS.register("explosive_staged_small", ::ExplosiveStagedBlockSmall)
 
     fun register() {
         BLOCKS.applyAll()

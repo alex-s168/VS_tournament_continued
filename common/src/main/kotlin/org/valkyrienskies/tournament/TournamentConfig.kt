@@ -40,6 +40,9 @@ object TournamentConfig {
         @JsonSchema(description = "The max distance of the sensor")
         var sensorDistance = 5.0
 
+        @JsonSchema(description = "At what speed the thruster should stop working")
+        var thrusterShutoffSpeed = 50
+
         @JsonSchema(description = "Blacklist of blocks that don't get assembled")
         var blockBlacklist = setOf(
             "minecraft:dirt",

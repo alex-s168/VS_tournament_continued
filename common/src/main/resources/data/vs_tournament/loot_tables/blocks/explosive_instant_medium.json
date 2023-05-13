@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vs_tournament:instantexplosive"
+          "name": "vs_tournament:explosive_instant_medium"
         }
       ],
       "conditions": [
