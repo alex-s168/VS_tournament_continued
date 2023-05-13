@@ -22,6 +22,8 @@ object TournamentBlocks {
     // DEBUG BLOCKS:
     val TARGETER                 = BLOCKS.register("targeter", ::TargeterBlock)
 
+    val SENSOR                 = BLOCKS.register("sensor", ::SensorBlock)
+
     fun register() {
         BLOCKS.applyAll()
     }

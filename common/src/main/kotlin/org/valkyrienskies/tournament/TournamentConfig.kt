@@ -13,20 +13,20 @@ object TournamentConfig {
 
     class Server {
 
-        @JsonSchema(description = "The Force a balloon will output")
-        var BaseHeight = 100.0
+        @JsonSchema(description = "Balloon base height")
+        var baseHeight = 100.0
 
         @JsonSchema(description = "The Force a spinner will output")
-        var SpinnerSpeed = 5000.0
+        var spinnerSpeed = 5000.0
 
         @JsonSchema(description = "The Force a balloon will output")
-        var BalloonPower = 30.0
+        var balloonPower = 30.0
 
         @JsonSchema(description = "how much stronger a baloon will get when powered (1.0 is 15x stronger at max power)")
-        var BalloonAnalogStrength = 1.0
+        var balloonAnalogStrength = 1.0
 
         @JsonSchema(description = "The Force a spinner will output")
-        var ThrusterSpeed = 10000.0
+        var thrusterSpeed = 10000.0
 
         @JsonSchema(description = "Weight of ballast when lowest redstone power")
         var ballastWeight = 10000.0
@@ -36,6 +36,9 @@ object TournamentConfig {
 
         @JsonSchema(description = "The Force the Pulse Gun applies")
         var pulseGunForce = 300.0
+
+        @JsonSchema(description = "The max distance of the sensor")
+        var sensorDistance = 5.0
 
         @JsonSchema(description = "Blacklist of blocks that don't get assembled")
         var blockBlacklist = setOf(

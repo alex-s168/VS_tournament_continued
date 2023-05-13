@@ -17,6 +17,7 @@ object TournamentBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
 
     val TARGETER = TournamentBlocks.TARGETER withBE ::TargeterBlockEntity byName "targeter"
+    val SENSOR = TournamentBlocks.SENSOR withBE ::SensorBlockEntity byName "sensor"
 
     fun register() {
         BLOCKENTITIES.applyAll()

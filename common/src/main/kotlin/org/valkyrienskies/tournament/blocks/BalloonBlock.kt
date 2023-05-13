@@ -60,7 +60,7 @@ class BalloonBlock : Block(
         level as ServerLevel
 
         BalloonShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
-            ).addBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.BalloonAnalogStrength)
+            ).addBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.balloonAnalogStrength)
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {

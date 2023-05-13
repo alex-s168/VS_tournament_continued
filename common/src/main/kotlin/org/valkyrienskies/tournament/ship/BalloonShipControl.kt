@@ -37,7 +37,7 @@ class BalloonShipControl : ShipForcesInducer {
             val tPos = Vector3d(pos).add( 0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
 
             val tHeight = physShip.transform.positionInWorld.y()
-            var tPValue = TournamentConfig.SERVER.BaseHeight - ((tHeight * tHeight) / 1000.0)
+            var tPValue = TournamentConfig.SERVER.baseHeight - ((tHeight * tHeight) / 1000.0)
 
             if (vel.y() > 10.0)    {
                 tPValue = (-vel.y() * 0.25)
@@ -49,7 +49,7 @@ class BalloonShipControl : ShipForcesInducer {
             physShip.applyInvariantForceToPos(
                 Vector3d(
                     0.0,
-                    (pow + 1.0) * TournamentConfig.SERVER.BalloonPower * tPValue,
+                    (pow + 1.0) * TournamentConfig.SERVER.balloonPower * tPValue,
                     0.0),
                 tPos
             )

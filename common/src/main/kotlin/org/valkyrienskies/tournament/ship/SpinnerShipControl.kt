@@ -36,7 +36,7 @@ class SpinnerShipControl : ShipForcesInducer {
 
             val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vec3d().conv())
 
-            physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.SpinnerSpeed ))
+            physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.spinnerSpeed ))
 
         }
     }
