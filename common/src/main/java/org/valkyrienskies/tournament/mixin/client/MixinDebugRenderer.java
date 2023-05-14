@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.tournament.TournamentDebugHelper;
 import org.valkyrienskies.tournament.api.debug.DebugLine;
 import org.valkyrienskies.tournament.api.debug.DebugObject;
+import org.valkyrienskies.tournament.api.helper.Helper3d;
 
 import java.awt.*;
 
@@ -34,11 +35,10 @@ public class MixinDebugRenderer {
 
                 Vec3d cam = new Vec3d(cameraX, cameraY, cameraZ);
 
-                if (obj instanceof DebugLine) {
-                    DebugLine line = (DebugLine) obj;
-
-                    Vec3d A = line.getA().sub(cam);
-                    Vec3d B = line.getB().sub(cam);
+                if (obj instanceof DebugLine line) {
+                    assert Minecraft.getInstance().level != null;
+                    Vec3d A = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getA()).sub(cam);
+                    Vec3d B = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getB()).sub(cam);
                     Vec3f normal = new Vec3f(A.sub(B).normalize());
 
                     Color c = line.getColor();

@@ -20,6 +20,7 @@ import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.blocks.RopeHookBlock
 import org.valkyrienskies.tournament.TournamentBlocks
 import org.valkyrienskies.tournament.TournamentItems
+import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
 
 
 class RopeItem : Item(
@@ -106,8 +107,10 @@ class RopeItem : Item(
 
             val RopeConstraintId = level.shipObjectWorld.createNewConstraint(RopeConstraint)
             ropeConstraintId = RopeConstraintId
-            RopeConstraintId?.let { hookBlock.SetRopeId(it, PosA, PosB) }
-
+            RopeConstraintId?.let {
+                (level.getBlockEntity(blockPos) as RopeHookBlockEntity).setRopeID(it, PosA, PosB, level)
+                (level.getBlockEntity(clickedPosition!!) as RopeHookBlockEntity).setSecondary(blockPos)
+            }
 
             clickedPosition = null
             clickedShipId = null

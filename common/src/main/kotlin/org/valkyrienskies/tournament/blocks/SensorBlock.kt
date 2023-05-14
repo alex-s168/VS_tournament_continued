@@ -32,6 +32,10 @@ class SensorBlock : BaseEntityBlock(
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
 
+    override fun getRenderShape(blockState: BlockState): RenderShape {
+        return RenderShape.MODEL
+    }
+
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
         builder.add(BlockStateProperties.POWER)
