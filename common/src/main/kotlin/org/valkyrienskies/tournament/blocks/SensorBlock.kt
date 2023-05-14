@@ -3,6 +3,9 @@ package org.valkyrienskies.tournament.blocks
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
@@ -29,17 +32,6 @@ class SensorBlock : BaseEntityBlock(
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
 
-    val SHAPE = RotShapes.box(0.0, 0.25, 0.0, 16.0, 15.75, 16.0)
-    val Sensor_SHAPE = DirectionalShape.north(SHAPE)
-
-    override fun getRenderShape(blockState: BlockState): RenderShape {
-        return RenderShape.MODEL
-    }
-
-    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-        return Sensor_SHAPE[state.getValue(BlockStateProperties.FACING)]
-    }
-
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
         builder.add(BlockStateProperties.POWER)
@@ -47,14 +39,6 @@ class SensorBlock : BaseEntityBlock(
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = SensorBlockEntity(pos, state)
-
-    override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
-        super.onPlace(state, level, pos, oldState, isMoving)
-    }
-
-    override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
-        super.onRemove(state, level, pos, newState, isMoving)
-    }
 
     override fun neighborChanged(
         state: BlockState,
@@ -73,8 +57,11 @@ class SensorBlock : BaseEntityBlock(
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
+        var dir = ctx.nearestLookingDirection;
+        if(ctx.player != null && ctx.player!!.isShiftKeyDown)
+            dir = dir.opposite
         return defaultBlockState()
-            .setValue(FACING, ctx.nearestLookingDirection)
+            .setValue(FACING, dir)
     }
 
     override fun isSignalSource(state: BlockState): Boolean {

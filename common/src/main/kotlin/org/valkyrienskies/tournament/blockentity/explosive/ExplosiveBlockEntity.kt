@@ -20,9 +20,13 @@ class ExplosiveBlockEntity(pos: BlockPos, state: BlockState)
             if(level.isClientSide)
                 return
 
-            if(be.explosionTicks > 0) {
+            if(be.explosionTicks > 1) {
                 (state.block as AbstractExplosiveBlock).explodeTick(level as ServerLevel, pos)
-                be.explosionTicks--;
+                be.explosionTicks--
+            }
+            if(be.explosionTicks == 1) {
+                level.removeBlock(pos, false)
+                be.explosionTicks--
             }
         }
     }

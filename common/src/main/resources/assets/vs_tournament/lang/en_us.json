@@ -10,10 +10,10 @@
   "block.vs_tournament.sensor": "Distance Sensor",
   "block.vs_tournament.rope_hook": "Rope Hook",
 
-  "block.vs_tournament.instantexplosive": "Instant Explosive (small)",
-  "block.vs_tournament.instantexplosive_big": "Instant Explosive (big)",
-  "block.vs_tournament.stagedexplosive": "Staged Explosive (medium)",
-  "block.vs_tournament.stagedexplosive_big": "Staged Explosive (big)",
+  "block.vs_tournament.explosive_instant_small": "Instant Explosive (small)",
+  "block.vs_tournament.explosive_instant_medium": "Instant Explosive (medium)",
+  "block.vs_tournament.explosive_instant_large": "Instant Explosive (larged)",
+  "block.vs_tournament.explosive_staged_small": "Staged Explosive (small)",
 
   "itemGroup.vs_tournament.tournament_tab": "VS Tournament",
 

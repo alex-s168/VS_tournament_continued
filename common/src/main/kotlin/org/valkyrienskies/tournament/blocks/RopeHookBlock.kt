@@ -18,6 +18,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.TournamentDebugHelper
+import org.valkyrienskies.tournament.api.block.DirectionalBaseEntityBlock
 import org.valkyrienskies.tournament.api.debug.DebugLine
 import org.valkyrienskies.tournament.api.debug.DebugObjectID
 import org.valkyrienskies.tournament.api.helper.Helper3d
@@ -27,7 +28,7 @@ import java.awt.Color
 import java.util.*
 import kotlin.math.absoluteValue
 
-class RopeHookBlock : DirectionalBlock(
+class RopeHookBlock : DirectionalBaseEntityBlock(
     Properties.of(Material.STONE)
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
