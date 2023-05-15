@@ -14,7 +14,7 @@ object Helper3d {
     }
 
     fun VecBlockMid(vec: Vec3d): Vec3d {
-        return vec.add(0.5,0.5,0.5)
+        return vec.add(0.25,0.25,0.25)
     }
 
     fun PositionToVec(pos: BlockPos): Vec3d {

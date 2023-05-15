@@ -42,8 +42,12 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
     }
 
     fun setSecondary(main: BlockPos) {
+        println("set secondary $main")
+
         isSecondary = true
         conPos = main
+
+        level!!.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_ALL_IMMEDIATE)
     }
 
     override fun getUpdateTag(): CompoundTag {
@@ -70,15 +74,18 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
 
         tag.putDouble("maxLen", maxLen)
         tag.putLong("debugID", debugID)
+        println("saved debugID: $debugID")
         tag.putInt("ropeId", ropeId!!.toInt())
 
-        if(conPos == null)
-            conPos = BlockPos(0,0,0)
-        tag.putInt("conX", conPos!!.x)
-        tag.putInt("conY", conPos!!.y)
-        tag.putInt("conZ", conPos!!.z)
-
         tag.putBoolean("secondary", isSecondary)
+
+        if(isSecondary) {
+            println("saved: secondary")
+
+            tag.putInt("conX", conPos!!.x)
+            tag.putInt("conY", conPos!!.y)
+            tag.putInt("conZ", conPos!!.z)
+        }
     }
 
     override fun load(tag: CompoundTag) {
@@ -98,13 +105,15 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
         debugID = tag.getLong("debugID")
         ropeId = tag.getInt("ropeId")
 
-        conPos = BlockPos(
-            tag.getInt("conX"),
-            tag.getInt("conY"),
-            tag.getInt("conZ"),
-        )
-
         isSecondary = tag.getBoolean("secondary")
+        if(isSecondary) {
+            println("loaded secondary")
+            conPos = BlockPos(
+                tag.getInt("conX"),
+                tag.getInt("conY"),
+                tag.getInt("conZ"),
+            )
+        }
     }
 
 }

@@ -7,7 +7,9 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.*
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
@@ -16,14 +18,13 @@ import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
-import org.valkyrienskies.tournament.TournamentDebugHelper
+import org.valkyrienskies.tournament.api.annotation.WhoCaresAboutDoingItProperly
 import org.valkyrienskies.tournament.api.block.DirectionalBaseEntityBlock
-import org.valkyrienskies.tournament.api.debug.DebugLine
 import org.valkyrienskies.tournament.api.helper.Helper3d
 import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
-import java.awt.Color
+import java.lang.Exception
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -44,7 +45,7 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)
         val be = level.getBlockEntity(pos) as RopeHookBlockEntity
-        if (be.otherPos != null) {
+        if (be.otherPos != null && !be.isSecondary) {
             if(be.maxLen == 0.0){
                 be.maxLen = (Helper3d.MaybeShipToWorldspace(level, be.otherPos!!).dist(Helper3d.MaybeShipToWorldspace(level, be.mainPos!!))).absoluteValue
             }
@@ -83,22 +84,36 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
 
     }
 
+    @WhoCaresAboutDoingItProperly
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         if (level.isClientSide) return
         level as ServerLevel
 
-        state.setValue(BlockStateProperties.POWER, 0)
+        val be = level.getBlockEntity(pos) as RopeHookBlockEntity
+        if(be.isSecondary) {
+            println("is secondary")
+            val t = be.conPos?.let { level.getBlockState(it) }
+            be.conPos?.let { level.removeBlock(it, false) }
+            try {
+                (be.conPos?.let { level.getBlockEntity(it) } as RopeHookBlockEntity).ropeId?.let { level.shipObjectWorld.removeConstraint( it ) }
+            } catch (ignored : Exception) {}
+            be.conPos?.let { level.setBlock(it, t!!, 2) }
+        }
+        be.ropeId?.let { level.shipObjectWorld.removeConstraint(it) }
+        super.onRemove(state, level, pos, newState, isMoving)
 
+        /*
         var be = level.getBlockEntity(pos) as RopeHookBlockEntity
         if(be.isSecondary) {
             println("is secondary")
-            be.isSecondary = false
-            be = level.getBlockEntity(be.conPos!!) as RopeHookBlockEntity
+            println("removing: conpos: ${be.conPos}")
+            be = be.conPos?.let { level.getBlockEntity(it) } as RopeHookBlockEntity
         }
 
         TournamentDebugHelper.removeObject(be.debugID)
 
         // delets any existing ropes
+        println("removing ropeid: ${be.ropeId}")
         be.ropeId?.let { level.shipObjectWorld.removeConstraint(it) }
         be.ropeId = null
         be.otherPos = null
@@ -107,6 +122,7 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
 
         level.sendBlockUpdated(be.blockPos, be.blockState, be.blockState, Block.UPDATE_ALL_IMMEDIATE)
 
+        */
         super.onRemove(state, level, pos, newState, isMoving)
     }
 
