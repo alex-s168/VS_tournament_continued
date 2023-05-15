@@ -2,6 +2,7 @@ package org.valkyrienskies.tournament.items
 
 import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.TextComponent
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
@@ -20,7 +21,9 @@ import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.blocks.RopeHookBlock
 import org.valkyrienskies.tournament.TournamentBlocks
 import org.valkyrienskies.tournament.TournamentItems
+import org.valkyrienskies.tournament.api.annotation.RemoveDebug
 import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
+import java.util.*
 
 
 class RopeItem : Item(
@@ -53,9 +56,14 @@ class RopeItem : Item(
 
                 //hook it up
                 ConnectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
-
+                if(clickedPosition == null)
+                    context.player!!.sendMessage(TextComponent("First position set!"), context.player!!.uuid)
+                else
+                    context.player!!.sendMessage(TextComponent("Rope connected!"), context.player!!.uuid)
 
                 println("  ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < == > " + level.getBlockState(blockPos).block)
+
+                return InteractionResult.SUCCESS
             } else {
                 println(" !ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < != > " + level.getBlockState(blockPos).block)
             }
@@ -63,6 +71,7 @@ class RopeItem : Item(
         return super.useOn(context)
     }
 
+    @RemoveDebug
     fun ConnectRope(hookBlock: RopeHookBlock, blockPos:BlockPos, shipId: ShipId?, level: ServerLevel)   {
         if(clickedPosition != null) {
 
