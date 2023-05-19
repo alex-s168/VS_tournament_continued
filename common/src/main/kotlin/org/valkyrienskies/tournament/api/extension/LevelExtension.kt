@@ -12,6 +12,7 @@ fun ServerLevel.explodeShip(level : ServerLevel, x : Double, y: Double, z: Doubl
 }
 
 fun ServerLevel.explodeShip(level: ServerLevel, pos: Vec3d, radius: Float, interaction: Explosion.BlockInteraction) {
+    level.explode(level, pos, radius, interaction)
     level.explode(level, Helper3d.MaybeShipToWorldspace(level, pos), radius, interaction)
 }
 

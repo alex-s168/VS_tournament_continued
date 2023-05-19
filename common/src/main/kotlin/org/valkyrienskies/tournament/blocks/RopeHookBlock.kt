@@ -18,6 +18,7 @@ import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentDebugHelper
 import org.valkyrienskies.tournament.api.annotation.WhoCaresAboutDoingItProperly
 import org.valkyrienskies.tournament.api.block.DirectionalBaseEntityBlock
@@ -53,14 +54,15 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
                 be.maxLen = (Helper3d.MaybeShipToWorldspace(level, be.otherPos!!)
                     .dist(Helper3d.MaybeShipToWorldspace(level, be.mainPos!!))).absoluteValue
             }
+            if(TournamentConfig.CLIENT.particleRopeRenderer) {
+                val p1 = Helper3d.MaybeShipToWorldspace(level, Helper3d.VecBlockMid(be.mainPos!!))
+                val p2 = Helper3d.MaybeShipToWorldspace(level, Helper3d.VecBlockMid(be.otherPos!!))
 
-            val p1 = Helper3d.MaybeShipToWorldspace(level, Helper3d.VecBlockMid(be.mainPos!!))
-            val p2 = Helper3d.MaybeShipToWorldspace(level, Helper3d.VecBlockMid(be.otherPos!!))
-
-            Helper3d.drawQuadraticParticleCurve(p1, p2, be.maxLen, 5.0, level, ParticleTypes.CLOUD)
+                Helper3d.drawQuadraticParticleCurve(p1, p2, be.maxLen, 5.0, level, ParticleTypes.CLOUD)
+            }
 
             if (!TournamentDebugHelper.exists(be.debugID)) {
-                TournamentDebugHelper.list()[be.debugID] = DebugLine(be.mainPos!!, be.otherPos!!, Color.RED)
+                TournamentDebugHelper.list()[be.debugID] = DebugLine(be.mainPos!!, be.otherPos!!, Color.RED, !TournamentConfig.CLIENT.particleRopeRenderer)
             }
         }
     }

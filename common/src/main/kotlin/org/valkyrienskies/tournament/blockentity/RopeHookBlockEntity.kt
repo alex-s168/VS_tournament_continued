@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.TournamentBlockEntities
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentDebugHelper
 import org.valkyrienskies.tournament.api.debug.DebugLine
 import org.valkyrienskies.tournament.api.debug.DebugObjectID
@@ -36,7 +37,7 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
         mainPos = main
         maxLen = 0.0
 
-        debugID = TournamentDebugHelper.addObject(DebugLine(main!!, other!!, Color.RED))
+        debugID = TournamentDebugHelper.addObject(DebugLine(main!!, other!!, Color.RED, !TournamentConfig.CLIENT.particleRopeRenderer))
 
         level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_ALL_IMMEDIATE)
     }

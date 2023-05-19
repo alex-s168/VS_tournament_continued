@@ -9,7 +9,12 @@ object TournamentConfig {
     @JvmField
     val SERVER = Server()
 
-    class Client
+    class Client {
+
+        @JsonSchema(description = "Should use the particle rope renderer. If set to false it will render a straight line!")
+        var particleRopeRenderer = false
+
+    }
 
     class Server {
 

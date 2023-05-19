@@ -45,7 +45,7 @@ class TargeterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
                 val force = rotn.mul(1e4 * ship.inertiaData.mass)
                 println("force: $force")
 
-                be.debugID = TournamentDebugHelper.updateObject(be.debugID, DebugLine(worldPos, force.add(worldPos), Color.RED))
+                be.debugID = TournamentDebugHelper.updateObject(be.debugID, DebugLine(worldPos, force.add(worldPos), Color.RED, false))
 
                 SimpleShipControl.getOrCreate(ship).addInvariantForce(force)
             }
