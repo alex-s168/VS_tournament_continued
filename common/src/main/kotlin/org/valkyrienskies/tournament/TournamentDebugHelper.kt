@@ -6,11 +6,11 @@ import org.valkyrienskies.tournament.api.debug.DebugObjectID
 class TournamentDebugHelper {
     companion object {
 
-        private var objects = ArrayList<DebugObject?>()
+        private var objects = HashMap<Long, DebugObject?>()
 
-        fun addObject(obj : DebugObject) : DebugObjectID {
+        fun addObject(obj : DebugObject) : Long {
             val id = objects.size
-            objects.add(obj)
+            objects.put(id.toLong(), obj)
             return (id).toLong()
         }
 
@@ -18,17 +18,21 @@ class TournamentDebugHelper {
             if (id.toInt() == -1) {
                 return addObject(obj)
             } else {
-                objects[id.toInt()] = obj
+                objects[id.toInt().toLong()] = obj
             }
             return id
         }
 
         fun removeObject(id : DebugObjectID) {
-            objects[id.toInt()] = null
+            objects.remove(id)
         }
 
-        fun query() : List<DebugObject?> {
-            return objects.toList()
+        fun list() : HashMap<Long, DebugObject?> {
+            return objects
+        }
+
+        fun exists(id : Long) : Boolean {
+            return objects.containsKey(id)
         }
 
     }

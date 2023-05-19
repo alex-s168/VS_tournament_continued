@@ -30,12 +30,12 @@ public class MixinDebugRenderer {
                 MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
         if (Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes()) {
-            for (DebugObject obj : TournamentDebugHelper.Companion.query()) {
+            TournamentDebugHelper.Companion.list().forEach((k,v)->{
                 VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.lines());
 
                 Vec3d cam = new Vec3d(cameraX, cameraY, cameraZ);
 
-                if (obj instanceof DebugLine line) {
+                if (v instanceof DebugLine line) {
                     assert Minecraft.getInstance().level != null;
                     Vec3d A = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getA()).sub(cam);
                     Vec3d B = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getB()).sub(cam);
@@ -46,7 +46,7 @@ public class MixinDebugRenderer {
                     vertexConsumer.vertex(A.x, A.y, A.z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).normal(normal.x, normal.y, normal.z).endVertex();
                     vertexConsumer.vertex(B.x, B.y, B.z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).normal(normal.x, normal.y, normal.z).endVertex();
                 }
-            }
+            });
             bufferSource.endBatch();
         }
     }

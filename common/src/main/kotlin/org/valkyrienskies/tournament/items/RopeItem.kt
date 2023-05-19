@@ -57,9 +57,9 @@ class RopeItem : Item(
                 //hook it up
                 ConnectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
                 if(clickedPosition == null)
-                    context.player!!.sendMessage(TextComponent("First position set!"), context.player!!.uuid)
-                else
                     context.player!!.sendMessage(TextComponent("Rope connected!"), context.player!!.uuid)
+                else
+                    context.player!!.sendMessage(TextComponent("First position set!"), context.player!!.uuid)
 
                 println("  ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < == > " + level.getBlockState(blockPos).block)
 

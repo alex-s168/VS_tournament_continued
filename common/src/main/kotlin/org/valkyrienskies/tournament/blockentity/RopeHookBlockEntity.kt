@@ -23,7 +23,7 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
 
     var maxLen: Double = 0.0
 
-    var debugID: DebugObjectID = -1
+    var debugID : Long = -1
 
     var isSecondary = false
     var conPos: BlockPos? = null
@@ -61,7 +61,7 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
     }
 
     override fun saveAdditional(tag: CompoundTag) {
-        if(mainPos == null)
+        if(mainPos == null || otherPos == null)
             return
 
         tag.putDouble("mainX", mainPos!!.x)
