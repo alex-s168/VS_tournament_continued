@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties.FAC
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
+import org.valkyrienskies.tournament.api.block.DirectionalBaseEntityBlock
 import org.valkyrienskies.tournament.blockentity.SensorBlockEntity
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
@@ -32,8 +33,19 @@ class SensorBlock : BaseEntityBlock(
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
 
+    val SHAPE = RotShapes.box(0.0, 0.0, 2.0, 16.0, 16.0, 16.0)
+    val ROPEATTACH_SHAPE = DirectionalShape.north(SHAPE)
+
+    init {
+        registerDefaultState(defaultBlockState().setValue(DirectionalBaseEntityBlock.FACING, Direction.NORTH).setValue(BlockStateProperties.POWER, 0))
+    }
+
     override fun getRenderShape(blockState: BlockState): RenderShape {
         return RenderShape.MODEL
+    }
+
+    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
+        return ROPEATTACH_SHAPE[state.getValue(FACING)]
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
