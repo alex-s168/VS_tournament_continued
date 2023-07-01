@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.forge.services;
+package org.valkyrienskies.tournament.forge.services;
 
 import kotlin.jvm.functions.Function0;
 import net.minecraft.network.chat.Component;

@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.forge;
+package org.valkyrienskies.tournament.forge;
 
 import kotlin.jvm.functions.Function0;
 import net.minecraft.core.Registry;

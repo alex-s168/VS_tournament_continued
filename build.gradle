@@ -121,6 +121,6 @@ allprojects {
     }
 
     dependencies {
-        implementation 'com.github.SuperCraftAlex:LIBRARY-UnifiedVectors:cac439d176'
+        implementation 'org.joml:joml:1.9.2'
     }
 }

@@ -28,7 +28,6 @@ class BalloonShipControl : ShipForcesInducer {
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
-        val mass = physShip.inertia.shipMass
         val segment = physShip.segments.segments[0]?.segmentDisplacement!!
         val vel = SegmentUtils.getVelocity(physShip.poseVel, segment, Vector3d())
 
@@ -38,7 +37,7 @@ class BalloonShipControl : ShipForcesInducer {
             val tPos = Vector3d(pos).add( 0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
 
             val tHeight = physShip.transform.positionInWorld.y()
-            var tPValue = TournamentConfig.SERVER.baseHeight - ((tHeight * tHeight) / 1000.0)
+            var tPValue = TournamentConfig.SERVER.balloonBaseHeight - ((tHeight * tHeight) / 1000.0)
 
             if (vel.y() > 10.0)    {
                 tPValue = (-vel.y() * 0.25)

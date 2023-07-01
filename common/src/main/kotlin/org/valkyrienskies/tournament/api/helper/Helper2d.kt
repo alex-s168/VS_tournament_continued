@@ -1,26 +1,29 @@
 package org.valkyrienskies.tournament.api.helper
 
-import de.m_marvin.univec.impl.Vec2d
-import de.m_marvin.univec.impl.Vec3d
+import org.joml.Vector2d
+import org.joml.Vector3d
+import org.valkyrienskies.tournament.api.extension.to3d
 
 object Helper2d {
 
-    //todo: PR to univec for doing that (if not already implemented)
+    fun vec2listTo3(list : List<Vector2d>) : List<Vector3d> {
+        val nl = ArrayList<Vector3d>()
 
-    fun vec2to3(vec: Vec2d, y: Double) : Vec3d {
-        return Vec3d(vec.x, y, vec.y)
-    }
-
-    fun vec3to2(vec: Vec3d) : Vec2d {
-        return Vec2d(vec.x, vec.z)
-    }
-
-    fun vec2listTo3(l : List<Vec2d>, y : Double) : List<Vec3d> {
-        var newlist = ArrayList<Vec3d>()
-        l.forEach {
-            newlist.add(vec2to3(it, y))
+        list.forEach {
+            nl.add(it.to3d())
         }
-        return newlist
+
+        return nl
+    }
+
+    fun vec2listTo3(list : List<Vector2d>, y : Double) : List<Vector3d> {
+        val nl = ArrayList<Vector3d>()
+
+        list.forEach {
+            nl.add(Vector3d(it.x, y, it.y))
+        }
+
+        return nl
     }
 
 }

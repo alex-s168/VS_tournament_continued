@@ -21,9 +21,6 @@ object TournamentBlocks {
     val ROPE_HOOK                = BLOCKS.register("rope_hook", ::RopeHookBlock)
     val SENSOR                   = BLOCKS.register("sensor", ::SensorBlock)
 
-    // DEBUG BLOCKS:
-    val TARGETER                 = BLOCKS.register("targeter", ::TargeterBlock)
-
     // EXPLOSIVES:
     val EXPLOSIVE_INSTANT_SMALL  = BLOCKS.register("explosive_instant_small", ::ExplosiveInstantBlockSmall)
     val EXPLOSIVE_INSTANT_MEDIUM = BLOCKS.register("explosive_instant_medium", ::ExplosiveInstantBlockMedium)

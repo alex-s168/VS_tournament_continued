@@ -4,11 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
-import de.m_marvin.univec.impl.Vec3d;
-import de.m_marvin.univec.impl.Vec3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,13 +31,13 @@ public abstract class MixinWorldRenderer {
         TournamentDebugHelper.Companion.list().forEach((k, v)->{
             VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.lines());
 
-            Vec3d cam = new Vec3d(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+            Vector3d cam = new Vector3d(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
             if (v instanceof DebugLine line && v.getAlways()) {
                 assert Minecraft.getInstance().level != null;
-                Vec3d A = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getA()).sub(cam);
-                Vec3d B = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getB()).sub(cam);
-                Vec3f normal = new Vec3f(A.sub(B).normalize());
+                Vector3d A = Helper3d.INSTANCE.convertShipToWorldSpace(Minecraft.getInstance().level, line.getA()).sub(cam);
+                Vector3d B = Helper3d.INSTANCE.convertShipToWorldSpace(Minecraft.getInstance().level, line.getB()).sub(cam);
+                Vector3f normal = new Vector3f((Vector3fc) A.sub(B).normalize());
 
                 Color c = line.getColor();
 

@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.forge.mixin;
+package org.valkyrienskies.tournament.forge.mixin;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;

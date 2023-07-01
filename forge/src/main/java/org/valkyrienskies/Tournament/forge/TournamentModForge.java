@@ -1,4 +1,4 @@
-package org.valkyrienskies.Tournament.forge;
+package org.valkyrienskies.tournament.forge;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

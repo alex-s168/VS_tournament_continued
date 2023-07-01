@@ -18,34 +18,37 @@ object TournamentConfig {
 
     class Server {
 
-        @JsonSchema(description = "Balloon base height")
-        var baseHeight = 100.0
+        @JsonSchema(description = "rope max force")
+        var ropeMaxForce = 1e10
 
-        @JsonSchema(description = "The Force a spinner will output")
+        @JsonSchema(description = "spinner output force")
         var spinnerSpeed = 5000.0
 
-        @JsonSchema(description = "The Force a balloon will output")
+        @JsonSchema(description = "balloon output force")
         var balloonPower = 30.0
 
-        @JsonSchema(description = "how much stronger a baloon will get when powered (1.0 is 15x stronger at max power)")
+        @JsonSchema(description = "how much stronger a balloon will get when powered (1.0 is 15x stronger at max power)")
         var balloonAnalogStrength = 1.0
 
-        @JsonSchema(description = "The Force a spinner will output")
+        @JsonSchema(description = "balloon base height")
+        var balloonBaseHeight = 100.0
+
+        @JsonSchema(description = "thruster output force")
         var thrusterSpeed = 10000.0
 
-        @JsonSchema(description = "Weight of ballast when lowest redstone power")
+        @JsonSchema(description = "weight of ballast when not redstone powered")
         var ballastWeight = 10000.0
 
-        @JsonSchema(description = "Weight of ballast when highest redstone power")
+        @JsonSchema(description = "weight of ballast when redstone powered")
         var ballastNoWeight = 10.0
 
-        @JsonSchema(description = "The Force the Pulse Gun applies")
+        @JsonSchema(description = "pulse gun force")
         var pulseGunForce = 300.0
 
-        @JsonSchema(description = "The max distance of the sensor")
+        @JsonSchema(description = "maximal distance of the sensor")
         var sensorDistance = 5.0
 
-        @JsonSchema(description = "At what speed the thruster should stop working")
+        @JsonSchema(description = "thruster shutoff speed")
         var thrusterShutoffSpeed = 50
 
         @JsonSchema(description = "Blacklist of blocks that don't get assembled")

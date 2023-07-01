@@ -1,6 +1,5 @@
 package org.valkyrienskies.tournament.items
 
-import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.TextComponent
 import net.minecraft.server.level.ServerLevel
@@ -20,10 +19,10 @@ import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.blocks.RopeHookBlock
 import org.valkyrienskies.tournament.TournamentBlocks
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.api.annotation.RemoveDebug
 import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
-import java.util.*
 
 
 class RopeItem : Item(
@@ -40,8 +39,7 @@ class RopeItem : Item(
         val level = context.level
         val blockPos = context.clickedPos.immutable()
         val ship = context.level.getShipObjectManagingPos(blockPos)
-        val player: Player? = context.player
-        var shipID: ShipId?
+        val shipID: ShipId?
 
         if(ship != null) {
             shipID = ship.id
@@ -55,7 +53,7 @@ class RopeItem : Item(
             if (level.getBlockState(blockPos).block == TournamentBlocks.ROPE_HOOK.get()) {
 
                 //hook it up
-                ConnectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
+                connectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
                 if(clickedPosition == null)
                     context.player!!.sendMessage(TextComponent("Rope connected!"), context.player!!.uuid)
                 else
@@ -72,7 +70,7 @@ class RopeItem : Item(
     }
 
     @RemoveDebug
-    fun ConnectRope(hookBlock: RopeHookBlock, blockPos:BlockPos, shipId: ShipId?, level: ServerLevel)   {
+    fun connectRope(hookBlock: RopeHookBlock, blockPos:BlockPos, shipId: ShipId?, level: ServerLevel)   {
         if(clickedPosition != null) {
 
             // CONNECT FULL ROPE
@@ -82,48 +80,48 @@ class RopeItem : Item(
             if (shipId != null){ otherShipId = shipId }
             if (clickedShipId != null){ thisShipId = clickedShipId as ShipId }
 
-            println("other " + otherShipId)
-            println("this " + thisShipId)
+            println("other $otherShipId")
+            println("this $thisShipId")
 
             if(clickedPosition == null){clickedPosition = blockPos}
 
-            var PosA = Vec3d(clickedPosition!!).add(0.5, 0.5, 0.5)
-            var PosB = Vec3d(blockPos).add(0.5, 0.5, 0.5)
+            val posA = clickedPosition!!.toJOMLD().add(0.5, 0.5, 0.5)
+            val posB = blockPos.toJOMLD().add(0.5, 0.5, 0.5)
 
-            var PosC = Vec3d(clickedPosition!!).add(0.5, 0.5, 0.5)
-            var PosD = Vec3d(blockPos).add(0.5, 0.5, 0.5)
+            var posC = clickedPosition!!.toJOMLD().add(0.5, 0.5, 0.5)
+            var posD = blockPos.toJOMLD().add(0.5, 0.5, 0.5)
 
-            if(level.getShipObjectManagingPos(clickedPosition!!) != null){
-                PosC = Vec3d(level.getShipObjectManagingPos(clickedPosition!!)!!.transform.shipToWorld.transformPosition(clickedPosition!!.toJOMLD()) )}
+            if(level.getShipObjectManagingPos(clickedPosition!!) != null)
+                posC = level.getShipObjectManagingPos(clickedPosition!!)!!.transform.shipToWorld.transformPosition(clickedPosition!!.toJOMLD())
 
-            if(level.getShipObjectManagingPos(blockPos) != null){
-                PosD = Vec3d(level.getShipObjectManagingPos(blockPos)!!.transform.shipToWorld.transformPosition(blockPos.toJOMLD()) )}
+            if(level.getShipObjectManagingPos(blockPos) != null)
+                posD = level.getShipObjectManagingPos(blockPos)!!.transform.shipToWorld.transformPosition(blockPos.toJOMLD())
 
-            println("A1" + PosA)
-            println("B1" + PosB)
-            println("C1" + PosC)
-            println("D1" + PosD)
+            println("A1 $posA")
+            println("B1 $posB")
+            println("C1 $posC")
+            println("D1 $posD")
 
-            val RopeCompliance = 1e-5 / (level.getShipObjectManagingPos(blockPos)?.inertiaData?.mass ?: 1).toDouble()
-            val RopeMaxForce = 1e10
-            val RopeConstraint = VSRopeConstraint(
-                thisShipId, otherShipId, RopeCompliance, PosA.conv(), PosB.conv(),
-                RopeMaxForce, PosC.sub(PosD).length() + 1.0
+            val ropeCompliance = 1e-5 / (level.getShipObjectManagingPos(blockPos)?.inertiaData?.mass ?: 1).toDouble()
+            val ropeMaxForce = TournamentConfig.SERVER.ropeMaxForce
+            val ropeConstraint = VSRopeConstraint(
+                thisShipId, otherShipId, ropeCompliance, posA, posB,
+                ropeMaxForce, posC.sub(posD).length() + 1.0
             )
 
-            println("Legnth: "+ PosC.sub(PosD).length())
-            println(RopeConstraint)
+            println("Legnth: "+ posC.sub(posD).length())
+            println(ropeConstraint)
 
-            val RopeConstraintId = level.shipObjectWorld.createNewConstraint(RopeConstraint)
-            ropeConstraintId = RopeConstraintId
-            RopeConstraintId?.let {
-                (level.getBlockEntity(blockPos) as RopeHookBlockEntity).setRopeID(it, PosA, PosB, level)
+            val ropeConstraintId = level.shipObjectWorld.createNewConstraint(ropeConstraint)
+            this.ropeConstraintId = ropeConstraintId
+            ropeConstraintId?.let {
+                (level.getBlockEntity(blockPos) as RopeHookBlockEntity).setRopeID(it, posA, posB, level)
                 (level.getBlockEntity(clickedPosition!!) as RopeHookBlockEntity).setSecondary(blockPos)
             }
 
             clickedPosition = null
             clickedShipId = null
-            ropeConstraintId = null
+            this.ropeConstraintId = null
 
             println("Done")
             println()

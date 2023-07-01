@@ -17,8 +17,6 @@ import org.valkyrienskies.tournament.registry.RegistrySupplier
 object TournamentBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
 
-
-    val TARGETER            = TournamentBlocks.TARGETER withBE ::TargeterBlockEntity byName "targeter"
     val SENSOR              = TournamentBlocks.SENSOR   withBE ::SensorBlockEntity   byName "sensor"
     val ROPE_HOOK           = TournamentBlocks.ROPE_HOOK withBE ::RopeHookBlockEntity byName "rope_hook"
 

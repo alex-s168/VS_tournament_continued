@@ -51,12 +51,12 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
         val be = level.getBlockEntity(pos) as RopeHookBlockEntity
         if (be.otherPos != null && !be.isSecondary && TournamentDebugHelper.exists(be.debugID) ) {
             if (be.maxLen == 0.0) {
-                be.maxLen = (Helper3d.MaybeShipToWorldspace(level, be.otherPos!!)
-                    .dist(Helper3d.MaybeShipToWorldspace(level, be.mainPos!!))).absoluteValue
+                be.maxLen = (Helper3d.convertShipToWorldSpace(level, be.otherPos!!)
+                    .distance(Helper3d.convertShipToWorldSpace(level, be.mainPos!!))).absoluteValue
             }
             if(TournamentConfig.CLIENT.particleRopeRenderer) {
-                val p1 = Helper3d.MaybeShipToWorldspace(level, Helper3d.VecBlockMid(be.mainPos!!))
-                val p2 = Helper3d.MaybeShipToWorldspace(level, Helper3d.VecBlockMid(be.otherPos!!))
+                val p1 = Helper3d.convertShipToWorldSpace(level, be.mainPos!!.add(0.5, 0.5, 0.5))
+                val p2 = Helper3d.convertShipToWorldSpace(level, be.otherPos!!.add(0.5, 0.5, 0.5))
 
                 Helper3d.drawQuadraticParticleCurve(p1, p2, be.maxLen, 5.0, level, ParticleTypes.CLOUD)
             }

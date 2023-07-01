@@ -1,8 +1,5 @@
 package org.valkyrienskies.tournament.blocks
 
-import de.m_marvin.industria.core.physics.PhysicUtility
-import de.m_marvin.industria.core.util.StructureFinder
-import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
@@ -27,7 +24,6 @@ import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
-import java.util.function.Predicate
 
 class ShipAssemblerBlock : DirectionalBlock (
     Properties.of(Material.STONE)
@@ -60,20 +56,7 @@ class ShipAssemblerBlock : DirectionalBlock (
 
         val blacklist = TournamentConfig.SERVER.blockBlacklist
 
-        val struct = StructureFinder.findStructure(
-            level,
-            pos,
-            6000
-        ) { blockState ->
-            !blacklist.contains(blockState.block.builtInRegistryHolder().key().location().toString())
-        }.orElse(emptyList())
-
-        PhysicUtility.assembleToContraption(
-            struct,
-            true,
-            1f,
-            level
-        )
+        // TODO: assembly code...
 
         return InteractionResult.SUCCESS
     }

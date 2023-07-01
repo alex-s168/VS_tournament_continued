@@ -1,7 +1,5 @@
 package org.valkyrienskies.tournament.blocks
 
-import de.m_marvin.univec.impl.Vec3d
-import de.m_marvin.univec.impl.Vec3i
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
@@ -18,9 +16,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
+import org.joml.Vector3d
 import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
+import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.ship.BalloonShipControl
 import org.valkyrienskies.tournament.ship.SpinnerShipControl
 import org.valkyrienskies.tournament.util.DirectionalShape
@@ -63,7 +64,7 @@ class SpinnerBlock : DirectionalBlock(
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
         SpinnerShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
-            ).addSpinner(Vec3i(pos), Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
+            ).addSpinner(pos.toJOML(), state.getValue(FACING).normal.toJOMLD().mul(state.getValue(BlockStateProperties.POWER).toDouble()))
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -73,7 +74,10 @@ class SpinnerBlock : DirectionalBlock(
         level as ServerLevel
 
         state.setValue(BlockStateProperties.POWER, 0)
-        level.getShipManagingPos(pos)?.getAttachment<SpinnerShipControl>()?.removeSpinner(Vec3i(pos), Vec3d(state.getValue(FACING).normal).mul(state.getValue(BlockStateProperties.POWER).toDouble()))
+        level.getShipManagingPos(pos)?.getAttachment<SpinnerShipControl>()?.removeSpinner(
+            pos.toJOML(),
+            state.getValue(FACING).normal.toJOMLD().mul(state.getValue(BlockStateProperties.POWER).toDouble())
+        )
     }
 
     override fun neighborChanged(

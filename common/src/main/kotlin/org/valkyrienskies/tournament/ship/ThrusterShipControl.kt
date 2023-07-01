@@ -1,8 +1,6 @@
 package org.valkyrienskies.tournament.ship
 
-import com.fasterxml.jackson.annotation.JacksonAnnotation
 import com.fasterxml.jackson.annotation.JsonAutoDetect
-import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
 import org.joml.Vector3d
 import org.joml.Vector3i
@@ -12,9 +10,9 @@ import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.api.ShipForcesInducer
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.core.impl.pipelines.SegmentUtils
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.api.extension.toDouble
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
@@ -30,28 +28,26 @@ class ThrusterShipControl : ShipForcesInducer {
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
-        val mass = physShip.inertia.shipMass
-        val segment = physShip.segments.segments[0]?.segmentDisplacement!!
-        val vel = SegmentUtils.getVelocity(physShip.poseVel, segment, Vector3d())
-
         thrusters.forEach {
             val (pos, force, tier) = it
 
-            val tForce = Vec3d(physShip.transform.shipToWorld.transformDirection(force, Vec3d().conv()))
-            val tPos = Vec3d(pos).add(0.5, 0.5, 0.5).sub(Vec3d().readFrom(physShip.transform.positionInShip))
+            val tForce = physShip.transform.shipToWorld.transformDirection(force, Vector3d())
+            val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
 
-            if (force.isFinite && physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed) {
-                physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.thrusterSpeed * tier).conv(), tPos.conv())
+            if (force.isFinite &&
+                physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
+            ) {
+                physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.thrusterSpeed * tier), tPos)
             }
         }
     }
 
-    fun addThruster(pos: BlockPos, tier: Double, force: Vec3d) {
-        thrusters.add(Triple(pos.toJOML(), force.conv(), tier))
+    fun addThruster(pos: BlockPos, tier: Double, force: Vector3d) {
+        thrusters.add(Triple(pos.toJOML(), force, tier))
     }
 
-    fun removeThruster(pos: BlockPos, tier: Double, force: Vec3d) {
-        thrusters.remove(Triple(pos.toJOML(), force.conv(), tier))
+    fun removeThruster(pos: BlockPos, tier: Double, force: Vector3d) {
+        thrusters.remove(Triple(pos.toJOML(), force, tier))
     }
 
     fun forceStopThruster(pos: BlockPos) {

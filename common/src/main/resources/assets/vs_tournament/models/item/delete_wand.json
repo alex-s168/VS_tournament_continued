@@ -3,8 +3,8 @@
 	"parent": "vs_tournament",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "vs_tournament:item/delete_gun",
-		"particle": "vs_tournament:item/delete_gun"
+		"0": "vs_tournament:item/delete_wand",
+		"particle": "vs_tournament:item/delete_wand"
 	},
 	"elements": [
 		{

@@ -3,19 +3,19 @@ package org.valkyrienskies.tournament.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import de.m_marvin.univec.impl.Vec3d;
-import de.m_marvin.univec.impl.Vec3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.tournament.TournamentDebugHelper;
 import org.valkyrienskies.tournament.api.debug.DebugLine;
-import org.valkyrienskies.tournament.api.debug.DebugObject;
 import org.valkyrienskies.tournament.api.helper.Helper3d;
 
 import java.awt.*;
@@ -33,13 +33,13 @@ public class MixinDebugRenderer {
             TournamentDebugHelper.Companion.list().forEach((k,v)->{
                 VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.lines());
 
-                Vec3d cam = new Vec3d(cameraX, cameraY, cameraZ);
+                Vector3d cam = new Vector3d(cameraX, cameraY, cameraZ);
 
                 if (v instanceof DebugLine line) {
                     assert Minecraft.getInstance().level != null;
-                    Vec3d A = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getA()).sub(cam);
-                    Vec3d B = Helper3d.INSTANCE.MaybeShipToWorldspace(Minecraft.getInstance().level, line.getB()).sub(cam);
-                    Vec3f normal = new Vec3f(A.sub(B).normalize());
+                    Vector3d A = Helper3d.INSTANCE.convertShipToWorldSpace(Minecraft.getInstance().level, line.getA()).sub(cam);
+                    Vector3d B = Helper3d.INSTANCE.convertShipToWorldSpace(Minecraft.getInstance().level, line.getB()).sub(cam);
+                    Vector3f normal = new Vector3f((Vector3fc) A.sub(B).normalize());
 
                     Color c = line.getColor();
 

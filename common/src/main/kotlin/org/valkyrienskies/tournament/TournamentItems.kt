@@ -14,17 +14,11 @@ import org.valkyrienskies.tournament.registry.DeferredRegister
 object TournamentItems {
     private val ITEMS = DeferredRegister.create(TournamentMod.MOD_ID, Registry.ITEM_REGISTRY)
 
-    //val ROPE                    = ITEMS.register("rope", ::RopeItem)
-    //val TOOL_PULSEGUN           = ITEMS.register("pulse_gun", ::PulseGunItem)
-    //val TOOL_DELETEWAND         = ITEMS.register("delete_wand", ::ShipDeleteWandItem)
-    //val TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GrabGunItem)
-    //val UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster", ::ThrusterUpgradeItem)
-
-    val ROPE                    = RopeItem() byName "rope"
-    val TOOL_PULSEGUN           = PulseGunItem() byName "pulse_gun"
-    val TOOL_DELETEWAND         = ShipDeleteWandItem() byName "delete_wand"
-    val TOOL_GRABGUN            = GrabGunItem() byName "grab_gun"
-    val UPGRADE_THRUSTER        = ThrusterUpgradeItem() byName "upgrade_thruster"
+    val ROPE                    = ITEMS.register("rope", ::RopeItem)
+    val TOOL_PULSEGUN           = ITEMS.register("pulse_gun", ::PulseGunItem)
+    val TOOL_DELETEWAND         = ITEMS.register("delete_wand", ::ShipDeleteWandItem)
+    val TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GrabGunItem)
+    val UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster", ::ThrusterUpgradeItem)
 
     val TAB: CreativeModeTab = CreativeTabs.create(
         ResourceLocation(

@@ -1,7 +1,5 @@
 package org.valkyrienskies.tournament.items
 
-import de.m_marvin.unimat.impl.Quaternion
-import de.m_marvin.univec.impl.Vec3d
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
@@ -12,6 +10,8 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
+import org.joml.Quaterniond
+import org.joml.Vector3d
 import org.valkyrienskies.core.api.ships.properties.ShipId
 import org.valkyrienskies.core.apigame.constraints.*
 import org.valkyrienskies.mod.common.dimensionId
@@ -26,16 +26,16 @@ class GrabGunItem : Item(
         Properties().stacksTo(1).tab(TournamentItems.TAB)
 ) {
 
-    private var CurrentPlayer : Player? = null
+    private var currentPlayer : Player? = null
     private var thisShipID : ShipId? = null
     private var grabbing : Boolean = false
 
-    private var SettingRot : Quaternion? = null
-    private var CurrentPlayerPitch : Double = 0.0
-    private var CurrentPlayerYaw : Double = 0.0
+    private var settingRot : Quaterniond? = null
+    private var currentPlayerPitch : Double = 0.0
+    private var currentPlayerYaw : Double = 0.0
 
-    private var SettingPos : Vec3d? = null
-    private var thisAttachPoint : Vec3d? = null
+    private var settingPos : Vector3d? = null
+    private var thisAttachPoint : Vector3d? = null
 
     private var thisAttachConstraintID : ConstraintId? = null
     private var thisRotationConstraintID : ConstraintId? = null
@@ -49,15 +49,15 @@ class GrabGunItem : Item(
     override fun useOn(context: UseOnContext): InteractionResult {
         if(grabbing) {
             grabbing = false
-            OnDropConstraints(context.level)
+            onDropConstraints(context.level)
         } else {
-            CurrentPlayer = context.player
+            currentPlayer = context.player
             val level = context.level
             val hitLoc = context.clickLocation
             val blockPos = context.clickedPos
             val ship = context.level.getShipObjectManagingPos(blockPos)
 
-            OnDropConstraints(level)
+            onDropConstraints(level)
 
             if (level !is ServerLevel || ship == null) {
                 return InteractionResult.PASS
@@ -66,12 +66,12 @@ class GrabGunItem : Item(
             val shipId = ship.id
             thisShipID = shipId
 
-            SettingPos = Vec3d(ship.transform.shipToWorld.transformPosition(hitLoc.toJOML()))
-            thisAttachPoint = Vec3d(hitLoc)
+            settingPos = ship.transform.shipToWorld.transformPosition(hitLoc.toJOML())
+            thisAttachPoint = hitLoc.toJOML()
 
-            SettingRot = Quaternion(ship.transform.shipToWorldRotation)
-            CurrentPlayerPitch = CurrentPlayer!!.xRot.toDouble()
-            CurrentPlayerYaw = CurrentPlayer!!.yRot.toDouble()
+            settingRot = Quaterniond(ship.transform.shipToWorldRotation)
+            currentPlayerPitch = currentPlayer!!.xRot.toDouble()
+            currentPlayerYaw = currentPlayer!!.yRot.toDouble()
 
             grabbing = true
 
@@ -84,28 +84,28 @@ class GrabGunItem : Item(
             val tempShip = level.shipObjectWorld.loadedShips.getById(thisShipID!!)
 
             if(tempShip != null && grabbing) {
-                val MinVec = Vec3d(
+                val minVec = Vector3d(
                         tempShip.shipAABB!!.minX().toDouble(),
                         tempShip.shipAABB!!.minY().toDouble(),
                         tempShip.shipAABB!!.minZ().toDouble()
                 )
-                val MaxVec = Vec3d(
+                val maxVec = Vector3d(
                         tempShip.shipAABB!!.maxX().toDouble(),
                         tempShip.shipAABB!!.maxY().toDouble(),
                         tempShip.shipAABB!!.maxZ().toDouble()
                 )
-                val totalScale = MinVec.sub(MaxVec).length() + 0.75
+                val totalScale = minVec.sub(maxVec).length() + 0.75
 
                 println(totalScale)
-                OnTickConstraints(totalScale, level)
+                onTickConstraints(totalScale, level)
             }
         } else {
-            OnDropConstraints(level)
+            onDropConstraints(level)
         }
         super.inventoryTick(stack, level, entity, slotId, isSelected)
     }
 
-    fun OnDropConstraints(level: Level) {
+    fun onDropConstraints(level: Level) {
         grabbing = false
         if (level is ServerLevel && thisShipID != null && thisRotationConstraintID != null && thisAttachConstraintID != null) {
             level.shipObjectWorld.removeConstraint(thisRotationConstraintID!!)
@@ -115,44 +115,42 @@ class GrabGunItem : Item(
         }
     }
 
-    fun OnTickConstraints(Distance: Double, level: Level) {
+    private fun onTickConstraints(Distance: Double, level: Level) {
         if(grabbing) {
-            if (level is ServerLevel && CurrentPlayer != null && thisShipID != null) {
+            if (level is ServerLevel && currentPlayer != null && thisShipID != null) {
 
                 val tempShip = level.shipObjectWorld.loadedShips.getById(thisShipID!!)
                 val otherShipId = level.shipObjectWorld.dimensionToGroundBodyIdImmutable[level.dimensionId]!!
 
                 // Update Rot Values
-                val newCurrentPlayerPitch = CurrentPlayer!!.xRot.toDouble()
-                val newCurrentPlayerYaw = CurrentPlayer!!.yRot.toDouble()
+                val newCurrentPlayerPitch = currentPlayer!!.xRot.toDouble()
+                val newCurrentPlayerYaw = currentPlayer!!.yRot.toDouble()
 
-                //todo: univec quaternion and matrix default constructors
-                //todo: univec quaternion conjugate and normalize
-                val ogPlayerRot = Quaternion(playerRotToQuaternion(CurrentPlayerPitch,CurrentPlayerYaw).conv().normalize())
-                val newPlayerRot = Quaternion( playerRotToQuaternion(newCurrentPlayerPitch, newCurrentPlayerYaw).conv().normalize() )
-                val deltaPlayerRot = Quaternion(newPlayerRot.conv().mul(ogPlayerRot.conv().conjugate()).normalize())
-                val newRot = Quaternion(deltaPlayerRot.mul(SettingRot).conv().normalize())
+                val ogPlayerRot = playerRotToQuaternion(currentPlayerPitch,currentPlayerYaw).normalize()
+                val newPlayerRot = playerRotToQuaternion(newCurrentPlayerPitch, newCurrentPlayerYaw).normalize()
+                val deltaPlayerRot = newPlayerRot.mul(ogPlayerRot.conjugate()).normalize()
+                val newRot = deltaPlayerRot.mul(settingRot).normalize()
 
                 // Update Pos Values
-                SettingPos = Vec3d(CurrentPlayer!!.position()).add(0.0, CurrentPlayer!!.eyeHeight.toDouble(), 0.0) .add(CurrentPlayer!!.lookAngle.toJOML().normalize().mul(Distance))
+                settingPos = currentPlayer!!.position().toJOML().add(0.0, currentPlayer!!.eyeHeight.toDouble(), 0.0) .add(currentPlayer!!.lookAngle.toJOML().normalize().mul(Distance))
                 val posOffset = thisAttachPoint!!.sub(tempShip!!.transform.positionInShip)
-                val posGlobalOffset = tempShip.transform.shipToWorld.transformDirection(posOffset.conv())
+                val posGlobalOffset = tempShip.transform.shipToWorld.transformDirection(posOffset)
 
 
-                val Mass = tempShip.inertiaData.mass
+                val mass = tempShip.inertiaData.mass
 
-                val AttachmentCompliance = 1e-7 / Mass
-                val AttachmentMaxForce = 1e10 * Mass
+                val AttachmentCompliance = 1e-7 / mass
+                val AttachmentMaxForce = 1e10 * mass
                 val AttachmentFixedDistance = 0.0
                 val AttachmentConstraint = VSAttachmentConstraint(
-                        thisShipID!!, otherShipId, AttachmentCompliance, thisAttachPoint!!.sub(posOffset).conv(), SettingPos!!.sub(posGlobalOffset).conv(),
+                        thisShipID!!, otherShipId, AttachmentCompliance, thisAttachPoint!!.sub(posOffset), settingPos!!.sub(posGlobalOffset),
                         AttachmentMaxForce, AttachmentFixedDistance
                 )
 
-                val RotationCompliance = 1e-6 / Mass
-                val RotationMaxForce = 1e10 * Mass
+                val RotationCompliance = 1e-6 / mass
+                val RotationMaxForce = 1e10 * mass
                 val RotationConstraint = VSFixedOrientationConstraint(
-                        thisShipID!!, otherShipId, RotationCompliance, Quaternion(0f,0f,0f,0f).convD(), newRot.convD(),
+                        thisShipID!!, otherShipId, RotationCompliance, Quaterniond(), newRot,
                         RotationMaxForce
                 )
 
@@ -160,7 +158,7 @@ class GrabGunItem : Item(
                 val PosDampingMaxForce = 0.0
                 val PosDampingEff = 0.0
                 val PosDampingConstraint = VSPosDampingConstraint(
-                        thisShipID!!, otherShipId, PosDampingCompliance, thisAttachPoint!!.sub(posOffset).conv(), SettingPos!!.sub(posGlobalOffset).conv(),
+                        thisShipID!!, otherShipId, PosDampingCompliance, thisAttachPoint!!.sub(posOffset), settingPos!!.sub(posGlobalOffset),
                         PosDampingMaxForce, PosDampingEff
                 )
 
@@ -168,12 +166,12 @@ class GrabGunItem : Item(
                 val RotDampingMaxForce = 0.0
                 val RotDampingEff = 0.0
                 val RotDampingConstraint = VSRotDampingConstraint(
-                        thisShipID!!, otherShipId, RotDampingCompliance, Quaternion(0f,0f,0f,0f).convD(), newRot.convD(),
+                        thisShipID!!, otherShipId, RotDampingCompliance, Quaterniond(), newRot,
                         RotDampingMaxForce, RotDampingEff, VSRotDampingAxes.ALL_AXES
                 )
 
                 //Drop and re grab the Constraints
-                OnDropConstraints(level)
+                onDropConstraints(level)
                 grabbing = true
 
                 val RotationConstraintId = level.shipObjectWorld.createNewConstraint(RotationConstraint)
@@ -187,11 +185,11 @@ class GrabGunItem : Item(
 
             }
         }else if (level is ServerLevel && thisShipID != null) {
-            OnDropConstraints(level)
+            onDropConstraints(level)
         }
     }
 
-    private fun playerRotToQuaternion(pitch:Double, yaw:Double) : Quaternion {
-        return Quaternion(0f,0f,0f,0f).rotateY(Math.toRadians(-yaw))
+    private fun playerRotToQuaternion(pitch:Double, yaw:Double) : Quaterniond {
+        return Quaterniond().rotateY(Math.toRadians(-yaw))
     }
 }

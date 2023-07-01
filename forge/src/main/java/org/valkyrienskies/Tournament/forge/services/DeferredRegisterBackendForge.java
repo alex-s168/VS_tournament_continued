@@ -1,9 +1,9 @@
-package org.valkyrienskies.Tournament.forge.services;
+package org.valkyrienskies.tournament.forge.services;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
-import org.valkyrienskies.Tournament.forge.DeferredRegisterImpl;
+import org.valkyrienskies.tournament.forge.DeferredRegisterImpl;
 import org.valkyrienskies.tournament.registry.DeferredRegister;
 import org.valkyrienskies.tournament.services.DeferredRegisterBackend;
 

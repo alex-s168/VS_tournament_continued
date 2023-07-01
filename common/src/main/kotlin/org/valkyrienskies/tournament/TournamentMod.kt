@@ -8,17 +8,15 @@ object TournamentMod {
 
     @JvmStatic
     fun init() {
+        VSConfigClass.registerConfig("vs_tournament", TournamentConfig::class.java)
         TournamentBlocks.register()
         TournamentBlockEntities.register()
         TournamentItems.register()
-        TournamentScreens.register()
-        TournamentEntities.register()
         TournamentWeights.register()
-        VSConfigClass.registerConfig("vs_tournament", TournamentConfig::class.java)
     }
 
     @JvmStatic
     fun initClient() {
-        TournamentClientScreens.register()
+
     }
 }
