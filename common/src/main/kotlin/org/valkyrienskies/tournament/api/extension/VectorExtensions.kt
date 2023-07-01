@@ -1,5 +1,6 @@
 package org.valkyrienskies.tournament.api.extension
 
+import net.minecraft.core.BlockPos
 import org.joml.Vector2d
 import org.joml.Vector3d
 import org.joml.Vector3i
@@ -16,3 +17,6 @@ fun Vector2d.to3d() : Vector3d {
     return Vector3d(x, 0.0, y)
 }
 
+fun Vector3d.toBlock() : BlockPos {
+    return BlockPos(x, y, z)
+}
