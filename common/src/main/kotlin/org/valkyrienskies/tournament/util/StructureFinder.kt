@@ -28,18 +28,10 @@ object StructureFinder {
         amount.getAndIncrement()
 
         findStructureLoop(level, BlockPos(pos.x+1, pos.y, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x+1, pos.y+1, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x+1, pos.y, pos.z+1), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x+1, pos.y+1, pos.z+1), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x, pos.y+1, pos.z+1), blacklist, set, checked, amount)
         findStructureLoop(level, BlockPos(pos.x, pos.y+1, pos.z), blacklist, set, checked, amount)
         findStructureLoop(level, BlockPos(pos.x, pos.y, pos.z+1), blacklist, set, checked, amount)
 
         findStructureLoop(level, BlockPos(pos.x-1, pos.y, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x-1, pos.y-1, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x-1, pos.y, pos.z-1), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x-1, pos.y-1, pos.z-1), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x, pos.y-1, pos.z-1), blacklist, set, checked, amount)
         findStructureLoop(level, BlockPos(pos.x, pos.y-1, pos.z), blacklist, set, checked, amount)
         findStructureLoop(level, BlockPos(pos.x, pos.y, pos.z-1), blacklist, set, checked, amount)
     }
