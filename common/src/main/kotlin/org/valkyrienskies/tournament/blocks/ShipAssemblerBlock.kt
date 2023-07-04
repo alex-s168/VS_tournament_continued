@@ -1,7 +1,9 @@
 package org.valkyrienskies.tournament.blocks
 
+import net.minecraft.Util
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.network.chat.TextComponent
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -20,10 +22,13 @@ import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
+import org.valkyrienskies.mod.common.assembly.createNewShipWithBlocks
 import org.valkyrienskies.mod.common.getShipManagingPos
+import org.valkyrienskies.mod.common.isChunkInShipyard
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
+import org.valkyrienskies.tournament.util.StructureFinder
 
 class ShipAssemblerBlock : DirectionalBlock (
     Properties.of(Material.STONE)
@@ -46,17 +51,32 @@ class ShipAssemblerBlock : DirectionalBlock (
         return Shipifier_SHAPE[state.getValue(BlockStateProperties.FACING)]
     }
 
-    override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): InteractionResult {
-        return asm(level, pos)
+    private fun asm(
+        state: BlockState,
+        level: ServerLevel,
+        pos: BlockPos
+    ) : Boolean {
+        val blacklist = TournamentConfig.SERVER.blockBlacklist
+
+        if (level.isChunkInShipyard(pos.x shr 4, pos.z shr 4)) {
+            return false
+        } else if (!state.isAir) {
+            val shipData = createNewShipWithBlocks(pos, StructureFinder.findStructure(level, pos, blacklist), level)
+
+            return true
+        }
+        return false
     }
 
-    private fun asm(level: Level, pos: BlockPos): InteractionResult {
+    override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): InteractionResult {
         if (level as? ServerLevel == null) return InteractionResult.PASS
         if(level.getShipManagingPos(pos) != null) return InteractionResult.PASS
 
-        val blacklist = TournamentConfig.SERVER.blockBlacklist
-
-        // TODO: assembly code...
+        if(asm(state, level, pos)) {
+            player.sendMessage(TextComponent("Assembled ship!"), Util.NIL_UUID)
+        } else {
+            player.sendMessage(TextComponent("That chunk is already part of a ship!"), Util.NIL_UUID)
+        }
 
         return InteractionResult.SUCCESS
     }
@@ -81,7 +101,7 @@ class ShipAssemblerBlock : DirectionalBlock (
 
         val signal = level.getBestNeighborSignal(pos)
         if (signal > 0) {
-            asm(level, pos)
+            asm(state, level, pos)
         }
     }
 
