@@ -17,6 +17,7 @@ public class DeferredRegisterImpl<T> implements DeferredRegister<T> {
     private final Registry<T> registry;
     private final List<RegistrySupplier<T>> everMade = new ArrayList<>();
 
+    @SuppressWarnings("all")
     public DeferredRegisterImpl(String modId, ResourceKey<Registry<T>> registry) {
         this.modId = modId;
         this.registry = (Registry<T>) Registry.REGISTRY.get(registry.location());
@@ -24,6 +25,7 @@ public class DeferredRegisterImpl<T> implements DeferredRegister<T> {
 
     @NotNull
     @Override
+     @SuppressWarnings("all")
     public <I extends T> RegistrySupplier<I> register(@NotNull String name, @NotNull Function0<? extends I> builder) {
         I result = Registry.register(registry, new ResourceLocation(modId, name), builder.invoke());
 

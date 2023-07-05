@@ -3,6 +3,10 @@ package org.valkyrienskies.tournament
 import net.minecraft.core.Registry
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.FireBlock
+import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.blocks.*
 import org.valkyrienskies.tournament.blocks.explosive.*
 import org.valkyrienskies.tournament.registry.DeferredRegister
@@ -30,6 +34,20 @@ object TournamentBlocks {
 
     fun register() {
         BLOCKS.applyAll()
+
+        VSGameEvents.registriesCompleted.on { _, _ ->
+            makeFlammables()
+        }
+    }
+
+    fun flammableBlock(block: Block, flameOdds: Int, burnOdds: Int) {
+        val fire = Blocks.FIRE as FireBlock
+        fire.setFlammable(block, flameOdds, burnOdds)
+    }
+
+    fun makeFlammables() {
+        flammableBlock(SEAT.get(), 15, 25)
+        flammableBlock(BALLOON.get(), 30, 60)
     }
 
     fun registerItems(items: DeferredRegister<Item>) {

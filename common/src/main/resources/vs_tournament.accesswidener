@@ -1,1 +1,2 @@
 accessWidener   v1  named
+accessible method net/minecraft/world/level/block/FireBlock setFlammable (Lnet/minecraft/world/level/block/Block;II)V

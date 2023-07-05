@@ -10,11 +10,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.phys.HitResult
 import org.joml.Vector3d
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
+import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.common.world.clipIncludeShips
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentConfig
+import kotlin.math.min
+import kotlin.math.max
 
 class SensorBlockEntity(pos: BlockPos, state: BlockState)
     : BlockEntity(TournamentBlockEntities.SENSOR.get(), pos, state)
@@ -44,12 +47,18 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState)
                     }).toMinecraft(),
                 ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE,
-                null), false)
+                null
+            ),
+            false
+        )
 
-        if(clipResult.type == HitResult.Type.BLOCK){
-            return 15;
+        val value =  max(1, min(15, ((1 - clipResult.location.toJOML().distance(blockPos.toJOMLD()) / TournamentConfig.SERVER.sensorDistance) * 15).toInt()))
+        println(value)
+
+        return if(clipResult.type == HitResult.Type.BLOCK) {
+            value;
         } else {
-            return 0;
+            0;
         }
     }
 

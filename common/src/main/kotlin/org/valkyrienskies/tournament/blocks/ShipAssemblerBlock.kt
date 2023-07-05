@@ -28,7 +28,7 @@ import org.valkyrienskies.mod.common.isChunkInShipyard
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
-import org.valkyrienskies.tournament.util.StructureFinder
+import org.valkyrienskies.tournament.util.ShipAssembler
 
 class ShipAssemblerBlock : DirectionalBlock (
     Properties.of(Material.STONE)
@@ -61,7 +61,8 @@ class ShipAssemblerBlock : DirectionalBlock (
         if (level.isChunkInShipyard(pos.x shr 4, pos.z shr 4)) {
             return false
         } else if (!state.isAir) {
-            val shipData = createNewShipWithBlocks(pos, StructureFinder.findStructure(level, pos, blacklist), level)
+            //val shipData = ShipAssembler.assemble(level, ShipAssembler.findStructure(level, pos, blacklist))
+            val shipData = createNewShipWithBlocks(pos, ShipAssembler.findStructure(level, pos, blacklist), level)
 
             return true
         }
