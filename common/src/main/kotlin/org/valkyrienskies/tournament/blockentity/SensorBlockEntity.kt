@@ -53,7 +53,6 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState)
         )
 
         val value =  max(1, min(15, ((1 - clipResult.location.toJOML().distance(blockPos.toJOMLD()) / TournamentConfig.SERVER.sensorDistance) * 15).toInt()))
-        println(value)
 
         return if(clipResult.type == HitResult.Type.BLOCK) {
             value;
