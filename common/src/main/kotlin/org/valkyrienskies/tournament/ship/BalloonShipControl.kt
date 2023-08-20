@@ -10,7 +10,6 @@ import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.api.ShipForcesInducer
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.core.impl.pipelines.SegmentUtils
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TournamentConfig
 import java.util.concurrent.CopyOnWriteArrayList
@@ -23,35 +22,34 @@ import java.util.concurrent.CopyOnWriteArrayList
 )
 class BalloonShipControl : ShipForcesInducer {
 
+
     private val balloons = CopyOnWriteArrayList<Pair<Vector3i, Double>>()
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
-        val segment = physShip.segments.segments[0]?.segmentDisplacement!!
-        val vel = SegmentUtils.getVelocity(physShip.poseVel, segment, Vector3d())
+        val vel = physShip.poseVel.vel
 
         balloons.forEach {
             val (pos, pow) = it
 
-            val tPos = Vector3d(pos).add( 0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
-
+            val tPos = Vector3d(pos).add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
             val tHeight = physShip.transform.positionInWorld.y()
             var tPValue = TournamentConfig.SERVER.balloonBaseHeight - ((tHeight * tHeight) / 1000.0)
 
             if (vel.y() > 10.0)    {
                 tPValue = (-vel.y() * 0.25)
+                tPValue -= (vel.y() * 0.25)
             }
             if(tPValue <= 0){
                 tPValue = 0.0
             }
-
             physShip.applyInvariantForceToPos(
-                Vector3d(
-                    0.0,
-                    (pow + 1.0) * TournamentConfig.SERVER.balloonPower * tPValue,
-                    0.0),
-                tPos
+                    Vector3d(
+                            0.0,
+                            (pow + 1.0) * TournamentConfig.SERVER.balloonPower * tPValue,
+                            0.0),
+                    tPos
             )
         }
     }

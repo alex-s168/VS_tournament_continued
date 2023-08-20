@@ -16,6 +16,7 @@ import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.common.world.clipIncludeShips
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.api.helper.Helper3d
 import kotlin.math.min
 import kotlin.math.max
 
@@ -52,12 +53,12 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState)
             false
         )
 
-        val value =  max(1, min(15, ((1 - clipResult.location.toJOML().distance(blockPos.toJOMLD()) / TournamentConfig.SERVER.sensorDistance) * 15).toInt()))
+        val value = max(1, min(15, ((1 - clipResult.location.toJOML().distance(Helper3d.convertShipToWorldSpace(level, blockPos)) / TournamentConfig.SERVER.sensorDistance) * 15).toInt()))
 
         return if(clipResult.type == HitResult.Type.BLOCK) {
-            value;
+            value
         } else {
-            0;
+            0
         }
     }
 

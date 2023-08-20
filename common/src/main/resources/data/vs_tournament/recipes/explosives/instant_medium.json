@@ -1,9 +1,9 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "   ",
-        "ITR",
-        " G "
+        "TRT",
+        "GRG",
+        "ITI"
     ],
     "key": {
         "G": {
@@ -20,7 +20,7 @@
         }
     },
     "result": {
-        "item": "vs_tournament:explosive_instant_large",
+        "item": "vs_tournament:explosive_instant_medium",
         "count": 1
     }
 }

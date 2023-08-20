@@ -11,47 +11,50 @@ object TournamentConfig {
 
     class Client {
 
-        @JsonSchema(description = "Should use the particle rope renderer. If set to false it will render a straight line!")
-        var particleRopeRenderer = false
+        @JsonSchema(description = "Use the particle rope renderer instead of the line rope renderer")
+        var particleRopeRenderer = true
 
     }
 
     class Server {
 
-        @JsonSchema(description = "rope max force")
+        @JsonSchema(description = "Gravity gun enabled")
+        var gravityGunEnabled = false
+
+        @JsonSchema(description = "The maximum force a rope can handle before breaking")
         var ropeMaxForce = 1e10
 
-        @JsonSchema(description = "spinner output force")
+        @JsonSchema(description = "The force a spinner applies to a ship")
         var spinnerSpeed = 5000.0
 
-        @JsonSchema(description = "balloon output force")
+        @JsonSchema(description = "The force a balloon applies to a ship")
         var balloonPower = 30.0
 
-        @JsonSchema(description = "how much stronger a balloon will get when powered (1.0 is 15x stronger at max power)")
+        @JsonSchema(description = "How much stronger a balloon will get when powered (1.0 is 15x stronger at max power)")
         var balloonAnalogStrength = 1.0
 
-        @JsonSchema(description = "balloon base height")
+        @JsonSchema(description = "Base height of a balloon")
         var balloonBaseHeight = 100.0
 
-        @JsonSchema(description = "thruster output force")
+        @JsonSchema(description = "The force a thruster applies to a ship")
         var thrusterSpeed = 10000.0
 
-        @JsonSchema(description = "weight of ballast when not redstone powered")
+        @JsonSchema(description = "The weight of a ballast when not redstone powered")
         var ballastWeight = 10000.0
 
-        @JsonSchema(description = "weight of ballast when redstone powered")
+        @JsonSchema(description = "The weight of a ballast when redstone powered")
         var ballastNoWeight = 10.0
 
-        @JsonSchema(description = "pulse gun force")
+        @JsonSchema(description = "The force the pulse gun applies to a ship")
         var pulseGunForce = 300.0
 
-        @JsonSchema(description = "maximal distance of the sensor")
+        @JsonSchema(description = "Maximum distance a sensor can detect a ship from")
         var sensorDistance = 5.0
 
-        @JsonSchema(description = "thruster shutoff speed")
+        @JsonSchema(description = "The speed at which the thruster will stop applying force")
         var thrusterShutoffSpeed = 50
 
-        @JsonSchema(description = "Blacklist of blocks that don't get assembled")
+        @JsonSchema(description = "The list of blocks that don't get assembled by the ship assembler")
         var blockBlacklist = setOf(
             "minecraft:dirt",
             "minecraft:grass_block",
@@ -84,6 +87,7 @@ object TournamentConfig {
             "minecraft:fern",
             "minecraft:dead_bush",
             "minecraft:seagrass",
+            "minecraft:tall_seagrass",
             "minecraft:sea_pickle",
             "minecraft:kelp",
             "minecraft:bamboo",
@@ -128,7 +132,20 @@ object TournamentConfig {
             "minecraft:end_portal_frame",
             "minecraft:end_portal",
             "minecraft:end_gateway",
-            "minecraft:portal"
+            "minecraft:portal",
+            "minecraft:oak_sapling",
+            "minecraft:spruce_sapling",
+            "minecraft:birch_sapling",
+            "minecraft:jungle_sapling",
+            "minecraft:acacia_sapling",
+            "minecraft:dark_oak_sapling",
+            "minecraft:oak_leaves",
+            "minecraft:spruce_leaves",
+            "minecraft:birch_leaves",
+            "minecraft:jungle_leaves",
+            "minecraft:acacia_leaves",
+            "minecraft:dark_oak_leaves"
         )
+
     }
 }

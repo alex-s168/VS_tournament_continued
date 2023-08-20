@@ -13,9 +13,12 @@ import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentDebugHelper
 import org.valkyrienskies.tournament.api.debug.DebugLine
+import org.valkyrienskies.tournament.api.helper.Helper3d
 import java.awt.Color
 
-class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(TournamentBlockEntities.ROPE_HOOK.get(), pos, state) {
+class RopeHookBlockEntity(pos: BlockPos, state: BlockState):
+        BlockEntity(TournamentBlockEntities.ROPE_HOOK.get(), pos, state)
+{
 
     var ropeId: ConstraintId? = null
     var mainPos: Vector3d? = null
@@ -28,15 +31,18 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Tourna
     var isSecondary = false
     var conPos: BlockPos? = null
 
-    fun setRopeID(rope: ConstraintId, main:Vector3d?, other:Vector3d?, level:Level) {
+    fun setRopeID(rope: ConstraintId, mainIn: Vector3d?, otherIn: Vector3d?, level: Level) {
         println("Block>> $rope")
+
+        val main = Helper3d.convertShipToWorldSpace(level, mainIn!!)
+        val other = Helper3d.convertShipToWorldSpace(level, otherIn!!)
 
         ropeId = rope
         otherPos = other
         mainPos = main
         maxLen = 0.0
 
-        debugID = TournamentDebugHelper.addObject(DebugLine(main!!, other!!, Color.RED, !TournamentConfig.CLIENT.particleRopeRenderer))
+        debugID = TournamentDebugHelper.addObject(DebugLine(main, other, Color.RED, !TournamentConfig.CLIENT.particleRopeRenderer))
 
         level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_ALL_IMMEDIATE)
     }

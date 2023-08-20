@@ -32,7 +32,7 @@ class SpinnerBlock : DirectionalBlock(
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
 
-    val SHAPE = RotShapes.box(0.25, 0.0, 0.25, 15.75, 16.0, 15.75)
+    val SHAPE = RotShapes.cube()
 
     val SPINNER_SHAPE = DirectionalShape.north(SHAPE)
 

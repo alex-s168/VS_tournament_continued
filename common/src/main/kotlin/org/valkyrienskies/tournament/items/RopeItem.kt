@@ -1,11 +1,12 @@
 package org.valkyrienskies.tournament.items
 
+import net.minecraft.Util
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.TextComponent
+import net.minecraft.network.chat.TranslatableComponent
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
@@ -55,9 +56,9 @@ class RopeItem : Item(
                 //hook it up
                 connectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
                 if(clickedPosition == null)
-                    context.player!!.sendMessage(TextComponent("Rope connected!"), context.player!!.uuid)
+                    context.player!!.sendMessage(TranslatableComponent("item.vs_tournament.rope.connected"), Util.NIL_UUID)
                 else
-                    context.player!!.sendMessage(TextComponent("First position set!"), context.player!!.uuid)
+                    context.player!!.sendMessage(TranslatableComponent("item.vs_tournament.rope.first"), Util.NIL_UUID)
 
                 println("  ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < == > " + level.getBlockState(blockPos).block)
 
@@ -109,7 +110,7 @@ class RopeItem : Item(
                 ropeMaxForce, posC.sub(posD).length() + 1.0
             )
 
-            println("Legnth: "+ posC.sub(posD).length())
+            println("Length: "+ posC.sub(posD).length())
             println(ropeConstraint)
 
             val ropeConstraintId = level.shipObjectWorld.createNewConstraint(ropeConstraint)

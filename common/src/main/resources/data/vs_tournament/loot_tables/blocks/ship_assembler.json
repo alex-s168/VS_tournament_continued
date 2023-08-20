@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vs_tournament:shipifier"
+          "name": "vs_tournament:ship_assembler"
         }
       ],
       "conditions": [

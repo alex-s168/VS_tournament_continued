@@ -5,6 +5,4 @@ import org.valkyrienskies.tournament.TournamentItems
 
 class ThrusterUpgradeItem  : Item(
         Properties().stacksTo(16).tab(TournamentItems.TAB)
-){
-
-}
+)

@@ -28,7 +28,7 @@ import org.valkyrienskies.mod.common.util.toDoubles
 
 class SeatBlock :
         HorizontalDirectionalBlock(
-                Properties.of(Material.WOOL).strength(1.0f, 120.0f).sound(SoundType.WOOL)
+                Properties.of(Material.WOOL).strength(1.0f, 2.0f).sound(SoundType.WOOL)
         ) {
     private val SEAT_AABB: VoxelShape = box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0)
 

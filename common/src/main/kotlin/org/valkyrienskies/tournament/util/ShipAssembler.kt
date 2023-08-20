@@ -1,6 +1,7 @@
 package org.valkyrienskies.tournament.util
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Registry
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.block.Rotation
 import org.joml.Vector3d
@@ -33,7 +34,7 @@ object ShipAssembler {
 
         checked.add(pos)
 
-        if(blacklist.contains(level.getBlockState(pos).block.builtInRegistryHolder().key().toString()))
+        if(blacklist.contains(Registry.BLOCK.getKey(level.getBlockState(pos).block).toString()))
             return
 
         if(level.getBlockState(pos).isAir)

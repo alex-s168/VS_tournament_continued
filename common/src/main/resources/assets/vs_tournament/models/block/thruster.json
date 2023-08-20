@@ -174,23 +174,17 @@
 			"name": "Root",
 			"origin": [8, 8, 8],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [
 				{
 					"name": "Base",
 					"origin": [8, 8, 8],
 					"color": 0,
-					"nbt": "{}",
-					"armAnimationEnabled": false,
 					"children": [0, 1, 2, 3, 4]
 				},
 				{
 					"name": "Firework",
 					"origin": [7.5, 1.625, 7.25],
 					"color": 0,
-					"nbt": "{}",
-					"armAnimationEnabled": false,
 					"children": [5, 6, 7, 8, 9]
 				}
 			]

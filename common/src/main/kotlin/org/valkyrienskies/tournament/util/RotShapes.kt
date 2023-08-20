@@ -50,6 +50,8 @@ class DirectionalShape private constructor(shape: RotShape) {
 }
 
 object RotShapes {
+    fun cube(): RotShape = box(0.1, 0.1, 0.1, 15.9, 15.9, 15.9)
+
     fun box(x1: Double, y1: Double, z1: Double, x2: Double, y2: Double, z2: Double): RotShape =
         Box(x1, y1, z1, x2, y2, z2)
 

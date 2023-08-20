@@ -1,23 +1,20 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "#N#",
-        " / ",
-        " / "
+        "ITI",
+        "TTT",
+        "ITI"
     ],
     "key": {
-        "#": {
-            "item": "minecraft:diamond"
+        "T": {
+            "item": "minecraft:tnt"
         },
-        "N": {
-            "item": "minecraft:nether_star"
-        },
-        "/": {
-            "item": "minecraft:stick"
+        "I": {
+            "item": "minecraft:iron_ingot"
         }
     },
     "result": {
-        "item": "vs_tournament:grab_gun",
+        "item": "vs_tournament:explosive_instant_large",
         "count": 1
     }
 }

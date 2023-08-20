@@ -54,8 +54,8 @@ class ThrusterBlock : DirectionalBlock (
     }
 
     override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): InteractionResult {
-        if (player.mainHandItem.item.asItem().equals(TournamentItems.UPGRADE_THRUSTER?.get())) {
-            if (level.isClientSide) return InteractionResult.SUCCESS
+        if (player.mainHandItem.item.asItem().equals(TournamentItems.UPGRADE_THRUSTER.get())) {
+            if (level.isClientSide) return InteractionResult.PASS
             level as ServerLevel
 
             if (state.getValue(TournamentProperties.TIER) != 5) {
@@ -95,8 +95,14 @@ class ThrusterBlock : DirectionalBlock (
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
-        ThrusterShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
-        )?.addThruster(pos, state.getValue(TournamentProperties.TIER).toDouble(), state.getValue(FACING).normal.toJOMLD().mul(state.getValue(BlockStateProperties.POWER).toDouble()))
+        ThrusterShipControl.getOrCreate(
+                level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
+        ).addThruster(
+                pos,
+                state.getValue(TournamentProperties.TIER).toDouble(),
+                state.getValue(FACING).normal.toJOMLD()
+                        .mul(state.getValue(BlockStateProperties.POWER).toDouble())
+        )
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -133,12 +139,13 @@ class ThrusterBlock : DirectionalBlock (
 
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)
+
         if (state.getValue(BlockStateProperties.POWER) > 0) {
             val dir = state.getValue(FACING)
 
-            val x = pos.x.toDouble() + (0.5 * (dir.stepX + 1));
-            val y = pos.y.toDouble() + (0.5 * (dir.stepY + 1));
-            val z = pos.z.toDouble() + (0.5 * (dir.stepZ + 1));
+            val x = pos.x.toDouble() + (0.5 * (dir.stepX + 1))
+            val y = pos.y.toDouble() + (0.5 * (dir.stepY + 1))
+            val z = pos.z.toDouble() + (0.5 * (dir.stepZ + 1))
             val speedX = dir.stepX * -0.4
             val speedY = dir.stepY * -0.4
             val speedZ = dir.stepZ * -0.4

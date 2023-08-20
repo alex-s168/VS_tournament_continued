@@ -15,7 +15,7 @@ object TournamentItems {
     val ROPE                    = ITEMS.register("rope", ::RopeItem)
     val TOOL_PULSEGUN           = ITEMS.register("pulse_gun", ::PulseGunItem)
     val TOOL_DELETEWAND         = ITEMS.register("delete_wand", ::ShipDeleteWandItem)
-    val TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GrabGunItem)
+    val TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GravityGunItem)
     val UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster", ::ThrusterUpgradeItem)
 
     val TAB: CreativeModeTab = CreativeTabs.create(

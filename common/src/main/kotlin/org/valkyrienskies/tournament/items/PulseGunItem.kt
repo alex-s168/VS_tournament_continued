@@ -3,6 +3,8 @@ package org.valkyrienskies.tournament.items
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.context.UseOnContext
 import org.joml.Vector3d
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
@@ -16,6 +18,10 @@ class PulseGunItem : Item(
 ){
 
     private var pulseForce : Vector3d? = null
+
+    override fun getRarity(stack: ItemStack): Rarity {
+        return Rarity.COMMON
+    }
 
     override fun useOn(context: UseOnContext): InteractionResult {
         val force = TournamentConfig.SERVER.pulseGunForce

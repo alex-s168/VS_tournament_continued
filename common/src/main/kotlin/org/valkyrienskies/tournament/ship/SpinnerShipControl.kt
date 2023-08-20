@@ -26,7 +26,7 @@ class SpinnerShipControl : ShipForcesInducer {
         physShip as PhysShipImpl
 
         spinners.forEach {
-            val (pos, torque) = it
+            val (_, torque) = it
 
             val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vector3d())
 

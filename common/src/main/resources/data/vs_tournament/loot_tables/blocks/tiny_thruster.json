@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vs_tournament:ionthruster"
+          "name": "vs_tournament:tiny_thruster"
         }
       ],
       "conditions": [

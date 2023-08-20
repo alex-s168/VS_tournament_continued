@@ -35,7 +35,7 @@ class ShipAssemblerBlock : DirectionalBlock (
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
 
-    val SHAPE = RotShapes.box(0.01, 0.01, 0.01, 15.98, 15.98, 15.98)
+    val SHAPE = RotShapes.cube()
 
     val Shipifier_SHAPE = DirectionalShape.south(SHAPE)
 

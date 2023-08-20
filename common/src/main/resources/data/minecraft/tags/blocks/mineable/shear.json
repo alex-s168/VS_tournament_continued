@@ -1,9 +1,6 @@
 {
   "replace": false,
   "values": [
-    "vs_tournament:ballast",
-    "vs_tournament:spinner",
-    "vs_tournament:thruster",
-    "vs_tournament:tiny_thruster"
+    "vs_tournament:balloon"
   ]
 }

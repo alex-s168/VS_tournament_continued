@@ -1,12 +1,17 @@
 package org.valkyrienskies.tournament.items
 
+import net.minecraft.Util
 import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.TranslatableComponent
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Rarity
+import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
@@ -19,10 +24,11 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.physics_api.ConstraintId
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
 
 
-class GrabGunItem : Item(
+class GravityGunItem : Item(
         Properties().stacksTo(1).tab(TournamentItems.TAB)
 ) {
 
@@ -46,11 +52,28 @@ class GrabGunItem : Item(
         return false
     }
 
+    override fun appendHoverText(stack: ItemStack, level: Level?, tooltipComponents: MutableList<Component>, isAdvanced: TooltipFlag) {
+        if (!TournamentConfig.SERVER.gravityGunEnabled) {
+            tooltipComponents.toMutableList().add(TranslatableComponent("item.vs_tournament.grab_gun.disabled"))
+        }
+    }
+
+    override fun getRarity(stack: ItemStack): Rarity {
+        return Rarity.RARE
+    }
+
     override fun useOn(context: UseOnContext): InteractionResult {
-        if(grabbing) {
+        if (!TournamentConfig.SERVER.gravityGunEnabled) {
+            context.player?.sendMessage(TranslatableComponent("item.vs_tournament.grab_gun.disabled"), Util.NIL_UUID)
+
+            return InteractionResult.PASS
+        }
+
+        if (grabbing) {
             grabbing = false
             onDropConstraints(context.level)
-        } else {
+        }
+        else {
             currentPlayer = context.player
             val level = context.level
             val hitLoc = context.clickLocation
@@ -189,7 +212,7 @@ class GrabGunItem : Item(
         }
     }
 
-    private fun playerRotToQuaternion(pitch:Double, yaw:Double) : Quaterniond {
+    private fun playerRotToQuaternion(pitch: Double, yaw: Double) : Quaterniond {
         return Quaterniond().rotateY(Math.toRadians(-yaw))
     }
 }

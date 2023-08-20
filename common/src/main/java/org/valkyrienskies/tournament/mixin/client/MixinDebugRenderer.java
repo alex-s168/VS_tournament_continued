@@ -39,12 +39,22 @@ public class MixinDebugRenderer {
                     assert Minecraft.getInstance().level != null;
                     Vector3d A = Helper3d.INSTANCE.convertShipToWorldSpace(Minecraft.getInstance().level, line.getA()).sub(cam);
                     Vector3d B = Helper3d.INSTANCE.convertShipToWorldSpace(Minecraft.getInstance().level, line.getB()).sub(cam);
-                    Vector3f normal = new Vector3f((Vector3fc) A.sub(B).normalize());
+                    Vector3d normalD = A.sub(B).normalize();
+                    Vector3f normal = new Vector3f(
+                            (float) normalD.x,
+                            (float) normalD.y,
+                            (float) normalD.z
+                    );
 
                     Color c = line.getColor();
 
-                    vertexConsumer.vertex(A.x, A.y, A.z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).normal(normal.x, normal.y, normal.z).endVertex();
-                    vertexConsumer.vertex(B.x, B.y, B.z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).normal(normal.x, normal.y, normal.z).endVertex();
+                    int r = c.getRed();
+                    int g = c.getGreen();
+                    int b = c.getBlue();
+                    int a = c.getAlpha();
+
+                    vertexConsumer.vertex(A.x, A.y, A.z).color(r, g, b, a).normal(normal.x, normal.y, normal.z).endVertex();
+                    vertexConsumer.vertex(B.x, B.y, B.z).color(r, g, b, a).normal(normal.x, normal.y, normal.z).endVertex();
                 }
             });
             bufferSource.endBatch();

@@ -18,8 +18,14 @@
   "itemGroup.vs_tournament.tournament_tab": "VS Tournament",
 
   "item.vs_tournament.pulse_gun": "Pulse Gun",
-  "item.vs_tournament.delete_gun": "Deleting Tool",
+  "item.vs_tournament.delete_wand": "Deleting Tool",
   "item.vs_tournament.grab_gun": "Gravity Gun",
   "item.vs_tournament.upgrade_thruster": "Thruster Upgrade",
-  "item.vs_tournament.rope": "Rope"
+  "item.vs_tournament.rope": "Rope",
+
+  "item.vs_tournament.grab_gun.disabled": "Gravity Gun is disabled on this server!",
+  "item.vs_tournament.rope.connected": "Rope connected!",
+  "item.vs_tournament.rope.first": "First position set!",
+  "item.vs_tournament.delete_wand.deleted": "Deleted ship!"
+
 }

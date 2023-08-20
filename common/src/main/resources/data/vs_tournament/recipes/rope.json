@@ -1,26 +1,17 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        " # ",
-        "ODO",
-        "OCO"
+        "  S",
+        " S ",
+        "S  "
     ],
     "key": {
-        "#": {
-            "item": "minecraft:redstone"
-        },
-        "O": {
-            "tag": "minecraft:planks"
-        },
-        "D": {
-            "item": "minecraft:diamond_block"
-        },
-        "C": {
-            "item": "minecraft:cobblestone"
+        "S": {
+            "item": "minecraft:string"
         }
     },
     "result": {
-        "item": "vs_tournament:ship_assembler",
+        "item": "vs_tournament:rope",
         "count": 1
     }
 }

@@ -1,26 +1,23 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "   ",
-        "ITR",
-        " G "
+        "IXI",
+        "XRX",
+        "IXI"
     ],
     "key": {
-        "G": {
-            "item": "minecraft:gunpowder"
+        "X": {
+            "item": "vs_tournament:explosive_instant_medium"
         },
         "R": {
             "item": "minecraft:redstone"
-        },
-        "T": {
-            "item": "minecraft:tnt"
         },
         "I": {
             "item": "minecraft:iron_ingot"
         }
     },
     "result": {
-        "item": "vs_tournament:explosive_instant_small",
+        "item": "vs_tournament:explosive_staged_small",
         "count": 1
     }
 }
