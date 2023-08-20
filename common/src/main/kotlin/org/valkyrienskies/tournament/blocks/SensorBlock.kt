@@ -30,7 +30,7 @@ class SensorBlock : BaseEntityBlock(
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
 
-    val SHAPE = RotShapes.box(0.0, 0.0, 2.0, 16.0, 16.0, 16.0)
+    val SHAPE = RotShapes.box(0.0, 0.0, 1.0, 16.0, 16.0, 16.0)
     val ROPEATTACH_SHAPE = DirectionalShape.north(SHAPE)
 
     init {

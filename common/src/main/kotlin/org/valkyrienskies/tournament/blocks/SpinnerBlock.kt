@@ -6,23 +6,18 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.DirectionalBlock
-import net.minecraft.world.level.block.RenderShape
-import net.minecraft.world.level.block.SoundType
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import org.joml.Vector3d
 import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
-import org.valkyrienskies.tournament.ship.BalloonShipControl
 import org.valkyrienskies.tournament.ship.SpinnerShipControl
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
@@ -63,8 +58,13 @@ class SpinnerBlock : DirectionalBlock(
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
-        SpinnerShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
-            ).addSpinner(pos.toJOML(), state.getValue(FACING).normal.toJOMLD().mul(state.getValue(BlockStateProperties.POWER).toDouble()))
+        SpinnerShipControl.getOrCreate(
+                level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
+        ).addSpinner(
+                pos.toJOML(),
+                state.getValue(FACING).opposite.normal.toJOMLD()
+                        .mul(state.getValue(BlockStateProperties.POWER).toDouble())
+        )
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -99,5 +99,9 @@ class SpinnerBlock : DirectionalBlock(
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
         return defaultBlockState()
             .setValue(FACING, ctx.nearestLookingDirection.opposite)
+    }
+
+    override fun getBlockSupportShape(state: BlockState, reader: BlockGetter, pos: BlockPos): VoxelShape {
+        return RotShapes.cube().makeMcShape()
     }
 }

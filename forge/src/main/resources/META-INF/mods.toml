@@ -7,7 +7,7 @@ license = "Apache-2.0"
 modId = "vs_tournament"
 version = "${version}"
 displayName = "VS Tournament Mod"
-authors = ["ConstantDust", "Alex"]
+authors = ["alex168", "ConstantDust", "Illuc"]
 description = '''
 
 '''

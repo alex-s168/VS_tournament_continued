@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "vs_tournament",
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "vs_tournament:block/tiny_thruster",

@@ -1,29 +1,32 @@
-
 {
   "variants": {
     "facing=north": {
       "model": "vs_tournament:block/spinner",
-      "y": 180
+      "y": 0,
+      "x": 90
     },
     "facing=east": {
       "model": "vs_tournament:block/spinner",
-      "y": 270
+      "y": 90,
+      "x": 90
     },
     "facing=south": {
       "model": "vs_tournament:block/spinner",
-      "y": 0
+      "y": 180,
+      "x": 90
     },
     "facing=west": {
       "model": "vs_tournament:block/spinner",
-      "y": 90
+      "y": 270,
+      "x": 90
     },
     "facing=up": {
       "model": "vs_tournament:block/spinner",
-      "x": 90
+      "x": 0
     },
     "facing=down": {
       "model": "vs_tournament:block/spinner",
-      "x": 270
+      "x": 180
     }
   }
 }
