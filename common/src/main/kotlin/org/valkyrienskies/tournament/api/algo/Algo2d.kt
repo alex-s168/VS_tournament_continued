@@ -15,14 +15,15 @@ object Algo2d {
 
         val res = ArrayList<Vector2d>()
 
-        for (i in 1..r.toInt()) {
-            res.addAll(circle(pos, i.toDouble()))
-            res.addAll(circle(pos.add(1.0,1.0), i.toDouble()))
-            res.addAll(circle(pos.add(1.0,0.0), i.toDouble()))
-            res.addAll(circle(pos.add(0.0,1.0), i.toDouble()))
-            res.addAll(circle(pos.sub(1.0,1.0), i.toDouble()))
-            res.addAll(circle(pos.sub(1.0,0.0), i.toDouble()))
-            res.addAll(circle(pos.sub(0.0,1.0), i.toDouble()))
+        for (j in 1..r.toInt()*2) {
+            val i = j.toDouble() / 2
+            res.addAll(circle(pos, i))
+            res.addAll(circle(pos.add(1.0,1.0), i))
+            res.addAll(circle(pos.add(1.0,0.0), i))
+            res.addAll(circle(pos.add(0.0,1.0), i))
+            res.addAll(circle(pos.sub(1.0,1.0), i))
+            res.addAll(circle(pos.sub(1.0,0.0), i))
+            res.addAll(circle(pos.sub(0.0,1.0), i))
         }
 
         return res

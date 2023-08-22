@@ -1,5 +1,6 @@
 package org.valkyrienskies.tournament.api.algo
 
+import org.joml.Vector2d
 import org.joml.Vector3d
 import org.valkyrienskies.tournament.api.extension.to2d
 import org.valkyrienskies.tournament.api.helper.Helper2d
@@ -23,6 +24,29 @@ object Algo3d {
                 y -= 1
             else
                 y += 1
+        }
+
+        return result
+    }
+
+    fun sphere(pos: Vector3d, radius: Double) : List<Vector3d> {
+        val result = ArrayList<Vector3d>()
+
+        val x = pos.add(radius, 0.0, 0.0)
+
+        for (i in 0..179) {
+            val y = x.rotateAxis(i.toDouble(), 1.0, 0.0, 0.0)
+            val r = y.x()
+            val h = y.y()
+            result.addAll(
+                Helper2d.vec2listTo3(
+                    Algo2d.filledCircleDirty(
+                        Vector2d(pos.x, pos.y),
+                        r
+                    ),
+                    h
+                )
+            )
         }
 
         return result

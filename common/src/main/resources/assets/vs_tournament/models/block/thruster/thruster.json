@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "vs_tournament:block/thruster",
-		"particle": "vs_tournament:block/thruster"
+		"1": "vs_tournament:block/thruster/thruster0",
+		"particle": "vs_tournament:block/thruster/thruster0"
 	},
 	"elements": [
 		{

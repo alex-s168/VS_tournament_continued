@@ -1,0 +1,7 @@
+{
+  "parent": "vs_tournament:block/thruster/thruster",
+  "textures": {
+    "1": "vs_tournament:block/thruster/thruster5",
+    "particle": "vs_tournament:block/thruster/thruster5"
+  }
+}

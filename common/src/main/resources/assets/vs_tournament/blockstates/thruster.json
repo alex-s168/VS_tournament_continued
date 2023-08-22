@@ -1,28 +1,147 @@
-
 {
   "variants": {
-    "facing=north": {
-      "model": "vs_tournament:block/thruster",
+    "facing=north,tier=0": {
+      "model": "vs_tournament:block/thruster/thruster0",
       "y": 180
     },
-    "facing=east": {
-      "model": "vs_tournament:block/thruster",
+    "facing=east,tier=0": {
+      "model": "vs_tournament:block/thruster/thruster0",
       "y": 270
     },
-    "facing=south": {
-      "model": "vs_tournament:block/thruster",
+    "facing=south,tier=0": {
+      "model": "vs_tournament:block/thruster/thruster0",
       "y": 0
     },
-    "facing=west": {
-      "model": "vs_tournament:block/thruster",
+    "facing=west,tier=0": {
+      "model": "vs_tournament:block/thruster/thruster0",
       "y": 90
     },
-    "facing=up": {
-      "model": "vs_tournament:block/thruster",
+    "facing=up,tier=0": {
+      "model": "vs_tournament:block/thruster/thruster0",
       "x": 90
     },
-    "facing=down": {
-      "model": "vs_tournament:block/thruster",
+    "facing=down,tier=0": {
+      "model": "vs_tournament:block/thruster/thruster0",
+      "x": 270
+    },
+    "facing=north,tier=1": {
+      "model": "vs_tournament:block/thruster/thruster1",
+      "y": 180
+    },
+    "facing=east,tier=1": {
+      "model": "vs_tournament:block/thruster/thruster1",
+      "y": 270
+    },
+    "facing=south,tier=1": {
+      "model": "vs_tournament:block/thruster/thruster1",
+      "y": 0
+    },
+    "facing=west,tier=1": {
+      "model": "vs_tournament:block/thruster/thruster1",
+      "y": 90
+    },
+    "facing=up,tier=1": {
+      "model": "vs_tournament:block/thruster/thruster1",
+      "x": 90
+    },
+    "facing=down,tier=1": {
+      "model": "vs_tournament:block/thruster/thruster1",
+      "x": 270
+    },
+    "facing=north,tier=2": {
+      "model": "vs_tournament:block/thruster/thruster2",
+      "y": 180
+    },
+    "facing=east,tier=2": {
+      "model": "vs_tournament:block/thruster/thruster2",
+      "y": 270
+    },
+    "facing=south,tier=2": {
+      "model": "vs_tournament:block/thruster/thruster2",
+      "y": 0
+    },
+    "facing=west,tier=2": {
+      "model": "vs_tournament:block/thruster/thruster2",
+      "y": 90
+    },
+    "facing=up,tier=2": {
+      "model": "vs_tournament:block/thruster/thruster2",
+      "x": 90
+    },
+    "facing=down,tier=2": {
+      "model": "vs_tournament:block/thruster/thruster2",
+      "x": 270
+    },
+    "facing=north,tier=3": {
+      "model": "vs_tournament:block/thruster/thruster3",
+      "y": 180
+    },
+    "facing=east,tier=3": {
+      "model": "vs_tournament:block/thruster/thruster3",
+      "y": 270
+    },
+    "facing=south,tier=3": {
+      "model": "vs_tournament:block/thruster/thruster3",
+      "y": 0
+    },
+    "facing=west,tier=3": {
+      "model": "vs_tournament:block/thruster/thruster3",
+      "y": 90
+    },
+    "facing=up,tier=3": {
+      "model": "vs_tournament:block/thruster/thruster3",
+      "x": 90
+    },
+    "facing=down,tier=3": {
+      "model": "vs_tournament:block/thruster/thruster3",
+      "x": 270
+    },
+    "facing=north,tier=4": {
+      "model": "vs_tournament:block/thruster/thruster4",
+      "y": 180
+    },
+    "facing=east,tier=4": {
+      "model": "vs_tournament:block/thruster/thruster4",
+      "y": 270
+    },
+    "facing=south,tier=4": {
+      "model": "vs_tournament:block/thruster/thruster4",
+      "y": 0
+    },
+    "facing=west,tier=4": {
+      "model": "vs_tournament:block/thruster/thruster4",
+      "y": 90
+    },
+    "facing=up,tier=4": {
+      "model": "vs_tournament:block/thruster/thruster4",
+      "x": 90
+    },
+    "facing=down,tier=4": {
+      "model": "vs_tournament:block/thruster/thruster4",
+      "x": 270
+    },
+    "facing=north,tier=5": {
+      "model": "vs_tournament:block/thruster/thruster5",
+      "y": 180
+    },
+    "facing=east,tier=5": {
+      "model": "vs_tournament:block/thruster/thruster5",
+      "y": 270
+    },
+    "facing=south,tier=5": {
+      "model": "vs_tournament:block/thruster/thruster5",
+      "y": 0
+    },
+    "facing=west,tier=5": {
+      "model": "vs_tournament:block/thruster/thruster5",
+      "y": 90
+    },
+    "facing=up,tier=5": {
+      "model": "vs_tournament:block/thruster/thruster5",
+      "x": 90
+    },
+    "facing=down,tier=5": {
+      "model": "vs_tournament:block/thruster/thruster5",
       "x": 270
     }
   }

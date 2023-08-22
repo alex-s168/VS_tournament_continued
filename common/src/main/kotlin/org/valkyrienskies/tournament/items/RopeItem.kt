@@ -2,7 +2,6 @@ package org.valkyrienskies.tournament.items
 
 import net.minecraft.Util
 import net.minecraft.core.BlockPos
-import net.minecraft.network.chat.TextComponent
 import net.minecraft.network.chat.TranslatableComponent
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
@@ -62,7 +61,7 @@ class RopeItem : Item(
 
                 println("  ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < == > " + level.getBlockState(blockPos).block)
 
-                return InteractionResult.SUCCESS
+                return InteractionResult.CONSUME
             } else {
                 println(" !ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < != > " + level.getBlockState(blockPos).block)
             }

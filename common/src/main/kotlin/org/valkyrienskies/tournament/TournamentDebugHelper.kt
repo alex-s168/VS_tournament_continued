@@ -10,7 +10,7 @@ class TournamentDebugHelper {
 
         fun addObject(obj : DebugObject) : Long {
             val id = objects.size
-            objects.put(id.toLong(), obj)
+            objects[id.toLong()] = obj
             return (id).toLong()
         }
 
