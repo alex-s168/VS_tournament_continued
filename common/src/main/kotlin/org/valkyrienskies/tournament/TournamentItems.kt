@@ -14,7 +14,6 @@ object TournamentItems {
     lateinit var ROPE              :  RegistrySupplier<RopeItem>
     lateinit var TOOL_PULSEGUN     :  RegistrySupplier<PulseGunItem>
     lateinit var TOOL_DELETEWAND   :  RegistrySupplier<ShipDeleteWandItem>
-    lateinit var TOOL_GRABGUN      :  RegistrySupplier<GravityGunItem>
     lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
 
     lateinit var TAB: CreativeModeTab
@@ -23,7 +22,6 @@ object TournamentItems {
         ROPE                    = ITEMS.register("rope", ::RopeItem)
         TOOL_PULSEGUN           = ITEMS.register("pulse_gun", ::PulseGunItem)
         TOOL_DELETEWAND         = ITEMS.register("delete_wand", ::ShipDeleteWandItem)
-        TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GravityGunItem)
         UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster") {
             Item(Item.Properties().stacksTo(16).tab(TAB))
         }

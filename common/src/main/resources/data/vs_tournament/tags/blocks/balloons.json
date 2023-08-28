@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "vs_tournament:balloon"
+    "vs_tournament:balloon",
+    "vs_tournament:balloon_unpowered"
   ]
 }

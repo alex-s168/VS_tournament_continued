@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vs_tournament:balloon"
+          "name": "vs_tournament:balloon_unpowered"
         }
       ]
     }

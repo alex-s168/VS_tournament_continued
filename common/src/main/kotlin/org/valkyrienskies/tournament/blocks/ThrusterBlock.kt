@@ -72,22 +72,6 @@ class ThrusterBlock(
                     1
                 )
 
-                with(ThrusterShipControl.getOrCreate(
-                    level.getShipObjectManagingPos(pos)
-                        ?: level.getShipManagingPos(pos)
-                        ?: return InteractionResult.CONSUME
-                )) {
-                    this.forceStopThruster(pos)
-                    this.addThruster(
-                        pos,
-                        state.getValue(TournamentProperties.TIER).toDouble() * mult,
-                        state.getValue(FACING)
-                            .normal
-                            .toJOMLD()
-                            .mul(state.getValue(BlockStateProperties.POWER).toDouble())
-                    )
-                }
-
                 return InteractionResult.CONSUME
             }
         }
@@ -110,13 +94,13 @@ class ThrusterBlock(
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
-        with(ThrusterShipControl.getOrCreate(
+        ThrusterShipControl.getOrCreate(
             level.getShipObjectManagingPos(pos)
                 ?: level.getShipManagingPos(pos)
                 ?: return
-        )) {
-            this.forceStopThruster(pos)
-            this.addThruster(
+        ).let {
+            it.forceStopThruster(pos)
+            it.addThruster(
                 pos,
                 state.getValue(TournamentProperties.TIER).toDouble() * mult,
                 state.getValue(FACING)
@@ -133,9 +117,7 @@ class ThrusterBlock(
         if (level.isClientSide) return
         level as ServerLevel
 
-        state.setValue(BlockStateProperties.POWER, 0)
-        level.getShipManagingPos(pos)?.getAttachment<ThrusterShipControl>()?.removeThruster(pos, state.getValue(TournamentProperties.TIER).toDouble(),state.getValue(FACING).normal.toJOMLD().mul(state.getValue(BlockStateProperties.POWER).toDouble()))
-        level.getShipManagingPos(pos)?.getAttachment<ThrusterShipControl>()?.forceStopThruster( pos )
+        level.getShipManagingPos(pos)?.getAttachment<ThrusterShipControl>()?.forceStopThruster(pos)
     }
 
     override fun neighborChanged(
@@ -151,25 +133,8 @@ class ThrusterBlock(
         if (level as? ServerLevel == null) return
 
         val signal = level.getBestNeighborSignal(pos)
-        if (state.getValue(BlockStateProperties.POWER) == signal) return
 
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
-
-        with(ThrusterShipControl.getOrCreate(
-            level.getShipObjectManagingPos(pos)
-                ?: level.getShipManagingPos(pos)
-                ?: return
-        )) {
-            this.forceStopThruster(pos)
-            this.addThruster(
-                pos,
-                state.getValue(TournamentProperties.TIER).toDouble() * mult,
-                state.getValue(FACING)
-                    .normal
-                    .toJOMLD()
-                    .mul(state.getValue(BlockStateProperties.POWER).toDouble())
-            )
-        }
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {

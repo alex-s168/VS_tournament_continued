@@ -23,10 +23,18 @@ import java.util.concurrent.CopyOnWriteArrayList
 )
 class ThrusterShipControl : ShipForcesInducer {
 
+    // for compat only!!
+    private val Thrusters = mutableListOf<Triple<Vector3i, Vector3d, Double>>()
+
     private val thrusters = CopyOnWriteArrayList<Triple<Vector3i, Vector3d, Double>>()
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
+
+        Thrusters.forEach {
+            thrusters.add(it)
+        }
+        Thrusters.clear()
 
         thrusters.forEach {
             val (pos, force, tier) = it
@@ -51,7 +59,7 @@ class ThrusterShipControl : ShipForcesInducer {
     }
 
     fun forceStopThruster(pos: BlockPos) {
-        thrusters.removeAll { it.first == pos }
+        thrusters.removeAll { it.first == pos.toJOML() }
     }
 
     companion object {

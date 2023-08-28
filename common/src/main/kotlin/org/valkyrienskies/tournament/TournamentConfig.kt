@@ -33,6 +33,9 @@ object TournamentConfig {
         @JsonSchema(description = "How much stronger a balloon will get when powered (1.0 is 15x stronger at max power)")
         var balloonAnalogStrength = 1.0
 
+        @JsonSchema(description = "The force multiplier of a balloon (not for \"powered balloon\")")
+        var unpoweredBalloonMul = 5.0
+
         @JsonSchema(description = "Base height of a balloon")
         var balloonBaseHeight = 100.0
 

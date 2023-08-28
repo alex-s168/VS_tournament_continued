@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "vs_tournament:block/balloon_off"
+		"all": "vs_tournament:block/balloon_on"
 	}
 }

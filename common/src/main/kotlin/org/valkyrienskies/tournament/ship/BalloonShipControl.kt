@@ -46,9 +46,10 @@ class BalloonShipControl : ShipForcesInducer {
             }
             physShip.applyInvariantForceToPos(
                     Vector3d(
-                            0.0,
-                            (pow + 1.0) * TournamentConfig.SERVER.balloonPower * tPValue,
-                            0.0),
+                        0.0,
+                        (pow + 1.0) * TournamentConfig.SERVER.balloonPower * tPValue,
+                        0.0
+                    ),
                     tPos
             )
         }
@@ -60,6 +61,10 @@ class BalloonShipControl : ShipForcesInducer {
 
     fun removeBalloon(pos: BlockPos, pow: Double) {
         balloons.remove(pos.toJOML() to pow)
+    }
+
+    fun removeBalloon(pos: BlockPos) {
+        balloons.removeAll { it.first == pos.toJOML() }
     }
 
     companion object {

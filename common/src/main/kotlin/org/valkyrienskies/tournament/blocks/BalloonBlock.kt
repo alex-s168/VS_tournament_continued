@@ -10,8 +10,6 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.block.state.StateDefinition
-import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.BlockHitResult
 import org.valkyrienskies.core.api.ships.getAttachment
@@ -20,55 +18,15 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.ship.BalloonShipControl
 
-class BalloonBlock : Block(
+open class BalloonBlock : Block(
     Properties.of(Material.WOOL)
         .sound(SoundType.WOOL).strength(1.0f, 2.0f)
 ) {
-
-    init {
-        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.POWER, 0))
-    }
-
-    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        super.createBlockStateDefinition(builder)
-        builder.add(BlockStateProperties.POWER)
-    }
-
-    override fun neighborChanged(
-        state: BlockState,
-        level: Level,
-        pos: BlockPos,
-        block: Block,
-        fromPos: BlockPos,
-        isMoving: Boolean
-    ) {
-        super.neighborChanged(state, level, pos, block, fromPos, isMoving)
-
-        if (level as? ServerLevel == null) return
-
-        val signal = level.getBestNeighborSignal(pos)
-        if (signal == state.getValue(BlockStateProperties.POWER)) return
-
-        with(BalloonShipControl.getOrCreate(
-            level.getShipObjectManagingPos(pos)
-                ?: level.getShipManagingPos(pos)
-                ?: return
-        )) {
-            this.removeBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble())
-            level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
-            this.addBalloon(
-                pos,
-                state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.balloonAnalogStrength
-            )
-        }
-    }
-
     override fun fallOn(level: Level, state: BlockState, blockPos: BlockPos, entity: Entity, f: Float) {
         entity.causeFallDamage(f, 0.2f, DamageSource.FALL)
     }
-    override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
-        super.onPlace(state, level, pos, oldState, isMoving)
 
+    override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         if (level.isClientSide) return
         level as ServerLevel
 
@@ -78,7 +36,7 @@ class BalloonBlock : Block(
                 ?: return
         ).addBalloon(
             pos,
-            state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.balloonAnalogStrength
+            TournamentConfig.SERVER.unpoweredBalloonMul * TournamentConfig.SERVER.balloonAnalogStrength
         )
     }
 
@@ -88,7 +46,7 @@ class BalloonBlock : Block(
         if (level.isClientSide) return
         level as ServerLevel
 
-        level.getShipManagingPos(pos)?.getAttachment<BalloonShipControl>()?.removeBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble())
+        level.getShipManagingPos(pos)?.getAttachment<BalloonShipControl>()?.removeBalloon(pos)
     }
 
     override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {

@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "powered=false": {
       "model": "vs_tournament:block/balloon"
+    },
+    "powered=true": {
+      "model": "vs_tournament:block/balloon_on"
     }
   }
 }

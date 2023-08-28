@@ -20,6 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList
     isGetterVisibility = JsonAutoDetect.Visibility.NONE,
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
+// for compat only!!
 class TournamentShipControl : ShipForcesInducer, ServerShipUser {
 
     @JsonIgnore

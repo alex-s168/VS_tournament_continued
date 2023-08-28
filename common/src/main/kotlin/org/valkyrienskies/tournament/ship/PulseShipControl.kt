@@ -18,10 +18,18 @@ import java.util.concurrent.CopyOnWriteArrayList
 )
 class PulseShipControl : ShipForcesInducer {
 
+    // for compat only!!
+    private val Pulses = CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
+
     private val pulses = CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
+
+        Pulses.forEach {
+            pulses.add(it)
+        }
+        Pulses.clear()
 
         pulses.forEach {
             val (pos, force) = it

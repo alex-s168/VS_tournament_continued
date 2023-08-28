@@ -23,6 +23,7 @@ object TournamentBlocks {
 
     lateinit var SHIP_ASSEMBLER           : RegistrySupplier<ShipAssemblerBlock>
     lateinit var BALLAST                  : RegistrySupplier<BallastBlock>
+    lateinit var POWERED_BALLOON          : RegistrySupplier<BalloonBlock>
     lateinit var BALLOON                  : RegistrySupplier<BalloonBlock>
     lateinit var THRUSTER                 : RegistrySupplier<ThrusterBlock>
     lateinit var THRUSTER_TINY            : RegistrySupplier<ThrusterBlock>
@@ -43,7 +44,8 @@ object TournamentBlocks {
     fun register() {
         SHIP_ASSEMBLER           = BLOCKS.register("ship_assembler", ::ShipAssemblerBlock)
         BALLAST                  = BLOCKS.register("ballast", ::BallastBlock)
-        BALLOON                  = BLOCKS.register("balloon", ::BalloonBlock)
+        POWERED_BALLOON          = BLOCKS.register("balloon", ::PoweredBalloonBlock)
+        BALLOON                  = BLOCKS.register("balloon_unpowered", ::BalloonBlock)
         THRUSTER                 = BLOCKS.register("thruster") { ThrusterBlock(
             1.0,
             ParticleTypes.FIREWORK,
@@ -100,7 +102,7 @@ object TournamentBlocks {
 
     fun makeFlammables() {
         flammableBlock(SEAT.get(), 15, 25)
-        flammableBlock(BALLOON.get(), 30, 60)
+        flammableBlock(POWERED_BALLOON.get(), 30, 60)
     }
 
     fun registerItems(items: DeferredRegister<Item>) {

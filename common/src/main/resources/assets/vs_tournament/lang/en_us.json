@@ -1,7 +1,7 @@
 {
   "block.vs_tournament.ballast": "Ballast",
   "block.vs_tournament.balloon": "Powered Balloon",
-  "block.vs_tournament.unp_balloon": "Balloon",
+  "block.vs_tournament.balloon_unpowered": "Balloon",
   "block.vs_tournament.spinner": "Spinner",
   "block.vs_tournament.thruster": "Thruster",
   "block.vs_tournament.tiny_thruster": "Tiny Thruster",
@@ -29,6 +29,6 @@
   "item.vs_tournament.delete_wand.deleted": "Deleted ship!",
 
   "advancements.vs_tournament.ship_assemble.title": "Assemble a ship",
-    "advancements.vs_tournament.ship_assemble.description": "Create a VS2 ship with the ship assembler"
+  "advancements.vs_tournament.ship_assemble.description": "Create a VS2 ship with the ship assembler"
 
 }

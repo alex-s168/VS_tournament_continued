@@ -20,10 +20,18 @@ import java.util.concurrent.CopyOnWriteArrayList
 )
 class SpinnerShipControl : ShipForcesInducer {
 
+    // for compat only!!
+    private val Spinners = mutableListOf<Pair<Vector3i, Vector3d>>()
+
     private val spinners = CopyOnWriteArrayList<Pair<Vector3i, Vector3d>>()
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
+
+        Spinners.forEach {
+            spinners.add(it)
+        }
+        spinners.clear()
 
         spinners.forEach {
             val (_, torque) = it
