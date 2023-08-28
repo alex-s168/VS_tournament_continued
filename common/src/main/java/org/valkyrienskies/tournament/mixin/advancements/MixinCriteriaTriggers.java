@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MixinCriteriaTriggers {
 
     @Invoker("register")
-    public static <T extends CriterionTrigger<?>> T registerInvoker(T criterion) {
+    static <T extends CriterionTrigger<?>> T registerInvoker(T criterion) {
         throw new AssertionError();
     }
 

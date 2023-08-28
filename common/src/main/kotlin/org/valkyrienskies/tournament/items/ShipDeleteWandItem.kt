@@ -34,7 +34,7 @@ class ShipDeleteWandItem : Item(
 
         ship.delete(level)
 
-        context.player?.sendMessage(TranslatableComponent("item.vs_tournament.delete_wand.deleted"), Util.NIL_UUID)
+        context.player?.sendMessage(TranslatableComponent("chat.vs_tournament.delete_wand.deleted"), Util.NIL_UUID)
 
         return super.useOn(context)
     }

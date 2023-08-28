@@ -84,7 +84,7 @@ class ShipSpawnerItem : Item(
         return true
     }
 
-    private fun createRandom(seed: Long): Random? {
+    private fun createRandom(seed: Long): Random {
         return if (seed == 0L) Random(Util.getMillis()) else Random(seed)
     }
 

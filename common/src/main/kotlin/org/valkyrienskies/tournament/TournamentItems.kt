@@ -4,6 +4,7 @@ import net.minecraft.core.Registry
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import org.valkyrienskies.tournament.items.*
+import org.valkyrienskies.tournament.items.old.GravityGunItem
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
 
@@ -15,6 +16,10 @@ object TournamentItems {
     lateinit var TOOL_PULSEGUN     :  RegistrySupplier<PulseGunItem>
     lateinit var TOOL_DELETEWAND   :  RegistrySupplier<ShipDeleteWandItem>
     lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
+    lateinit var GIFT_BAG          :  RegistrySupplier<GiftBagItem>
+
+    // old:
+    lateinit var TOOL_GRAVITYGUN   :  RegistrySupplier<GravityGunItem>
 
     lateinit var TAB: CreativeModeTab
 
@@ -25,6 +30,10 @@ object TournamentItems {
         UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster") {
             Item(Item.Properties().stacksTo(16).tab(TAB))
         }
+        GIFT_BAG                = ITEMS.register("gift_bag", ::GiftBagItem)
+
+        // old:
+        TOOL_GRAVITYGUN         = ITEMS.register("grab_gun", ::GravityGunItem)
 
         TournamentBlocks.registerItems(ITEMS)
         ITEMS.applyAll()

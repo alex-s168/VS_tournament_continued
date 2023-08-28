@@ -43,11 +43,11 @@ class RopeItem : Item(
                 connectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
                 if (clickedPosition == null)
                     context.player!!.sendMessage(
-                        TranslatableComponent("item.vs_tournament.rope.connected"),
+                        TranslatableComponent("chat.vs_tournament.rope.connected"),
                         Util.NIL_UUID
                     )
                 else
-                    context.player!!.sendMessage(TranslatableComponent("item.vs_tournament.rope.first"), Util.NIL_UUID)
+                    context.player!!.sendMessage(TranslatableComponent("chat.vs_tournament.rope.first"), Util.NIL_UUID)
 
                 println("  ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < == > " + level.getBlockState(blockPos).block)
 
