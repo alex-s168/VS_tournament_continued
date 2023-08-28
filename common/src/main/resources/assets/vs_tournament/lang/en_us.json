@@ -1,11 +1,11 @@
 {
   "block.vs_tournament.ballast": "Ballast",
-  "block.vs_tournament.balloon": "Balloon",
+  "block.vs_tournament.balloon": "Powered Balloon",
+  "block.vs_tournament.unp_balloon": "Balloon",
   "block.vs_tournament.spinner": "Spinner",
   "block.vs_tournament.thruster": "Thruster",
   "block.vs_tournament.tiny_thruster": "Tiny Thruster",
   "block.vs_tournament.ship_assembler": "Ship Assembler",
-  "block.vs_tournament.hinge": "Hinge",
   "block.vs_tournament.seat": "Seat",
   "block.vs_tournament.sensor": "Distance Sensor",
   "block.vs_tournament.rope_hook": "Rope Hook",
@@ -15,7 +15,7 @@
   "block.vs_tournament.explosive_instant_large": "Instant Explosive (large)",
   "block.vs_tournament.explosive_staged_small": "Staged Explosive (small)",
 
-  "itemGroup.vs_tournament.tournament_tab": "VS Tournament",
+  "itemGroup.vs_tournament.main_tab": "VS Tournament",
 
   "item.vs_tournament.pulse_gun": "Pulse Gun",
   "item.vs_tournament.delete_wand": "Deleting Tool",
@@ -26,6 +26,9 @@
   "item.vs_tournament.grab_gun.disabled": "Gravity Gun is disabled on this server!",
   "item.vs_tournament.rope.connected": "Rope connected!",
   "item.vs_tournament.rope.first": "First position set!",
-  "item.vs_tournament.delete_wand.deleted": "Deleted ship!"
+  "item.vs_tournament.delete_wand.deleted": "Deleted ship!",
+
+  "advancements.vs_tournament.ship_assemble.title": "Assemble a ship",
+    "advancements.vs_tournament.ship_assemble.description": "Create a VS2 ship with the ship assembler"
 
 }

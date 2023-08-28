@@ -1,31 +1,33 @@
 package org.valkyrienskies.tournament
 
 import net.minecraft.core.Registry
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
-import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Item
 import org.valkyrienskies.tournament.items.*
-import org.valkyrienskies.tournament.registry.CreativeTabs
 import org.valkyrienskies.tournament.registry.DeferredRegister
+import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 @Suppress("unused")
 object TournamentItems {
     private val ITEMS = DeferredRegister.create(TournamentMod.MOD_ID, Registry.ITEM_REGISTRY)
 
-    val ROPE                    = ITEMS.register("rope", ::RopeItem)
-    val TOOL_PULSEGUN           = ITEMS.register("pulse_gun", ::PulseGunItem)
-    val TOOL_DELETEWAND         = ITEMS.register("delete_wand", ::ShipDeleteWandItem)
-    val TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GravityGunItem)
-    val UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster", ::ThrusterUpgradeItem)
+    lateinit var ROPE              :  RegistrySupplier<RopeItem>
+    lateinit var TOOL_PULSEGUN     :  RegistrySupplier<PulseGunItem>
+    lateinit var TOOL_DELETEWAND   :  RegistrySupplier<ShipDeleteWandItem>
+    lateinit var TOOL_GRABGUN      :  RegistrySupplier<GravityGunItem>
+    lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
 
-    val TAB: CreativeModeTab = CreativeTabs.create(
-        ResourceLocation(
-            TournamentMod.MOD_ID,
-            "tournament_tab"
-        )
-    ) { ItemStack(TournamentBlocks.THRUSTER.get()) }
+    lateinit var TAB: CreativeModeTab
 
     fun register() {
+        ROPE                    = ITEMS.register("rope", ::RopeItem)
+        TOOL_PULSEGUN           = ITEMS.register("pulse_gun", ::PulseGunItem)
+        TOOL_DELETEWAND         = ITEMS.register("delete_wand", ::ShipDeleteWandItem)
+        TOOL_GRABGUN            = ITEMS.register("grab_gun", ::GravityGunItem)
+        UPGRADE_THRUSTER        = ITEMS.register("upgrade_thruster") {
+            Item(Item.Properties().stacksTo(16).tab(TAB))
+        }
+
         TournamentBlocks.registerItems(ITEMS)
         ITEMS.applyAll()
     }

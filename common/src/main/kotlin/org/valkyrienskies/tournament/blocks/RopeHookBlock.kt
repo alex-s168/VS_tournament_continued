@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.item.ItemEntity
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
@@ -20,7 +22,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentDebugHelper
-import org.valkyrienskies.tournament.api.annotation.WhoCaresAboutDoingItProperly
+import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.api.block.DirectionalBaseEntityBlock
 import org.valkyrienskies.tournament.api.debug.DebugLine
 import org.valkyrienskies.tournament.api.helper.Helper3d
@@ -52,18 +54,16 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
         if (be.otherPos != null && !be.isSecondary && TournamentDebugHelper.exists(be.debugID) ) {
             if (be.maxLen == 0.0) {
                 be.maxLen = (Helper3d.convertShipToWorldSpace(level, be.otherPos!!)
-                    .distance(Helper3d.convertShipToWorldSpace(level, be.mainPos!!))).absoluteValue
+                    .distance(Helper3d.convertShipToWorldSpace(level, be.mainPos!!)))
+                    .absoluteValue
             }
-            if(TournamentConfig.CLIENT.particleRopeRenderer) {
-                val p1 = Helper3d.convertShipToWorldSpace(level, be.mainPos!!.add(0.5, 0.5, 0.5))
-                val p2 = Helper3d.convertShipToWorldSpace(level, be.otherPos!!.add(0.5, 0.5, 0.5))
+            val p1 = Helper3d.convertShipToWorldSpace(level, be.mainPos!!)
+            val p2 = Helper3d.convertShipToWorldSpace(level, be.otherPos!!)
 
+            if (TournamentConfig.CLIENT.particleRopeRenderer)
                 Helper3d.drawQuadraticParticleCurve(p1, p2, be.maxLen, 5.0, level, ParticleTypes.CLOUD)
-            }
 
-            if (!TournamentDebugHelper.exists(be.debugID)) {
-                TournamentDebugHelper.list()[be.debugID] = DebugLine(be.mainPos!!, be.otherPos!!, Color.RED, !TournamentConfig.CLIENT.particleRopeRenderer)
-            }
+            TournamentDebugHelper.list()[be.debugID] = DebugLine(p1, p2, Color.RED, !TournamentConfig.CLIENT.particleRopeRenderer)
         }
     }
 
@@ -91,13 +91,15 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
         if(signal > 0)
-            killk(level, pos)
+            dropConstraints(level, pos)
     }
 
-    fun killk(level: ServerLevel, pos: BlockPos) {
+    fun dropConstraints(level: ServerLevel, pos: BlockPos) {
         val be = level.getBlockEntity(pos) as RopeHookBlockEntity
+
         if(be.isSecondary) {
             val t = be.conPos?.let { level.getBlockState(it) }
+
             try {
                 val pbe = (be.conPos?.let { level.getBlockEntity(it) } as RopeHookBlockEntity)
                 pbe.ropeId?.let { level.shipObjectWorld.removeConstraint( it ) }
@@ -106,10 +108,16 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
                 pbe.ropeId = 0
                 pbe.debugID = -1
                 level.sendBlockUpdated(pbe.blockPos, pbe.blockState, pbe.blockState, Block.UPDATE_ALL_IMMEDIATE)
-            } catch (ignored : Exception) {}
+            } catch (_: Exception) {}
+
             be.conPos?.let { level.removeBlock(it, false) }
             be.conPos?.let { level.setBlock(it, t!!, 2) }
+
+            ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), ItemStack(TournamentItems.ROPE.get())).also {
+                level.addFreshEntity(it)
+            }
         }
+
         TournamentDebugHelper.removeObject(be.debugID)
         be.ropeId?.let { level.shipObjectWorld.removeConstraint(it) }
         be.otherPos = null
@@ -118,12 +126,11 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
         level.sendBlockUpdated(be.blockPos, be.blockState, be.blockState, Block.UPDATE_ALL_IMMEDIATE)
     }
 
-    @WhoCaresAboutDoingItProperly
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         if (level.isClientSide) return
         level as ServerLevel
 
-        killk(level, pos)
+        dropConstraints(level, pos)
 
         super.onRemove(state, level, pos, newState, isMoving)
     }
@@ -144,7 +151,7 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
         if(signal > 0)
-            killk(level, pos)
+            dropConstraints(level, pos)
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {

@@ -37,13 +37,14 @@ class SensorBlock : BaseEntityBlock(
         registerDefaultState(defaultBlockState().setValue(DirectionalBaseEntityBlock.FACING, Direction.NORTH).setValue(BlockStateProperties.POWER, 0))
     }
 
-    override fun getRenderShape(blockState: BlockState): RenderShape {
-        return RenderShape.MODEL
-    }
+    override fun getRenderShape(blockState: BlockState): RenderShape = RenderShape.MODEL
 
-    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-        return ROPEATTACH_SHAPE[state.getValue(FACING)]
-    }
+    override fun getShape(
+        state: BlockState,
+        level: BlockGetter,
+        pos: BlockPos,
+        context: CollisionContext
+    ): VoxelShape = ROPEATTACH_SHAPE[state.getValue(FACING)]
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
@@ -71,19 +72,21 @@ class SensorBlock : BaseEntityBlock(
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
         var dir = ctx.nearestLookingDirection.opposite
+
         if(ctx.player != null && ctx.player!!.isShiftKeyDown)
             dir = dir.opposite
         return defaultBlockState()
             .setValue(FACING, dir)
     }
 
-    override fun isSignalSource(state: BlockState): Boolean {
-        return true
-    }
+    override fun isSignalSource(state: BlockState): Boolean = true
 
-    override fun getSignal(state: BlockState, level: BlockGetter, pos: BlockPos, direction: Direction): Int {
-        return (level.getBlockEntity(pos) as SensorBlockEntity).lastVal
-    }
+    override fun getSignal(
+        state: BlockState,
+        level: BlockGetter,
+        pos: BlockPos,
+        direction: Direction
+    ): Int = (level.getBlockEntity(pos) as SensorBlockEntity).lastVal
 
     override fun <T : BlockEntity> getTicker(
         level: Level,

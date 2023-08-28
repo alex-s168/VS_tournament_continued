@@ -35,13 +35,14 @@ class SpinnerBlock : DirectionalBlock(
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(BlockStateProperties.POWER, 0))
     }
 
-    override fun getRenderShape(blockState: BlockState): RenderShape {
-        return RenderShape.MODEL
-    }
+    override fun getRenderShape(blockState: BlockState): RenderShape = RenderShape.MODEL
 
-    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
-        return SPINNER_SHAPE[state.getValue(BlockStateProperties.FACING)]
-    }
+    override fun getShape(
+        state: BlockState,
+        level: BlockGetter,
+        pos: BlockPos,
+        context: CollisionContext
+    ): VoxelShape = SPINNER_SHAPE[state.getValue(BlockStateProperties.FACING)]
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
@@ -62,8 +63,11 @@ class SpinnerBlock : DirectionalBlock(
                 level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
         ).addSpinner(
                 pos.toJOML(),
-                state.getValue(FACING).opposite.normal.toJOMLD()
-                        .mul(state.getValue(BlockStateProperties.POWER).toDouble())
+                state.getValue(FACING)
+                    .opposite
+                    .normal
+                    .toJOMLD()
+                    .mul(state.getValue(BlockStateProperties.POWER).toDouble())
         )
     }
 
@@ -96,12 +100,14 @@ class SpinnerBlock : DirectionalBlock(
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
     }
 
-    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
-        return defaultBlockState()
+    override fun getStateForPlacement(
+        ctx: BlockPlaceContext
+    ): BlockState = defaultBlockState()
             .setValue(FACING, ctx.nearestLookingDirection.opposite)
-    }
 
-    override fun getBlockSupportShape(state: BlockState, reader: BlockGetter, pos: BlockPos): VoxelShape {
-        return RotShapes.cube().makeMcShape()
-    }
+    override fun getBlockSupportShape(
+        state: BlockState,
+        reader: BlockGetter,
+        pos: BlockPos
+    ): VoxelShape = RotShapes.cube().makeMcShape()
 }

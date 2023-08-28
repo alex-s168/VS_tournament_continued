@@ -1,6 +1,9 @@
 package org.valkyrienskies.tournament
 
+import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.ItemStack
 import org.valkyrienskies.core.impl.config.VSConfigClass
+import org.valkyrienskies.tournament.TournamentBlocks.SHIP_ASSEMBLER
 
 
 object TournamentMod {

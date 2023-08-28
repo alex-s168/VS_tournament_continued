@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "vs_tournament:ship_assembler"
+    },
+    "title": {
+      "translate": "advancements.vs_tournament.ship_assemble.title"
+    },
+    "description": {
+      "translate": "advancements.vs_tournament.ship_assemble.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "vs_tournament:ship_assembled"
+    }
+  },
+  "requirements": []
+}

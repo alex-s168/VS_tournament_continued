@@ -24,7 +24,7 @@ class ExplosiveBlockEntity(pos: BlockPos, state: BlockState)
                 (state.block as AbstractExplosiveBlock).explodeTick(level as ServerLevel, pos)
                 be.explosionTicks--
             }
-            if(be.explosionTicks == 1) {
+            else if(be.explosionTicks == 1) {
                 level.removeBlock(pos, false)
                 be.explosionTicks--
             }

@@ -27,9 +27,10 @@ import org.valkyrienskies.mod.common.ValkyrienSkiesMod
 import org.valkyrienskies.mod.common.util.toDoubles
 
 class SeatBlock :
-        HorizontalDirectionalBlock(
-                Properties.of(Material.WOOL).strength(1.0f, 2.0f).sound(SoundType.WOOL)
-        ) {
+        HorizontalDirectionalBlock(Properties.of(Material.WOOL)
+                .strength(1.0f, 2.0f)
+                .sound(SoundType.WOOL))
+{
     private val SEAT_AABB: VoxelShape = box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0)
 
     init {
@@ -47,17 +48,20 @@ class SeatBlock :
 
     @Deprecated("Deprecated in Java")
     override fun getShape(
-            state: BlockState, level: BlockGetter?, pos: BlockPos?, context: CollisionContext?
+        state: BlockState,
+        level: BlockGetter,
+        pos: BlockPos,
+        context: CollisionContext
     ): VoxelShape = SEAT_AABB
 
     @Deprecated("Deprecated in Java")
     override fun use(
-            state: BlockState,
-            level: Level,
-            pos: BlockPos,
-            player: Player,
-            hand: InteractionHand,
-            blockHitResult: BlockHitResult
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        player: Player,
+        hand: InteractionHand,
+        blockHitResult: BlockHitResult
     ): InteractionResult {
         if (level.isClientSide) return InteractionResult.SUCCESS
         val seatEntity = ValkyrienSkiesMod.SHIP_MOUNTING_ENTITY_TYPE.create(level)!!.apply {

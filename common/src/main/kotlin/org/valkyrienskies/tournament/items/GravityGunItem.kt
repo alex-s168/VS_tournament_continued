@@ -54,7 +54,7 @@ class GravityGunItem : Item(
 
     override fun appendHoverText(stack: ItemStack, level: Level?, tooltipComponents: MutableList<Component>, isAdvanced: TooltipFlag) {
         if (!TournamentConfig.SERVER.gravityGunEnabled) {
-            tooltipComponents.toMutableList().add(TranslatableComponent("item.vs_tournament.grab_gun.disabled"))
+            tooltipComponents.add(TranslatableComponent("item.vs_tournament.grab_gun.disabled"))
         }
     }
 
@@ -128,7 +128,7 @@ class GravityGunItem : Item(
         super.inventoryTick(stack, level, entity, slotId, isSelected)
     }
 
-    fun onDropConstraints(level: Level) {
+    private fun onDropConstraints(level: Level) {
         grabbing = false
         if (level is ServerLevel && thisShipID != null && thisRotationConstraintID != null && thisAttachConstraintID != null) {
             level.shipObjectWorld.removeConstraint(thisRotationConstraintID!!)

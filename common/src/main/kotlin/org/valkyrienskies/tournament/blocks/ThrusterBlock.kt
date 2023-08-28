@@ -2,7 +2,7 @@ package org.valkyrienskies.tournament.blocks
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -32,7 +32,11 @@ import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import java.util.*
 
-class ThrusterBlock : DirectionalBlock (
+class ThrusterBlock(
+    val mult: Double,
+    val particle: ParticleOptions,
+    val maxTier: Int
+) : DirectionalBlock (
     Properties.of(Material.STONE)
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
 ) {
@@ -57,7 +61,7 @@ class ThrusterBlock : DirectionalBlock (
         if (level as? ServerLevel == null) return InteractionResult.PASS
         if (player.mainHandItem.item.asItem().equals(TournamentItems.UPGRADE_THRUSTER.get()) && hand == InteractionHand.MAIN_HAND) {
 
-            if (state.getValue(TournamentProperties.TIER) != 5) {
+            if (state.getValue(TournamentProperties.TIER) < maxTier) {
 
                 level.setBlock(
                     pos,
@@ -68,15 +72,26 @@ class ThrusterBlock : DirectionalBlock (
                     1
                 )
 
-                println(level.getBlockState(pos).getValue(TournamentProperties.TIER))
+                with(ThrusterShipControl.getOrCreate(
+                    level.getShipObjectManagingPos(pos)
+                        ?: level.getShipManagingPos(pos)
+                        ?: return InteractionResult.CONSUME
+                )) {
+                    this.forceStopThruster(pos)
+                    this.addThruster(
+                        pos,
+                        state.getValue(TournamentProperties.TIER).toDouble() * mult,
+                        state.getValue(FACING)
+                            .normal
+                            .toJOMLD()
+                            .mul(state.getValue(BlockStateProperties.POWER).toDouble())
+                    )
+                }
 
                 return InteractionResult.CONSUME
             }
-            return InteractionResult.PASS
         }
-        else {
-            return InteractionResult.PASS
-        }
+        return InteractionResult.PASS
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
@@ -95,14 +110,21 @@ class ThrusterBlock : DirectionalBlock (
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
-        ThrusterShipControl.getOrCreate(
-                level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
-        ).addThruster(
+        with(ThrusterShipControl.getOrCreate(
+            level.getShipObjectManagingPos(pos)
+                ?: level.getShipManagingPos(pos)
+                ?: return
+        )) {
+            this.forceStopThruster(pos)
+            this.addThruster(
                 pos,
-                state.getValue(TournamentProperties.TIER).toDouble(),
-                state.getValue(FACING).normal.toJOMLD()
-                        .mul(state.getValue(BlockStateProperties.POWER).toDouble())
-        )
+                state.getValue(TournamentProperties.TIER).toDouble() * mult,
+                state.getValue(FACING)
+                    .normal
+                    .toJOMLD()
+                    .mul(state.getValue(BlockStateProperties.POWER).toDouble())
+            )
+        }
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -129,7 +151,25 @@ class ThrusterBlock : DirectionalBlock (
         if (level as? ServerLevel == null) return
 
         val signal = level.getBestNeighborSignal(pos)
+        if (state.getValue(BlockStateProperties.POWER) == signal) return
+
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
+
+        with(ThrusterShipControl.getOrCreate(
+            level.getShipObjectManagingPos(pos)
+                ?: level.getShipManagingPos(pos)
+                ?: return
+        )) {
+            this.forceStopThruster(pos)
+            this.addThruster(
+                pos,
+                state.getValue(TournamentProperties.TIER).toDouble() * mult,
+                state.getValue(FACING)
+                    .normal
+                    .toJOMLD()
+                    .mul(state.getValue(BlockStateProperties.POWER).toDouble())
+            )
+        }
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
@@ -150,7 +190,7 @@ class ThrusterBlock : DirectionalBlock (
             val speedY = dir.stepY * -0.4
             val speedZ = dir.stepZ * -0.4
 
-            level.addParticle(ParticleTypes.FIREWORK, x, y, z, speedX, speedY, speedZ)
+            level.addParticle(particle, x, y, z, speedX, speedY, speedZ)
         }
     }
 

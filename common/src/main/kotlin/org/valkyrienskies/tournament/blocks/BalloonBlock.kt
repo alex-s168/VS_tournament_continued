@@ -47,7 +47,20 @@ class BalloonBlock : Block(
         if (level as? ServerLevel == null) return
 
         val signal = level.getBestNeighborSignal(pos)
-        level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
+        if (signal == state.getValue(BlockStateProperties.POWER)) return
+
+        with(BalloonShipControl.getOrCreate(
+            level.getShipObjectManagingPos(pos)
+                ?: level.getShipManagingPos(pos)
+                ?: return
+        )) {
+            this.removeBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble())
+            level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
+            this.addBalloon(
+                pos,
+                state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.balloonAnalogStrength
+            )
+        }
     }
 
     override fun fallOn(level: Level, state: BlockState, blockPos: BlockPos, entity: Entity, f: Float) {
@@ -59,8 +72,14 @@ class BalloonBlock : Block(
         if (level.isClientSide) return
         level as ServerLevel
 
-        BalloonShipControl.getOrCreate(level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
-            ).addBalloon(pos, state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.balloonAnalogStrength)
+        BalloonShipControl.getOrCreate(
+            level.getShipObjectManagingPos(pos)
+                ?: level.getShipManagingPos(pos)
+                ?: return
+        ).addBalloon(
+            pos,
+            state.getValue(BlockStateProperties.POWER).toDouble() * TournamentConfig.SERVER.balloonAnalogStrength
+        )
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
