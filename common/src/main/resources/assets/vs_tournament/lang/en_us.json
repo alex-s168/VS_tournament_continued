@@ -19,18 +19,20 @@
 
   "item.vs_tournament.pulse_gun": "Pulse Gun",
   "item.vs_tournament.delete_wand": "Deleting Tool",
-  "item.vs_tournament.grab_gun": "Gravity Gun",
   "item.vs_tournament.upgrade_thruster": "Thruster Upgrade",
   "item.vs_tournament.rope": "Rope",
   "item.vs_tournament.gift_bag": "Gift Bag",
+  "item.vs_tournament.grab_gun": "OLD ITEM",
+  "item.vs_tournament.delete_gun": "OLD ITEM",
 
   "chat.vs_tournament.rope.connected": "Rope connected!",
   "chat.vs_tournament.rope.first": "First position set!",
   "chat.vs_tournament.delete_wand.deleted": "Deleted ship!",
 
-
   "advancements.vs_tournament.ship_assemble.title": "Assemble a ship",
   "advancements.vs_tournament.ship_assemble.description": "Create a VS2 ship with the ship assembler",
+  "advancements.vs_tournament.balloon_pop.title": "Popping balloons is fun!",
+  "advancements.vs_tournament.balloon_pop.description": "Hit a balloon with a projectile",
 
   "tooltip.vs_tournament.old_item": "We removed this item. Right click it to get your compensation.",
   "tooltip.vs_tournament.gift.grab_gun": "The pieces of your old gravity gun. Right click to get your compensation."

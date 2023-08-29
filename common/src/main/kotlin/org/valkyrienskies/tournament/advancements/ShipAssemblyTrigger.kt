@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.trigger
+package org.valkyrienskies.tournament.advancements
 
 import com.google.gson.JsonObject
 import net.minecraft.advancements.critereon.*
@@ -45,11 +45,6 @@ class ShipAssemblyTrigger
 
         fun matches(shipSize: Int): Boolean = this.shipSize.matches(shipSize)
 
-        companion object {
-            fun shipAssembled(shipSize: Ints): TriggerInstance {
-                return TriggerInstance(EntityPredicate.Composite.ANY, shipSize)
-            }
-        }
     }
 
 }

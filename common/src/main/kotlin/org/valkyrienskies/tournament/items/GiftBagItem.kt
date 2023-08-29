@@ -56,10 +56,7 @@ class GiftBagItem : Item(
                 .withLuck(player.luck)
                 .withParameter(LootContextParams.THIS_ENTITY, player)
                 .create(LootContextParamSets.PIGLIN_BARTER)
-            println(table)
-            println(level.server.lootTables.ids.contains(table))
             val loot = level.server.lootTables.get(table).getRandomItems(ctx)
-            println(loot)
 
             loot.forEach { itemStack ->
                 if (!player.inventory.add(itemStack)) {

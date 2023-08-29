@@ -90,6 +90,8 @@ object TournamentBlocks {
         }
         EXPLOSIVE_TEST           = BLOCKS.register("explosive_test", ::TestExplosiveBlock)
 
+        // old:
+
 
         BLOCKS.applyAll()
         VSGameEvents.registriesCompleted.on { _, _ ->

@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "vs_tournament:balloon_unpowered"
+    },
+    "title": {
+      "translate": "advancements.vs_tournament.balloon_pop.title"
+    },
+    "description": {
+      "translate": "advancements.vs_tournament.balloon_pop.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "vs_tournament:balloon_shot"
+    }
+  },
+  "rewards": {}
+}
