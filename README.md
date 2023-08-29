@@ -1,2 +1,4 @@
-# VS_Tournament
- A revision of the revision of the vs tournament mod, engineer at your hearts content!
+![Logo-Recovered](vs_tournament_logo.png)
+
+# VS: Tournament
+Small mod that adds some utilities to Valkyrien Skies 2
