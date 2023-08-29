@@ -32,7 +32,9 @@ class GravityGunItem : Item(
             player.drop(stack, false)
         }
 
-        return InteractionResultHolder.consume(player.getItemInHand(usedHand))
+        val thisStack = player.getItemInHand(usedHand)
+        thisStack.shrink(1)
+        return InteractionResultHolder.consume(thisStack)
     }
 
     override fun appendHoverText(

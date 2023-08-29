@@ -68,6 +68,7 @@ class GiftBagItem : Item(
             }
         }
 
+        stack.shrink(1)
         return InteractionResultHolder.consume(stack)
     }
 
