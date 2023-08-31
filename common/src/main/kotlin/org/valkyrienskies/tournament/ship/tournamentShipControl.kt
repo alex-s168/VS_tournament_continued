@@ -21,11 +21,18 @@ import java.util.concurrent.CopyOnWriteArrayList
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 // for compat only!!
-class TournamentShipControl : ShipForcesInducer, ServerShipUser {
+class tournamentShipControl : ShipForcesInducer, ServerShipUser {
 
     @JsonIgnore
     override var ship: ServerShip? = null
 
+    private var extraForce = 0.0
+    private var physConsumption = 0f
+    var power = 0.0
+    var consumed = 0f
+        private set
+
+    private val Balloons = mutableListOf<Pair<Vector3i, Double>>()
     private val Spinners = mutableListOf<Pair<Vector3i, Vector3d>>()
     private val Thrusters = mutableListOf<Triple<Vector3i, Vector3d, Double>>()
     private val Pulses = CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
@@ -35,6 +42,10 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser {
         physShip as PhysShipImpl
 
         println("Converting old ship controller from ship ${ship!!.id} to new one")
+
+        Balloons.forEach { (pos, force) ->
+            BalloonShipControl.getOrCreate(ship!!).addBalloon(pos.toBlockPos(), force)
+        }
 
         Thrusters.forEach { (pos, dir, strength) ->
             ThrusterShipControl.getOrCreate(ship!!).addThruster(pos.toBlockPos(), strength, dir)
@@ -48,7 +59,7 @@ class TournamentShipControl : ShipForcesInducer, ServerShipUser {
             PulseShipControl.getOrCreate(ship!!).addPulse(pos, force)
         }
 
-        ship!!.saveAttachment(TournamentShipControl::class.java, null)
+        ship!!.saveAttachment(tournamentShipControl::class.java, null)
     }
 
 }

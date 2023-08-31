@@ -34,6 +34,11 @@
   "advancements.vs_tournament.balloon_pop.title": "Popping balloons is fun!",
   "advancements.vs_tournament.balloon_pop.description": "Hit a balloon with a projectile",
 
-  "tooltip.vs_tournament.old_item": "We removed this item. Right click it to get your compensation.",
-  "tooltip.vs_tournament.gift.grab_gun": "The pieces of your old gravity gun. Right click to get your compensation."
+  "screen.vs_tournament.gift_bag.title": "Gift Bag",
+
+  "tooltip.vs_tournament.gift.none": "Empty",
+  "tooltip.vs_tournament.old_item": "We removed this item. Right click it in-game to get a compensation.",
+  "tooltip.vs_tournament.gift.grab_gun": "The pieces of your old gravity gun. Right click to get a compensation.",
+
+  "description.vs_tournament.old_block": "OLD BLOCK. Place and break to get new one."
 }

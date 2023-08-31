@@ -10,12 +10,12 @@ import net.minecraft.world.level.Explosion
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.FireBlock
-import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraft.world.level.material.Material
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.api.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
-import org.valkyrienskies.tournament.blocks.explosive.*
+import org.valkyrienskies.tournament.blocks.explosive.AbstractExplosiveBlock
+import org.valkyrienskies.tournament.blocks.explosive.SimpleExplosiveStagedBlock
+import org.valkyrienskies.tournament.blocks.explosive.TestExplosiveBlock
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
 
@@ -57,7 +57,7 @@ object TournamentBlocks {
             0.2,
             ParticleTypes.ELECTRIC_SPARK,
             3
-        )}
+        ) }
         SPINNER                  = BLOCKS.register("spinner", ::SpinnerBlock)
         SEAT                     = BLOCKS.register("seat", ::SeatBlock)
         ROPE_HOOK                = BLOCKS.register("rope_hook", ::RopeHookBlock)
@@ -91,6 +91,11 @@ object TournamentBlocks {
         EXPLOSIVE_TEST           = BLOCKS.register("explosive_test", ::TestExplosiveBlock)
 
         // old:
+        BLOCKS.register("shipifier") { OldBlock(SHIP_ASSEMBLER.get()) }
+        BLOCKS.register("instantexplosive") { OldBlock(EXPLOSIVE_INSTANT_MEDIUM.get()) }
+        BLOCKS.register("instantexplosive_big") { OldBlock(EXPLOSIVE_INSTANT_LARGE.get()) }
+        BLOCKS.register("stagedexplosive") { OldBlock(EXPLOSIVE_STAGED_SMALL.get()) }
+        BLOCKS.register("stagedexplosive_big") { OldBlock(Blocks.AIR) }
 
 
         BLOCKS.applyAll()
