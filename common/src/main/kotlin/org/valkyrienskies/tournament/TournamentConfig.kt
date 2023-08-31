@@ -18,9 +18,6 @@ object TournamentConfig {
 
     class Server {
 
-        @JsonSchema(description = "Gravity gun enabled")
-        var gravityGunEnabled = false
-
         @JsonSchema(description = "The maximum force a rope can handle before breaking")
         var ropeMaxForce = 1e10
 
@@ -52,9 +49,9 @@ object TournamentConfig {
         var pulseGunForce = 300.0
 
         @JsonSchema(description = "Maximum distance a sensor can detect a ship from")
-        var sensorDistance = 5.0
+        var sensorDistance = 17.0
 
-        @JsonSchema(description = "The speed at which the thruster will stop applying force")
+        @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
         var thrusterShutoffSpeed = 50
 
         @JsonSchema(description = "The list of blocks that don't get assembled by the ship assembler")

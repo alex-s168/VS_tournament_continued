@@ -53,7 +53,13 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState)
             false
         )
 
-        val value = max(1, min(15, ((1 - clipResult.location.toJOML().distance(Helper3d.convertShipToWorldSpace(level, blockPos)) / TournamentConfig.SERVER.sensorDistance) * 15).toInt()))
+        val value = max(1, min(15, (
+                (1 - Helper3d.convertShipToWorldSpace(level, clipResult.location.toJOML())
+                    .distance(Helper3d.convertShipToWorldSpace(level, blockPos))
+                        / TournamentConfig.SERVER.sensorDistance)
+                        * 16
+                ).toInt()
+        ))
 
         return if(clipResult.type == HitResult.Type.BLOCK) {
             value

@@ -5,6 +5,7 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.world.level.Level
 import org.joml.Vector3d
 import org.valkyrienskies.mod.common.getShipManagingPos
+import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.tournament.api.extension.toBlock
@@ -13,7 +14,7 @@ import kotlin.math.absoluteValue
 object Helper3d {
 
     fun convertShipToWorldSpace(level: Level, pos: BlockPos) : Vector3d {
-        val s = level.getShipManagingPos(pos)
+        val s = level.getShipObjectManagingPos(pos)
         return if (s == null) {
             pos.toJOMLD()
         } else {
