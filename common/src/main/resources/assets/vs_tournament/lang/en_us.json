@@ -9,6 +9,8 @@
   "block.vs_tournament.seat": "Seat",
   "block.vs_tournament.sensor": "Distance Sensor",
   "block.vs_tournament.rope_hook": "Rope Hook",
+  "block.vs_tournament.fuel_container_full": "Fuel Container",
+  "block.vs_tournament.fuel_gauge": "Fuel Gauge",
 
   "block.vs_tournament.explosive_instant_small": "Instant Explosive (small)",
   "block.vs_tournament.explosive_instant_medium": "Instant Explosive (medium)",
@@ -22,12 +24,20 @@
   "item.vs_tournament.upgrade_thruster": "Thruster Upgrade",
   "item.vs_tournament.rope": "Rope",
   "item.vs_tournament.gift_bag": "Gift Bag",
-  "item.vs_tournament.grab_gun": "OLD ITEM",
-  "item.vs_tournament.delete_gun": "OLD ITEM",
+  "item.vs_tournament.iron_cube": "Iron Cube",
+  "item.vs_tournament.raw_fuel_powder": "Raw Fuel Powder",
+  "item.vs_tournament.fuel_paste": "Fuel Paste",
+  "item.vs_tournament.coal_dust": "Coal Dust",
+  "item.vs_tournament.hammer": "Hammer",
+
+  "item.vs_tournament.old_item": "OLD ITEM",
 
   "chat.vs_tournament.rope.connected": "Rope connected!",
   "chat.vs_tournament.rope.first": "First position set!",
   "chat.vs_tournament.delete_wand.deleted": "Deleted ship!",
+  "chat.vs_tournament.fuel_container.amount": "Fuel: %s / %s tons",
+  "chat.vs_tournament.fuel_gauge.not_on_ship": "Not on a ship!",
+  "chat.vs_tournament.fuel_gauge.amount": "Total fuel: %s tons",
 
   "advancements.vs_tournament.ship_assemble.title": "Assemble a ship",
   "advancements.vs_tournament.ship_assemble.description": "Create a VS2 ship with the ship assembler",

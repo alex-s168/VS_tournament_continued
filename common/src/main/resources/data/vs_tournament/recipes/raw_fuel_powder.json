@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#S",
+    "GG"
+  ],
+  "key": {
+    "#": {
+      "item": "vs_tournament:coal_dust"
+    },
+    "S": {
+      "item": "minecraft:sugar"
+    },
+    "G": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "result": {
+    "item": "vs_tournament:raw_fuel_powder",
+    "count": 4
+  }
+}

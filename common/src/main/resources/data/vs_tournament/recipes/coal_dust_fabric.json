@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "vs_tournament:hammer"
+    }
+  ],
+  "result": {
+    "item": "vs_tournament:coal_dust",
+    "count": 1
+  }
+}

@@ -7,10 +7,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vs_tournament:explosive_staged_small"
+          "name": "vs_tournament:fuel_container_full"
         }
       ],
       "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
   ]

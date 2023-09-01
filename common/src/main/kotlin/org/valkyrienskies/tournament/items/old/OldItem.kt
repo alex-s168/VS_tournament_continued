@@ -14,26 +14,31 @@ import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.items.GiftBagItem
 
 
-class GravityGunItem : Item(
+class OldItem(
+    val name: String
+): Item(
     Properties()
         .stacksTo(1)
-        .tab(TournamentItems.TAB)
         .rarity(Rarity.RARE)
 ) {
 
+    override fun getDescriptionId(): String =
+        "item.vs_tournament.old_item"
+
     override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
+        val thisStack = player.getItemInHand(usedHand)
+
         val stack = GiftBagItem.of(
-            "vs_tournament:gifts/grab_gun",
-            "tooltip.vs_tournament.gift.grab_gun",
+            "vs_tournament:gifts/$name",
+            "tooltip.vs_tournament.gift.$name",
             Rarity.RARE
         )
+        stack.count = thisStack.count
 
-        if (!player.inventory.add(stack)) {
+        if (!player.inventory.add(stack))
             player.drop(stack, false)
-        }
 
-        val thisStack = player.getItemInHand(usedHand)
-        thisStack.shrink(1)
+        thisStack.count = 0
         return InteractionResultHolder.consume(thisStack)
     }
 

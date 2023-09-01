@@ -81,6 +81,15 @@ class SensorBlock : BaseEntityBlock(
 
     override fun isSignalSource(state: BlockState): Boolean = true
 
+    override fun getDirectSignal(state: BlockState, level: BlockGetter, pos: BlockPos, direction: Direction): Int {
+        val f = state.getValue(FACING)
+        return if (direction == f) {
+            0
+        } else {
+            state.getValue(BlockStateProperties.POWER)
+        }
+    }
+
     override fun getSignal(
         state: BlockState,
         level: BlockGetter,

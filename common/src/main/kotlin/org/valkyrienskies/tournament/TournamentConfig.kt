@@ -18,6 +18,15 @@ object TournamentConfig {
 
     class Server {
 
+        @JsonSchema(description = "Fuel mass of poor tier fuel (tons)")
+        var fuelValuePoor = 1
+
+        @JsonSchema(description = "Fuel mass of good tier fuel (tons)")
+        var fuelValueGood = 6
+
+        @JsonSchema(description = "Fuel mass of rich tier fuel (tons)")
+        var fuelValueRich = 20
+
         @JsonSchema(description = "The maximum force a rope can handle before breaking")
         var ropeMaxForce = 1e10
 

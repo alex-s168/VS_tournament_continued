@@ -7,10 +7,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vs_tournament:explosive_staged_small"
+          "name": "vs_tournament:fuel_gauge"
         }
       ],
       "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ]
     }
   ]
