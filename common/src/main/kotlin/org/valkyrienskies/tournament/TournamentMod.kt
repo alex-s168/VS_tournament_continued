@@ -17,6 +17,7 @@ object TournamentMod {
         TournamentItems.register()
         TournamentWeights.register()
         TournamentTriggers.init()
+        TournamentOres.register()
     }
 
     @JvmStatic

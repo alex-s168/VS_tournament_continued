@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
@@ -12,6 +13,9 @@ import net.minecraft.world.level.Explosion
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.FireBlock
+import net.minecraft.world.level.block.OreBlock
+import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.material.Material
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.api.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
@@ -101,6 +105,12 @@ object TournamentBlocks {
         FUEL_CONTAINER_FULL      = register("fuel_container_full", ::FuelContainerBlock)
 
         FUEL_GAUGE               = register("fuel_gauge", ::FuelGaugeBlock)
+
+        register("ore_phynite") {
+            OreBlock(BlockBehaviour.Properties.of(TournamentMaterials.PHYNITE)
+                .strength(3.0f, 3.0f)
+            )
+        }
 
 
         // old:

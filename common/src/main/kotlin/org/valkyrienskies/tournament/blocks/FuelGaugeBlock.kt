@@ -12,7 +12,7 @@ import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.BlockHitResult
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.mod.common.getShipManagingPos
-import org.valkyrienskies.tournament.storage.ShipFuelAttachment
+import org.valkyrienskies.tournament.storage.ShipFuelStorage
 import java.util.UUID
 
 class FuelGaugeBlock: Block(
@@ -41,7 +41,7 @@ class FuelGaugeBlock: Block(
             return InteractionResult.SUCCESS
         }
 
-        val fuel = ShipFuelAttachment.getOrCreate(ship as ServerShip).getTotalFuelValue()
+        val fuel = ShipFuelStorage.getFuel(ship as ServerShip)
         player.sendMessage(
             TranslatableComponent("chat.vs_tournament.fuel_gauge.amount", fuel.toString()),
             UUID(0, 0)

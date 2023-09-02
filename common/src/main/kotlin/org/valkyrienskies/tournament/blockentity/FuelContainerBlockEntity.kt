@@ -12,8 +12,12 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
+import org.valkyrienskies.core.api.ships.ServerShip
+import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.tournament.TournamentBlockEntities
+import org.valkyrienskies.tournament.storage.ShipFuelStorage
 import org.valkyrienskies.tournament.util.getThrusterFuelValue
+import java.util.concurrent.CopyOnWriteArrayList
 
 class FuelContainerBlockEntity(
     pos: BlockPos,
@@ -43,6 +47,15 @@ class FuelContainerBlockEntity(
 
     override fun load(tag: CompoundTag) {
         amount.set(tag.getDouble("amount"))
+        val ship = level!!.getShipManagingPos(worldPosition)
+        ship?.let {
+            ship as ServerShip
+            val li = ShipFuelStorage.ships.getOrPut(ship) { CopyOnWriteArrayList() }
+            if (li.contains(amount))
+                li[li.indexOf(amount)] = amount
+            else
+                li.add(amount)
+        }
     }
 
     companion object {

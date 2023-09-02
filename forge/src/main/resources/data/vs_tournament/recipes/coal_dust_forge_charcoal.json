@@ -2,14 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:coal"
+      "item": "minecraft:charcoal"
     },
     {
-      "item": "vs_tournament:hammer"
+      "type": "forge:ore_dict",
+      "ore": "toolHammer"
     }
   ],
   "result": {
     "item": "vs_tournament:coal_dust",
-    "count": 2
+    "count": 1
   }
 }

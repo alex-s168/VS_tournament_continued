@@ -5,11 +5,11 @@
       "item": "minecraft:coal"
     },
     {
-      "item": "vs_tournament:hammer"
+      "tag": "c:items/hammers"
     }
   ],
   "result": {
     "item": "vs_tournament:coal_dust",
-    "count": 2
+    "count": 1
   }
 }

@@ -20,9 +20,10 @@ import net.minecraft.world.phys.BlockHitResult
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.tournament.blockentity.FuelContainerBlockEntity
-import org.valkyrienskies.tournament.storage.ShipFuelAttachment
+import org.valkyrienskies.tournament.storage.ShipFuelStorage
 import org.valkyrienskies.tournament.util.getThrusterFuelValue
 import java.util.UUID
+import java.util.concurrent.CopyOnWriteArrayList
 
 class FuelContainerBlock: BaseEntityBlock(
     Properties.of(Material.METAL)
@@ -38,7 +39,7 @@ class FuelContainerBlock: BaseEntityBlock(
         val ship = level.getShipManagingPos(pos)
         ship?.let {
             ship as ServerShip
-            ShipFuelAttachment.getOrCreate(ship).fuelSources.add(be.amount)
+            ShipFuelStorage.ships.getOrPut(ship) { CopyOnWriteArrayList() }.add(be.amount)
         }
     }
 
@@ -49,7 +50,7 @@ class FuelContainerBlock: BaseEntityBlock(
         val ship = level.getShipManagingPos(pos)
         ship?.let {
             ship as ServerShip
-            ShipFuelAttachment.getOrCreate(ship).fuelSources.remove(be.amount)
+            ShipFuelStorage.ships[ship]?.remove(be.amount)
         }
     }
 
