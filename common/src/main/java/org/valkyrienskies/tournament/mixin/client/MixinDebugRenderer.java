@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.tournament.TournamentDebugHelper;
-import org.valkyrienskies.tournament.api.debug.DebugLine;
-import org.valkyrienskies.tournament.api.helper.Helper3d;
+import org.valkyrienskies.tournament.util.debug.DebugLine;
+import org.valkyrienskies.tournament.util.helper.Helper3d;
 
 import java.awt.*;
 

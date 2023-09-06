@@ -12,7 +12,7 @@ import org.valkyrienskies.core.impl.api.ShipForcesInducer
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TournamentConfig
-import org.valkyrienskies.tournament.api.extension.toDouble
+import org.valkyrienskies.tournament.util.extension.toDouble
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(

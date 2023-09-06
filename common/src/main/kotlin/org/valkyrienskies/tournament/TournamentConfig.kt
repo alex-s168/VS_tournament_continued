@@ -18,13 +18,13 @@ object TournamentConfig {
 
     class Server {
 
-        @JsonSchema(description = "Fuel mass of poor tier fuel (tons)")
+        @JsonSchema(description = "Fuel mass of poor tier fuel (kg)")
         var fuelValuePoor = 1
 
-        @JsonSchema(description = "Fuel mass of good tier fuel (tons)")
+        @JsonSchema(description = "Fuel mass of good tier fuel (kg)")
         var fuelValueGood = 6
 
-        @JsonSchema(description = "Fuel mass of rich tier fuel (tons)")
+        @JsonSchema(description = "Fuel mass of rich tier fuel (kg)")
         var fuelValueRich = 20
 
         @JsonSchema(description = "The maximum force a rope can handle before breaking")

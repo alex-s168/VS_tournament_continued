@@ -23,12 +23,13 @@ import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentDebugHelper
 import org.valkyrienskies.tournament.TournamentItems
-import org.valkyrienskies.tournament.api.block.DirectionalBaseEntityBlock
-import org.valkyrienskies.tournament.api.debug.DebugLine
-import org.valkyrienskies.tournament.api.helper.Helper3d
+import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
+import org.valkyrienskies.tournament.util.debug.DebugLine
+import org.valkyrienskies.tournament.util.helper.Helper3d
 import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
+import org.valkyrienskies.tournament.util.extension.ensureWorldPos
 import java.awt.Color
 import java.lang.Exception
 import java.util.*
@@ -57,8 +58,8 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
                     .distance(Helper3d.convertShipToWorldSpace(level, be.mainPos!!)))
                     .absoluteValue
             }
-            val p1 = Helper3d.convertShipToWorldSpace(level, be.mainPos!!)
-            val p2 = Helper3d.convertShipToWorldSpace(level, be.otherPos!!)
+            val p1 = level.ensureWorldPos(be.mainPos!!)
+            val p2 = level.ensureWorldPos(be.otherPos!!)
 
             if (TournamentConfig.CLIENT.particleRopeRenderer)
                 Helper3d.drawQuadraticParticleCurve(p1, p2, be.maxLen, 5.0, level, ParticleTypes.CLOUD)

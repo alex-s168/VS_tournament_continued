@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api.debug
+package org.valkyrienskies.tournament.util.debug
 
 import org.joml.Vector3d
 import java.awt.Color

@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api.extension
+package org.valkyrienskies.tournament.util.extension
 
 import net.minecraft.core.BlockPos
 import org.joml.Vector2d

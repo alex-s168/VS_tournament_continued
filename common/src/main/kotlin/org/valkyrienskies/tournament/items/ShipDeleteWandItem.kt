@@ -10,7 +10,7 @@ import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.context.UseOnContext
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentItems
-import org.valkyrienskies.tournament.api.extension.delete
+import org.valkyrienskies.tournament.util.extension.delete
 
 class ShipDeleteWandItem : Item(
         Properties().stacksTo(1).tab(TournamentItems.TAB)

@@ -19,8 +19,8 @@ import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.common.yRange
 import org.valkyrienskies.mod.util.relocateBlock
 import org.valkyrienskies.mod.util.updateBlock
-import org.valkyrienskies.tournament.api.extension.toBlock
-import org.valkyrienskies.tournament.api.extension.toDouble
+import org.valkyrienskies.tournament.util.extension.toBlock
+import org.valkyrienskies.tournament.util.extension.toDouble
 import java.util.concurrent.atomic.AtomicInteger
 
 object ShipAssembler {

@@ -19,8 +19,8 @@ import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.TournamentConfig
-import org.valkyrienskies.tournament.api.algo.Algo3d
-import org.valkyrienskies.tournament.api.extension.toBlock
+import org.valkyrienskies.tournament.util.algo.Algo3d
+import org.valkyrienskies.tournament.util.extension.toBlock
 import org.valkyrienskies.tournament.ship.BalloonShipControl
 
 class TestExplosiveBlock : Block(
@@ -52,10 +52,14 @@ class TestExplosiveBlock : Block(
         val signal = level.getBestNeighborSignal(pos)
         if (signal > 0) {
             level.removeBlock(pos, false)
-            Algo3d.sphere(pos.toJOMLD(), 5.0).forEach {
+            Algo3d.cone(pos.toJOMLD(), 5.0, -10.0).forEach {
                 level.removeBlockEntity(it.toBlock())
                 level.removeBlock(it.toBlock(), false)
             }
+            //Algo3d.sphere(pos.toJOMLD(), 5.0).forEach {
+            //    level.removeBlockEntity(it.toBlock())
+            //    level.removeBlock(it.toBlock(), false)
+            //}
         }
     }
 }

@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties.FAC
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import org.valkyrienskies.tournament.api.block.DirectionalBaseEntityBlock
+import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
 import org.valkyrienskies.tournament.blockentity.SensorBlockEntity
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes

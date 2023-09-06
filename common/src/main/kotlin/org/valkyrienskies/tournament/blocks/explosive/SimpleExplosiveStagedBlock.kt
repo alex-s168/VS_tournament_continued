@@ -3,7 +3,7 @@ package org.valkyrienskies.tournament.blocks.explosive
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Explosion
-import org.valkyrienskies.tournament.api.extension.explodeShip
+import org.valkyrienskies.tournament.util.extension.explodeShip
 
 abstract class SimpleExplosiveStagedBlock(
     private val tickCount: IntRange,

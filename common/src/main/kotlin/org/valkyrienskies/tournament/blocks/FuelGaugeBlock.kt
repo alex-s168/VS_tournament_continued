@@ -27,8 +27,7 @@ class FuelGaugeBlock: Block(
         hand: InteractionHand,
         hit: BlockHitResult
     ): InteractionResult {
-        if (level.isClientSide)
-            return InteractionResult.PASS
+        if (level.isClientSide) return InteractionResult.PASS
 
         val ship = level.getShipManagingPos(pos)
 
@@ -41,7 +40,7 @@ class FuelGaugeBlock: Block(
             return InteractionResult.SUCCESS
         }
 
-        val fuel = ShipFuelStorage.getFuel(ship as ServerShip)
+        val fuel = ShipFuelStorage.get(ship as ServerShip).getFuel(level)
         player.sendMessage(
             TranslatableComponent("chat.vs_tournament.fuel_gauge.amount", fuel.toString()),
             UUID(0, 0)

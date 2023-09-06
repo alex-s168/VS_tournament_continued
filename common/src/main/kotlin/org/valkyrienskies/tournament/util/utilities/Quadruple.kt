@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api.utilities
+package org.valkyrienskies.tournament.util.utilities
 
 import java.io.Serializable
 

@@ -1,8 +1,8 @@
-package org.valkyrienskies.tournament.api.helper
+package org.valkyrienskies.tournament.util.helper
 
 import org.joml.Vector2d
 import org.joml.Vector3d
-import org.valkyrienskies.tournament.api.extension.to3d
+import org.valkyrienskies.tournament.util.extension.to3d
 
 object Helper2d {
 

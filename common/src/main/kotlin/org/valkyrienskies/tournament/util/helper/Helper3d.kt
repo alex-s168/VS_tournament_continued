@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api.helper
+package org.valkyrienskies.tournament.util.helper
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
@@ -8,7 +8,7 @@ import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
-import org.valkyrienskies.tournament.api.extension.toBlock
+import org.valkyrienskies.tournament.util.extension.toBlock
 import kotlin.math.absoluteValue
 
 object Helper3d {

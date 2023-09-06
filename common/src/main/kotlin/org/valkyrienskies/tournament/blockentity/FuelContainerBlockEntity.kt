@@ -1,23 +1,24 @@
 package org.valkyrienskies.tournament.blockentity
 
-import com.google.common.util.concurrent.AtomicDouble
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.protocol.Packet
+import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket
+import net.minecraft.network.protocol.game.ClientboundUpdateTagsPacket
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.datafix.fixes.BlockEntityKeepPacked
 import net.minecraft.world.WorldlyContainer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
-import org.valkyrienskies.core.api.ships.ServerShip
-import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.tournament.TournamentBlockEntities
-import org.valkyrienskies.tournament.storage.ShipFuelStorage
+import org.valkyrienskies.tournament.blocks.FuelContainerBlock
 import org.valkyrienskies.tournament.util.getThrusterFuelValue
-import java.util.concurrent.CopyOnWriteArrayList
 
 class FuelContainerBlockEntity(
     pos: BlockPos,
@@ -29,77 +30,74 @@ class FuelContainerBlockEntity(
     state
 ) {
 
-    var amount = AtomicDouble(0.0)
-
-    override fun getUpdateTag(): CompoundTag {
-        val tag = CompoundTag()
-        saveAdditional(tag)
-        return tag
-    }
-
-    override fun getUpdatePacket(): ClientboundBlockEntityDataPacket? {
-        return ClientboundBlockEntityDataPacket.create(this)
-    }
+    var amount: Double = 0.0
 
     override fun saveAdditional(tag: CompoundTag) {
-        tag.putDouble("amount", amount.get())
+        tag.putDouble("amount", amount)
+
+        println("saved: $amount")
+
+        super.saveAdditional(tag)
     }
 
     override fun load(tag: CompoundTag) {
-        amount.set(tag.getDouble("amount"))
-        val ship = level!!.getShipManagingPos(worldPosition)
-        ship?.let {
-            ship as ServerShip
-            val li = ShipFuelStorage.ships.getOrPut(ship) { CopyOnWriteArrayList() }
-            if (li.contains(amount))
-                li[li.indexOf(amount)] = amount
-            else
-                li.add(amount)
-        }
-    }
+        amount = tag.getDouble("amount")
 
-    companion object {
-        fun tick(level: Level, pos: BlockPos, state: BlockState, be: BlockEntity) {
-            be as FuelContainerBlockEntity
-        }
+        println("loaded: $amount")
+
+        super.load(tag)
     }
 
     fun getContainer(): CustomContainer {
         return CustomContainer(this)
     }
 
-    fun sendUpdate() =
-        level!!.sendBlockUpdated(worldPosition, level!!.getBlockState(worldPosition), level!!.getBlockState(worldPosition), 3)
+    override fun getUpdatePacket(): Packet<ClientGamePacketListener> =
+        ClientboundBlockEntityDataPacket.create(this)
+
+    override fun getUpdateTag(): CompoundTag =
+        CompoundTag().also { saveAdditional(it) }
+
+    fun sendUpdate() {
+        level as ServerLevel
+        level!!.sendBlockUpdated(
+            worldPosition,
+            level!!.getBlockState(worldPosition),
+            level!!.getBlockState(worldPosition),
+            3
+        )
+        level!!.getChunk(worldPosition).isUnsaved = true
+    }
 
     class CustomContainer(
         val be: FuelContainerBlockEntity
     ): WorldlyContainer {
         override fun clearContent() {
-            be.amount.set(0.0)
+            be.amount = 0.0
         }
 
         override fun getContainerSize(): Int =
             be.cap
 
         override fun isEmpty(): Boolean =
-            (be.amount.get() == 0.0)
+            (be.amount == 0.0)
 
         override fun getItem(slot: Int): ItemStack =
             ItemStack(Items.AIR)
 
         override fun removeItem(slot: Int, amount: Int): ItemStack {
-            be.amount.set(be.amount.get() - amount)
+            be.amount -= amount
             be.sendUpdate()
             return ItemStack(Items.AIR)
         }
 
         override fun removeItemNoUpdate(slot: Int): ItemStack {
-            be.amount.set(be.amount.get() - 1)
+            be.amount --
             return ItemStack(Items.AIR)
         }
 
         override fun setItem(slot: Int, stack: ItemStack) {
-            be.amount.set(be.amount.get() + stack.getThrusterFuelValue()!!)
+            be.amount += stack.getThrusterFuelValue() ?: return
             be.sendUpdate()
         }
 
@@ -115,7 +113,7 @@ class FuelContainerBlockEntity(
 
         override fun canPlaceItemThroughFace(index: Int, stack: ItemStack, direction: Direction?): Boolean {
             stack.getThrusterFuelValue() ?.let {
-                return (be.amount.get() + it <= be.cap)
+                return (be.amount + it <= be.cap)
             }
             return false
         }

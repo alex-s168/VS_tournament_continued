@@ -1,7 +1,7 @@
 package org.valkyrienskies.tournament
 
-import org.valkyrienskies.tournament.api.debug.DebugObject
-import org.valkyrienskies.tournament.api.debug.DebugObjectID
+import org.valkyrienskies.tournament.util.debug.DebugObject
+import org.valkyrienskies.tournament.util.debug.DebugObjectID
 
 class TournamentDebugHelper {
     companion object {

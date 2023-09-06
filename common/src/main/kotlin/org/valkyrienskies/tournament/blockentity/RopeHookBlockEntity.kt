@@ -12,8 +12,8 @@ import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentDebugHelper
-import org.valkyrienskies.tournament.api.debug.DebugLine
-import org.valkyrienskies.tournament.api.helper.Helper3d
+import org.valkyrienskies.tournament.util.debug.DebugLine
+import org.valkyrienskies.tournament.util.helper.Helper3d
 import java.awt.Color
 
 class RopeHookBlockEntity(pos: BlockPos, state: BlockState):

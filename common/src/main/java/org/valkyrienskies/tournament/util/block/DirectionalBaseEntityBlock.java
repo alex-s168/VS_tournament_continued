@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api.block;
+package org.valkyrienskies.tournament.util.block;
 
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;

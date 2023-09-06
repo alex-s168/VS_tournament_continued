@@ -16,7 +16,7 @@ import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.common.world.clipIncludeShips
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentConfig
-import org.valkyrienskies.tournament.api.helper.Helper3d
+import org.valkyrienskies.tournament.util.helper.Helper3d
 import kotlin.math.min
 import kotlin.math.max
 

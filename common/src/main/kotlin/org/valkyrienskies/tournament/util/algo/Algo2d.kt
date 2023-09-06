@@ -1,4 +1,4 @@
-package org.valkyrienskies.tournament.api.algo
+package org.valkyrienskies.tournament.util.algo
 
 import org.joml.Vector2d
 
