@@ -14,6 +14,7 @@ import org.valkyrienskies.mod.common.util.toBlockPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.blockentity.FuelContainerBlockEntity
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.math.max
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -59,6 +60,8 @@ class ShipFuelStorage: ServerShipUser {
 
         val time = System.currentTimeMillis()
         if (time - lastUsedCacheTime > 1000) {
+            cachedFuel = max(0.0, cachedFuel - cachedUsedFuel)
+
             for (block in sources) {
                 if (cachedUsedFuel == 0.0) break
 

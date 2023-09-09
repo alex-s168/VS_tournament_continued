@@ -35,15 +35,11 @@ class FuelContainerBlockEntity(
     override fun saveAdditional(tag: CompoundTag) {
         tag.putDouble("amount", amount)
 
-        println("saved: $amount")
-
         super.saveAdditional(tag)
     }
 
     override fun load(tag: CompoundTag) {
         amount = tag.getDouble("amount")
-
-        println("loaded: $amount")
 
         super.load(tag)
     }

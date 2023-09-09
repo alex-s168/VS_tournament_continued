@@ -30,6 +30,8 @@ object TournamentBlockEntities {
         FuelContainerBlockEntity(pos, state, 1000)
     } byName "fuel_container_full"
 
+    val THRUSTER            = TournamentBlocks.THRUSTER withBE ::ThrusterBlockEntity byName "thruster"
+
     fun register() {
         BLOCKENTITIES.applyAll()
     }

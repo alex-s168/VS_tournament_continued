@@ -60,7 +60,7 @@ class ThrusterShipControl : ShipForcesInducer {
         thrusters.remove(Triple(pos.toJOML(), force, tier))
     }
 
-    fun forceStopThruster(pos: BlockPos) {
+    fun stopThruster(pos: BlockPos) {
         thrusters.removeAll { it.first == pos.toJOML() }
     }
 

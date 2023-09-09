@@ -48,6 +48,12 @@ object TournamentConfig {
         @JsonSchema(description = "The force a thruster applies to a ship")
         var thrusterSpeed = 10000.0
 
+        @JsonSchema(description = "The amount of fuel (kg) a thruster uses per tick")
+        var thrusterFuelConsumtion = 0.1
+
+        @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
+        var thrusterShutoffSpeed = 50
+
         @JsonSchema(description = "The weight of a ballast when not redstone powered")
         var ballastWeight = 10000.0
 
@@ -59,9 +65,6 @@ object TournamentConfig {
 
         @JsonSchema(description = "Maximum distance a sensor can detect a ship from")
         var sensorDistance = 17.0
-
-        @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
-        var thrusterShutoffSpeed = 50
 
         @JsonSchema(description = "The list of blocks that don't get assembled by the ship assembler")
         var blockBlacklist = setOf(
