@@ -23,7 +23,8 @@ plugins {
 //    version = Tournament_version + '+' + gitRevision.substring(0, 10)
 //}
 
-version = Tournament_version
+String gitRevision = "git rev-parse HEAD".execute().text.trim()
+version = Tournament_version + '+' + gitRevision.substring(0, 10)
 
 architectury {
     minecraft = rootProject.minecraft_version
