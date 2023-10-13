@@ -20,9 +20,6 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.joml.Vector3d
 import org.joml.Vector3dc
-import org.valkyrienskies.core.impl.util.x
-import org.valkyrienskies.core.impl.util.y
-import org.valkyrienskies.core.impl.util.z
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod
 import org.valkyrienskies.mod.common.util.toDoubles
 
@@ -66,7 +63,7 @@ class SeatBlock :
         if (level.isClientSide) return InteractionResult.SUCCESS
         val seatEntity = ValkyrienSkiesMod.SHIP_MOUNTING_ENTITY_TYPE.create(level)!!.apply {
             val seatEntityPos: Vector3dc = Vector3d(pos.x + .5, pos.y.toDouble(), pos.z + .5)
-            moveTo(seatEntityPos.x, seatEntityPos.y, seatEntityPos.z)
+            moveTo(seatEntityPos.x(), seatEntityPos.y(), seatEntityPos.z())
             lookAt(EntityAnchorArgument.Anchor.EYES, state.getValue(FACING).normal.toDoubles().add(position()))
             isController = true
         }

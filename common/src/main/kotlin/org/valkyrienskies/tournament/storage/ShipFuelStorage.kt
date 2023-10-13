@@ -9,7 +9,6 @@ import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.core.api.ships.saveAttachment
-import org.valkyrienskies.core.impl.api.ServerShipUser
 import org.valkyrienskies.mod.common.util.toBlockPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.blockentity.FuelContainerBlockEntity
@@ -23,9 +22,9 @@ import kotlin.math.max
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ShipFuelStorage: ServerShipUser {
+class ShipFuelStorage {
     @JsonIgnore
-    override var ship: ServerShip? = null
+    var ship: ServerShip? = null
 
     private val sources = CopyOnWriteArrayList<Vector3i>()
 
