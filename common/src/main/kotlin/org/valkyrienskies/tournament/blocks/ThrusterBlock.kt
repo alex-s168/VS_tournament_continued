@@ -77,6 +77,9 @@ class ThrusterBlock(
                     (state.getValue(TournamentProperties.TIER) + 1)
                 ), 3)
 
+                be.disable()
+                be.enable()
+
                 return InteractionResult.CONSUME
             }
         }

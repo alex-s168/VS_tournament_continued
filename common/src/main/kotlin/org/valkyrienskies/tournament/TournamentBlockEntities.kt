@@ -50,6 +50,6 @@ object TournamentBlockEntities {
             BlockEntityType.Builder.of(
                 this.second,
                 *this.first.map { it.get() }.toTypedArray()
-            ).build(type!!)
+            ).build(type)
         }
 }
