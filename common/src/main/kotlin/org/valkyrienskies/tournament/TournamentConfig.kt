@@ -159,5 +159,8 @@ object TournamentConfig {
             "minecraft:dark_oak_leaves"
         )
 
+        @JsonSchema(description = "DO NOT CHANGE THIS UNLESS YOU KNOW WHAT YOU ARE DOING!")
+        var removeAllAttachments = false
+
     }
 }
