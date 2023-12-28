@@ -19,11 +19,9 @@ object TournamentItems {
 
     lateinit var ROPE              :  RegistrySupplier<RopeItem>
     lateinit var TOOL_PULSEGUN     :  RegistrySupplier<PulseGunItem>
-    lateinit var TOOL_DELETEWAND   :  RegistrySupplier<ShipDeleteWandItem>
+    lateinit var TOOL_DELETEWAND: RegistrySupplier<ShipDeleteWandItem>
     lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
     lateinit var GIFT_BAG          :  RegistrySupplier<GiftBagItem>
-    lateinit var HAMMER            :  RegistrySupplier<Item>
-    lateinit var HAMMER_LATE       :  Item
 
     lateinit var TAB: CreativeModeTab
 
@@ -38,17 +36,8 @@ object TournamentItems {
         ITEMS.register("iron_cube") {
             Item(Item.Properties().stacksTo(64).tab(TAB))
         }
-        ITEMS.register("raw_fuel_powder") {
-            Item(Item.Properties().stacksTo(64).tab(TAB))
-        }
-        ITEMS.register("fuel_paste") {
-            Item(Item.Properties().stacksTo(64).tab(TAB))
-        }
         ITEMS.register("coal_dust") {
             Item(Item.Properties().stacksTo(64).tab(TAB))
-        }
-        HAMMER                  = ITEMS.register("hammer") {
-            Item(Item.Properties().stacksTo(1).tab(TAB))
         }
 
         // old:

@@ -50,10 +50,6 @@ object TournamentBlocks {
 
     lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
 
-    lateinit var FUEL_CONTAINER_FULL      : RegistrySupplier<FuelContainerBlock>
-
-    lateinit var FUEL_GAUGE               : RegistrySupplier<FuelGaugeBlock>
-
 
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
@@ -100,10 +96,6 @@ object TournamentBlocks {
             ) {}
         }
         EXPLOSIVE_TEST           = register("explosive_test", ::TestExplosiveBlock)
-
-        FUEL_CONTAINER_FULL      = register("fuel_container_full", ::FuelContainerBlock)
-
-        FUEL_GAUGE               = register("fuel_gauge", ::FuelGaugeBlock)
 
         register("ore_phynite") {
             OreBlock(BlockBehaviour.Properties.of(TournamentMaterials.PHYNITE)

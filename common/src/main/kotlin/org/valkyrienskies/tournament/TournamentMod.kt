@@ -14,7 +14,7 @@ object TournamentMod {
         TournamentBlocks.register()
         TournamentBlockEntities.register()
         TournamentItems.register()
-        // TournamentWeights.register()
+        TournamentWeights.register()
         TournamentTriggers.init()
         TournamentOres.register()
 

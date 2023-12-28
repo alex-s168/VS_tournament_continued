@@ -65,6 +65,7 @@ class ShipAssemblerBlock : DirectionalBlock (
             return false
         } else if (!state.isAir) {
             val structure = ShipAssembler.findStructure(level, pos, blacklist)
+            println(structure.size)
             val shipData = createNewShipWithBlocks(pos, structure, level)
 
             player?.let {

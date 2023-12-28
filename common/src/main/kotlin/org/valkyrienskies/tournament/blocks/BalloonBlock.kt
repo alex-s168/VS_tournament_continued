@@ -80,7 +80,7 @@ open class BalloonBlock : Block(
 
         level.destroyBlock(hit.blockPos, false)
         shotBalloon(hit.blockPos)
-        Direction.values().forEach {
+        Direction.entries.forEach {
             val neighbor = hit.blockPos.relative(it)
             if (level.getBlockState(neighbor).block == this &&
                 level.random.nextFloat() < 0.5

@@ -3,14 +3,15 @@ package org.valkyrienskies.tournament.util
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.server.level.ServerLevel
+import org.apache.commons.lang3.mutable.MutableInt
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet
 import org.valkyrienskies.mod.common.util.toJOML
 import java.util.concurrent.atomic.AtomicInteger
 
 object ShipAssembler {
 
-    private fun findStructureLoop(level: ServerLevel, pos: BlockPos, blacklist: Set<String>, set : DenseBlockPosSet, checked : MutableSet<BlockPos>, amount : AtomicInteger) {
-        if(amount.get() > 2000)
+    private fun findStructureLoop(level: ServerLevel, pos: BlockPos, blacklist: Set<String>, set : DenseBlockPosSet, checked : MutableSet<BlockPos>, amount : MutableInt) {
+        if(amount.value > 2000)
             return
 
         if(checked.contains(pos))
@@ -26,7 +27,7 @@ object ShipAssembler {
 
         set.add(pos.toJOML())
 
-        amount.getAndIncrement()
+        amount.increment()
 
         findStructureLoop(level, BlockPos(pos.x+1, pos.y, pos.z), blacklist, set, checked, amount)
         findStructureLoop(level, BlockPos(pos.x, pos.y+1, pos.z), blacklist, set, checked, amount)
@@ -40,7 +41,7 @@ object ShipAssembler {
     fun findStructure(level : ServerLevel, pos : BlockPos, blacklist : Set<String>) : DenseBlockPosSet {
         val set = DenseBlockPosSet()
 
-        findStructureLoop(level, pos, blacklist, set, mutableSetOf(), AtomicInteger(0))
+        findStructureLoop(level, pos, blacklist, set, mutableSetOf(), MutableInt(0))
 
         return set
     }

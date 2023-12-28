@@ -70,6 +70,7 @@ class GiftBagItem : Item(
         val stack = player.getItemInHand(usedHand)
 
         if (!(stack.getTagElement("items") != null || stack.getTagElement("loot") != null)) {
+            /*
             if (level.isClientSide) {
                 val cont = SimpleContainer(9)
                 cont.startOpen(player)
@@ -78,8 +79,9 @@ class GiftBagItem : Item(
                     println(cont.getItem(0).item.builtInRegistryHolder().key().registry().toString())
                     cont.stopOpen(player)
                 })
-
             }
+
+             */
             return InteractionResultHolder.success(stack)
         }
 

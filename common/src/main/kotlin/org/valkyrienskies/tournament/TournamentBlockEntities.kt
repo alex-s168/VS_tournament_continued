@@ -26,12 +26,6 @@ object TournamentBlockEntities {
     val EXPLOSIVE_L         = TournamentBlocks.EXPLOSIVE_INSTANT_LARGE withBE ::ExplosiveBlockEntity byName "explosive_instant_large"
     val EXPLOSIVE_STAGED_S  = TournamentBlocks.EXPLOSIVE_STAGED_SMALL withBE ::ExplosiveBlockEntity byName "explosive_staged_small"
 
-    val FUEL_CONTAINER_FULL = TournamentBlocks.FUEL_CONTAINER_FULL withBE { pos, state ->
-        FuelContainerBlockEntity(pos, state, 1000)
-    } byName "fuel_container_full"
-
-    val THRUSTER            = TournamentBlocks.THRUSTER withBE ::ThrusterBlockEntity byName "thruster"
-
     fun register() {
         BLOCKENTITIES.applyAll()
     }

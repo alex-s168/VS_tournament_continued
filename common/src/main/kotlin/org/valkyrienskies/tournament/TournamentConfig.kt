@@ -17,16 +17,6 @@ object TournamentConfig {
     }
 
     class Server {
-
-        @JsonSchema(description = "Fuel mass of poor tier fuel (kg)")
-        var fuelValuePoor = 1
-
-        @JsonSchema(description = "Fuel mass of good tier fuel (kg)")
-        var fuelValueGood = 6
-
-        @JsonSchema(description = "Fuel mass of rich tier fuel (kg)")
-        var fuelValueRich = 20
-
         @JsonSchema(description = "The maximum force a rope can handle before breaking")
         var ropeMaxForce = 1e10
 
@@ -47,9 +37,6 @@ object TournamentConfig {
 
         @JsonSchema(description = "The force a thruster applies to a ship")
         var thrusterSpeed = 10000.0
-
-        @JsonSchema(description = "The amount of fuel (kg) a thruster uses per tick")
-        var thrusterFuelConsumtion = 0.1
 
         @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
         var thrusterShutoffSpeed = 50

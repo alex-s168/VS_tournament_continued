@@ -1,8 +1,9 @@
 package org.valkyrienskies.tournament.util
-
+/*
 import net.minecraft.world.item.ItemStack
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentTags
+
 
 fun ItemStack.getThrusterFuelValue(): Int? {
     if (this.`is`(TournamentTags.THRUSTER_FUEL_POOR)) return TournamentConfig.SERVER.fuelValuePoor
@@ -11,3 +12,4 @@ fun ItemStack.getThrusterFuelValue(): Int? {
 
     return null
 }
+ */

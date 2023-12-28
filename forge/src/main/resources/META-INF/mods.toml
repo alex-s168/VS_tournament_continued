@@ -7,7 +7,7 @@ license = "Apache-2.0"
 modId = "vs_tournament"
 version = "${version}"
 displayName = "VS Tournament Mod"
-authors = ["alex168", "ConstantDust", "Illuc"]
+authors = ["alex_s168", "ConstantDust", "Illuc"]
 description = '''
 
 '''
@@ -30,6 +30,6 @@ side = "BOTH"
 [[dependencies.vs_tournament]]
 modId = "valkyrienskies"
 mandatory = true
-versionRange = "[2,)"
+versionRange = "[2.1.1-beta.1,)"
 ordering = "AFTER"
 side = "BOTH"
