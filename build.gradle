@@ -116,6 +116,11 @@ allprojects {
                 }
             }
         }
+        maven {
+            name = 'Kotlin for Forge'
+            url = 'https://thedarkcolour.github.io/KotlinForForge/'
+            content { includeGroup "thedarkcolour" }
+        }
         maven { url 'https://jitpack.io' }
     }
 
@@ -131,5 +136,26 @@ allprojects {
 
     dependencies {
         implementation 'org.joml:joml:1.9.2'
+    }
+}
+
+tasks.register('copyJars') {
+    mustRunAfter(build)
+    doLast {
+        def bl = new File(projectDir, "build/libs")
+        copy {
+            from new File(projectDir, "forge/build/libs/tournament-${version}.jar")
+            into bl
+            rename { String ignored ->
+                "military-mod-forge-${version}.jar"
+            }
+        }
+        copy {
+            from new File(projectDir, "fabric/build/libs/tournament-${version}.jar")
+            into bl
+            rename { String ignored ->
+                "military-mod-fabric-${version}.jar"
+            }
+        }
     }
 }

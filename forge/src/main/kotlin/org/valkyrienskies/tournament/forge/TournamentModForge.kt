@@ -1,0 +1,82 @@
+package org.valkyrienskies.tournament.forge
+
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.ItemStack
+import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory
+import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
+import net.minecraftforge.client.event.ModelRegistryEvent
+import net.minecraftforge.eventbus.api.IEventBus
+import net.minecraftforge.fml.common.Mod
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import org.valkyrienskies.core.impl.config.VSConfigClass.Companion.getRegisteredConfig
+import org.valkyrienskies.mod.compat.clothconfig.VSClothConfig.createConfigScreenFor
+import org.valkyrienskies.tournament.TournamentBlocks.SHIP_ASSEMBLER
+import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.TournamentItems
+import org.valkyrienskies.tournament.TournamentMod
+import org.valkyrienskies.tournament.TournamentMod.init
+import org.valkyrienskies.tournament.TournamentMod.initClient
+import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
+import thedarkcolour.kotlinforforge.forge.MOD_BUS
+
+@Mod(TournamentMod.MOD_ID)
+class TournamentModForge {
+    private var happendClientSetup = false
+
+    init {
+        // Submit our event bus to let architectury register our content on the right time
+        MOD_BUS.addListener { event: FMLClientSetupEvent? ->
+            clientSetup(
+                event
+            )
+        }
+        MOD_BUS.addListener { event: ModelRegistryEvent? ->
+            onModelRegistry(
+                event
+            )
+        }
+        MOD_BUS.addListener { event: RegisterRenderers ->
+            entityRenderers(
+                event
+            )
+        }
+        LOADING_CONTEXT.registerExtensionPoint(
+            ConfigGuiFactory::class.java
+        ) {
+            ConfigGuiFactory { _: Minecraft?, parent: Screen? ->
+                createConfigScreenFor(
+                    parent!!,
+                    getRegisteredConfig(TournamentConfig::class.java)
+                )
+            }
+        }
+        TournamentItems.TAB = object : CreativeModeTab("vs_tournament.main_tab") {
+            override fun makeIcon(): ItemStack {
+                return ItemStack(SHIP_ASSEMBLER.get())
+            }
+        }
+        init()
+    }
+
+    private fun clientSetup(event: FMLClientSetupEvent?) {
+        if (happendClientSetup) {
+            return
+        }
+        happendClientSetup = true
+        initClient()
+    }
+
+    private fun entityRenderers(event: RegisterRenderers) {
+
+    }
+
+    private fun onModelRegistry(event: ModelRegistryEvent?) {
+
+    }
+
+    companion object {
+        fun getModBus(): IEventBus = MOD_BUS
+    }
+}
