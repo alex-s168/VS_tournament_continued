@@ -133,10 +133,6 @@ allprojects {
     java {
         withSourcesJar()
     }
-
-    dependencies {
-        implementation 'org.joml:joml:1.9.2'
-    }
 }
 
 tasks.register('copyJars') {
