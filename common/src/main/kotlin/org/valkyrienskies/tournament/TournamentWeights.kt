@@ -20,23 +20,27 @@ object TournamentWeights  {
         Registry.register(BlockStateInfo.REGISTRY, ResourceLocation(TournamentMod.MOD_ID, "ballast"), Ballast)
     }
     object Ballast: BlockStateInfoProvider {
-        override val blockStateData: List<Triple<Lod1SolidBlockStateId, Lod1LiquidBlockStateId, Lod1BlockStateId>> =
-            listOf()
+        override val blockStateData: List<Triple<Lod1SolidBlockStateId, Lod1LiquidBlockStateId, Lod1BlockStateId>>
+            get() = emptyList()
 
-        override val liquidBlockStates: List<Lod1LiquidBlockState> =
-            listOf()
+        override val liquidBlockStates: List<Lod1LiquidBlockState>
+            get() = emptyList()
 
-        override val priority: Int = 200
+        override val priority: Int
+            get() = 200
 
-        override val solidBlockStates: List<Lod1SolidBlockState> =
-            listOf()
+        override val solidBlockStates: List<Lod1SolidBlockState>
+            get() = emptyList()
 
-        override fun getBlockStateMass(blockState: BlockState): Double =
-            Math.lerp(
-                TournamentConfig.SERVER.ballastNoWeight,
-                TournamentConfig.SERVER.ballastWeight,
-                (try { blockState.getValue(BlockStateProperties.POWER) } catch (_: Exception) { null } ?: 0) / 15.0
-            )
+        override fun getBlockStateMass(blockState: BlockState): Double? =
+            if (blockState.block == TournamentBlocks.BALLAST.get())
+                Math.lerp(
+                    TournamentConfig.SERVER.ballastNoWeight,
+                    TournamentConfig.SERVER.ballastWeight,
+                    (kotlin.runCatching { blockState.getValue(BlockStateProperties.POWER) }.getOrNull() ?: 0) / 15.0
+                )
+            else
+                null
 
         override fun getBlockStateType(blockState: BlockState): BlockType? =
             null

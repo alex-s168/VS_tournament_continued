@@ -24,6 +24,17 @@ class BallastBlock : Block(
         builder.add(POWER)
     }
 
+    override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
+        super.onPlace(state, level, pos, oldState, isMoving)
+
+        if (level as? ServerLevel == null) return
+
+        val signal = level.getBestNeighborSignal(pos)
+
+        if (signal != state.getValue(POWER))
+            level.setBlock(pos, state.setValue(POWER, signal), 2)
+    }
+
     override fun neighborChanged(
         state: BlockState,
         level: Level,
