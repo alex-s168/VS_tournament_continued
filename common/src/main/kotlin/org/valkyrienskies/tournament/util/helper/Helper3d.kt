@@ -1,5 +1,6 @@
 package org.valkyrienskies.tournament.util.helper
 
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.world.level.Level
@@ -13,14 +14,13 @@ import kotlin.math.absoluteValue
 
 object Helper3d {
 
-    fun convertShipToWorldSpace(level: Level, pos: BlockPos) : Vector3d {
-        val s = level.getShipObjectManagingPos(pos)
-        return if (s == null) {
-            pos.toJOMLD()
-        } else {
-            s.shipToWorld.transformPosition(pos.toJOMLD())
-        }
-    }
+    fun getShipRenderPosition(level: ClientLevel, pos: Vector3d): Vector3d =
+        level.getShipObjectManagingPos(pos)?.renderTransform?.shipToWorld?.transformPosition(pos)
+            ?: pos
+
+    fun convertShipToWorldSpace(level: Level, pos: BlockPos): Vector3d =
+        level.getShipObjectManagingPos(pos) ?.shipToWorld ?.transformPosition(pos.toJOMLD())
+            ?: pos.toJOMLD()
 
     fun convertShipToWorldSpace(level: Level, vec: Vector3d) : Vector3d {
         return convertShipToWorldSpace(level, vec.toBlock())
