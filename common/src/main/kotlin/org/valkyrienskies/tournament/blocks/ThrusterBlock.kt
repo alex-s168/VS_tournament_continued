@@ -65,20 +65,16 @@ class ThrusterBlock(
     override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): InteractionResult {
         if (level !is ServerLevel) return InteractionResult.PASS
 
-        if (player.mainHandItem.item.asItem().equals(TournamentItems.UPGRADE_THRUSTER.get()) && hand == InteractionHand.MAIN_HAND) {
-            if (state.getValue(TournamentProperties.TIER) < maxTier) {
-                state.setValue(TournamentProperties.TIER, state.getValue(TournamentProperties.TIER) + 1)
-                level.sendBlockUpdated(pos, state, state.setValue(
-                    TournamentProperties.TIER,
-                    (state.getValue(TournamentProperties.TIER) + 1)
-                ), 3)
-
+        if (player.mainHandItem.item.asItem() == TournamentItems.UPGRADE_THRUSTER.get() && hand == InteractionHand.OFF_HAND) {
+            val tier = state.getValue(TournamentProperties.TIER)
+            if (tier < maxTier) {
                 disableThruster(level, pos)
-                enableThruster(level, pos, state)
+                level.setBlockAndUpdate(pos, state.setValue(TournamentProperties.TIER, tier + 1))
 
                 return InteractionResult.CONSUME
             }
         }
+
         return InteractionResult.PASS
     }
 
@@ -95,11 +91,12 @@ class ThrusterBlock(
         if (level !is ServerLevel) return
 
         val signal = level.getBestNeighborSignal(pos)
-        if (signal > 0) {
+        if (state.getValue(BlockStateProperties.POWER) != signal) {
             level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.POWER, signal))
+            return
         }
 
-        if (state.getValue(BlockStateProperties.POWER) > 0) {
+        if (signal > 0) {
             enableThruster(level, pos, state)
         }
     }
@@ -123,7 +120,10 @@ class ThrusterBlock(
             it.addThruster(
                 pos,
                 state.getValue(TournamentProperties.TIER).toDouble(),
-                state.getValue(FACING).normal.toJOMLD().mul(state.getValue(BlockStateProperties.POWER).toDouble()).mul(mult)
+                state.getValue(FACING).normal.toJOMLD()
+                    .mul(state.getValue(BlockStateProperties.POWER).toDouble()
+                            * state.getValue(TournamentProperties.TIER).toDouble()
+                            * mult)
             )
         }
     }
@@ -149,13 +149,9 @@ class ThrusterBlock(
 
         if (signal == prev) return
 
-        if (signal > 0) {
-            enableThruster(level, pos, state.setValue(BlockStateProperties.POWER, signal))
-        } else {
-            disableThruster(level, pos)
-        }
+        disableThruster(level, pos)
 
-        level.sendBlockUpdated(pos, state, state.setValue(BlockStateProperties.POWER, signal), 2)
+        level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.POWER, signal))
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState =
