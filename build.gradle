@@ -143,14 +143,14 @@ tasks.register('copyJars') {
             from new File(projectDir, "forge/build/libs/tournament-${version}.jar")
             into bl
             rename { String ignored ->
-                "military-mod-forge-${version}.jar"
+                "tournament-forge-${version}.jar"
             }
         }
         copy {
             from new File(projectDir, "fabric/build/libs/tournament-${version}.jar")
             into bl
             rename { String ignored ->
-                "military-mod-fabric-${version}.jar"
+                "tournament-fabric-${version}.jar"
             }
         }
     }
