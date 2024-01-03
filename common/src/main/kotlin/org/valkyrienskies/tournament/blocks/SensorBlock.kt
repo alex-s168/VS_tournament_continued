@@ -24,10 +24,10 @@ import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
 
-class SensorBlock : BaseEntityBlock(
+class SensorBlock: BaseEntityBlock(
     Properties.of(Material.STONE)
         .sound(SoundType.STONE).strength(1.0f, 2.0f)
-) {
+), RedstoneConnectingBlock {
 
     companion object {
         private val SHAPE =
@@ -111,5 +111,8 @@ class SensorBlock : BaseEntityBlock(
                 t
             )
         }
+
+    override fun canConnectTo(state: BlockState, direction: Direction): Boolean =
+        direction == state.getValue(FACING)
 
 }
