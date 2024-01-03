@@ -1,5 +1,6 @@
 package org.valkyrienskies.tournament.blocks
 
+import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
@@ -29,7 +30,6 @@ import org.valkyrienskies.tournament.util.helper.Helper3d
 import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
-import org.valkyrienskies.tournament.util.extension.ensureWorldPos
 import java.awt.Color
 import java.lang.Exception
 import java.util.*
@@ -52,17 +52,18 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)
         val be = level.getBlockEntity(pos) as RopeHookBlockEntity
-        if (be.otherPos != null && !be.isSecondary && TournamentDebugHelper.exists(be.debugID) ) {
+        if (be.otherPos != null && !be.isSecondary && TournamentDebugHelper.exists(be.debugID)) {
+            level as ClientLevel
             if (be.maxLen == 0.0) {
-                be.maxLen = (Helper3d.convertShipToWorldSpace(level, be.otherPos!!)
-                    .distance(Helper3d.convertShipToWorldSpace(level, be.mainPos!!)))
+                be.maxLen = (Helper3d.getShipRenderPosition(level, be.otherPos!!)
+                    .distance(Helper3d.getShipRenderPosition(level, be.mainPos!!)))
                     .absoluteValue
             }
-            val p1 = level.ensureWorldPos(be.mainPos!!)
-            val p2 = level.ensureWorldPos(be.otherPos!!)
+            val p1 = Helper3d.getShipRenderPosition(level, be.mainPos!!)
+            val p2 = Helper3d.getShipRenderPosition(level, be.otherPos!!)
 
             if (TournamentConfig.CLIENT.particleRopeRenderer)
-                Helper3d.drawQuadraticParticleCurve(p1, p2, be.maxLen, 5.0, level, ParticleTypes.CLOUD)
+                Helper3d.drawQuadraticParticleCurve(p1, p2, be.maxLen, be.maxLen * 2, level, ParticleTypes.CLOUD)
 
             TournamentDebugHelper.list()[be.debugID] = DebugLine(p1, p2, Color.RED, !TournamentConfig.CLIENT.particleRopeRenderer)
         }
@@ -103,6 +104,11 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
 
             try {
                 val pbe = (be.conPos?.let { level.getBlockEntity(it) } as RopeHookBlockEntity)
+                if (pbe.ropeId != 0) {
+                    ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), ItemStack(TournamentItems.ROPE.get())).also {
+                        level.addFreshEntity(it)
+                    }
+                }
                 pbe.ropeId?.let { level.shipObjectWorld.removeConstraint( it ) }
                 TournamentDebugHelper.removeObject(pbe.debugID)
                 pbe.otherPos = null
@@ -113,10 +119,6 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
 
             be.conPos?.let { level.removeBlock(it, false) }
             be.conPos?.let { level.setBlock(it, t!!, 2) }
-
-            ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), ItemStack(TournamentItems.ROPE.get())).also {
-                level.addFreshEntity(it)
-            }
         }
 
         TournamentDebugHelper.removeObject(be.debugID)
