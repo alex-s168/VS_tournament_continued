@@ -136,7 +136,6 @@ allprojects {
 }
 
 tasks.register('copyJars') {
-    mustRunAfter(build)
     doLast {
         def bl = new File(projectDir, "build/libs")
         copy {

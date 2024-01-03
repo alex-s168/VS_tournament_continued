@@ -10,6 +10,7 @@
   },
   "minVersion": "0.8",
   "mixins": [
-    "advancements.MixinCriteriaTriggers"
+    "advancements.MixinCriteriaTriggers",
+    "block.RedStoneWireBlockMixin"
   ]
 }

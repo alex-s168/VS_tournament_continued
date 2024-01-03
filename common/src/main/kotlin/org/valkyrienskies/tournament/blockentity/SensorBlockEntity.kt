@@ -75,7 +75,10 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState)
                 return
 
             be.lastVal = be.getResult(level as ServerLevel)
-            level.updateNeighborsAt(pos, state.block)
+            if (be.lastVal == state.getValue(BlockStateProperties.POWER))
+                return
+
+            level.setBlock(pos, state.setValue(BlockStateProperties.POWER, be.lastVal), 2)
         }
     }
 }
