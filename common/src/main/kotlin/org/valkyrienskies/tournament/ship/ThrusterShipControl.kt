@@ -1,14 +1,20 @@
 package org.valkyrienskies.tournament.ship
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonIgnore
 import net.minecraft.core.BlockPos
+import net.minecraft.resources.ResourceKey
+import net.minecraft.server.MinecraftServer
+import net.minecraft.world.level.Level
 import org.joml.Vector3d
 import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.*
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.extension.toDouble
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
@@ -24,16 +30,46 @@ class ThrusterShipControl : ShipForcesInducer {
 
     private val thrusters = CopyOnWriteArrayList<Triple<Vector3i, Vector3d, Double>>()
 
+    data class ThrusterData(
+        val force: Vector3d,
+        val mult: Double,
+        var submerged: Boolean,
+        var level: ResourceKey<Level>? = null
+    )
+
+    private val thrustersNew = ConcurrentHashMap<Vector3i, ThrusterData>()
+
+    @JsonIgnore
+    private var hasTicker = false
+
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
         Thrusters.forEach {
-            thrusters.add(it)
+            thrustersNew[it.first] = ThrusterData(it.second, it.third, false)
         }
         Thrusters.clear()
 
         thrusters.forEach {
-            val (pos, force, tier) = it
+            thrustersNew[it.first] = ThrusterData(it.second, it.third, false)
+        }
+        thrusters.clear()
+
+        if (!hasTicker) {
+            TickScheduler.serverTickPerm {
+                thrustersNew.forEach { (pos, data) ->
+
+                }
+            }
+            hasTicker = true
+        }
+
+        thrustersNew.forEach { (pos, data) ->
+            val (force, tier, submerged) = data
+
+            if (submerged) {
+                return@forEach
+            }
 
             val tForce = physShip.transform.shipToWorld.transformDirection(force, Vector3d())
             val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
@@ -48,16 +84,20 @@ class ThrusterShipControl : ShipForcesInducer {
         }
     }
 
-    fun addThruster(pos: BlockPos, tier: Double, force: Vector3d) {
-        thrusters.add(Triple(pos.toJOML(), force, tier))
+    fun addThruster(
+        pos: BlockPos,
+        tier: Double,
+        force: Vector3d,
+        level: ResourceKey<Level>?
+    ) {
+        thrustersNew[pos.toJOML()] = ThrusterData(force, tier, false)
     }
 
-    fun removeThruster(pos: BlockPos, tier: Double, force: Vector3d) {
-        thrusters.remove(Triple(pos.toJOML(), force, tier))
-    }
-
-    fun stopThruster(pos: BlockPos) {
-        thrusters.removeAll { it.first == pos.toJOML() }
+    fun stopThruster(
+        pos: BlockPos,
+        level: ResourceKey<Level>?
+    ) {
+        thrustersNew.remove(pos.toJOML())
     }
 
     companion object {
