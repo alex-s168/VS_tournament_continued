@@ -39,7 +39,7 @@ class ThrusterShipControl : ShipForcesInducer {
             val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
 
             if (force.isFinite && (
-                    TournamentConfig.SERVER.thrusterShutoffSpeed == -1
+                    TournamentConfig.SERVER.thrusterShutoffSpeed == -1.0
                     || physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
                 )
             ) {
