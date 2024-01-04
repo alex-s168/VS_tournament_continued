@@ -77,6 +77,16 @@ class ShipAssemblerBlock : DirectionalBlock (
         return false
     }
 
+    override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
+        super.onPlace(state, level, pos, oldState, isMoving)
+        if (level as? ServerLevel == null) return
+
+        val signal = level.getBestNeighborSignal(pos)
+        if (signal > 0) {
+            asm(state, level, pos, null)
+        }
+    }
+
     override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): InteractionResult {
         if (level as? ServerLevel == null) return InteractionResult.PASS
         if(level.getShipManagingPos(pos) != null) return InteractionResult.PASS

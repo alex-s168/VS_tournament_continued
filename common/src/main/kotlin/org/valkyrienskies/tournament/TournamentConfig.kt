@@ -21,7 +21,7 @@ object TournamentConfig {
         var ropeMaxForce = 1e10
 
         @JsonSchema(description = "The force a spinner applies to a ship")
-        var spinnerSpeed = 4000.0
+        var spinnerSpeed = 5000.0
 
         @JsonSchema(description = "The force a balloon applies to a ship")
         var balloonPower = 30.0
@@ -39,7 +39,7 @@ object TournamentConfig {
         var thrusterSpeed = 10000.0
 
         @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
-        var thrusterShutoffSpeed = 50
+        var thrusterShutoffSpeed = 80.0
 
         @JsonSchema(description = "The weight of a ballast when not redstone powered")
         var ballastWeight = 10000.0
