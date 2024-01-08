@@ -13,7 +13,7 @@ import java.util.function.BooleanSupplier;
 public class MinecraftServerMixin {
 
     @Inject(
-        method = " tickChildren(Ljava/util/function/BooleanSupplier;)V",
+        method = "tickChildren(Ljava/util/function/BooleanSupplier;)V",
         at = @At(value = "TAIL")
     )
     public void tickChildren(BooleanSupplier hasTimeLeft, CallbackInfo ci) {

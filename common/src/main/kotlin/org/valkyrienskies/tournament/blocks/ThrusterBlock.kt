@@ -27,7 +27,7 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.TournamentProperties
-import org.valkyrienskies.tournament.ship.ThrusterShipControl
+import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import java.util.*
@@ -109,10 +109,10 @@ class ThrusterBlock(
         super.onRemove(state, level, pos, newState, isMoving)
     }
 
-    private fun getShipControl(level: Level, pos: BlockPos): ThrusterShipControl? =
+    private fun getShipControl(level: Level, pos: BlockPos)  =
         ((level.getShipObjectManagingPos(pos)
             ?: level.getShipManagingPos(pos))
-            as? ServerShip)?.let { ThrusterShipControl.getOrCreate(it) }
+            as? ServerShip)?.let { TournamentShips.getOrCreate(it) }
 
     private fun enableThruster(level: ServerLevel, pos: BlockPos, state: BlockState) {
         getShipControl(level, pos)?.let {

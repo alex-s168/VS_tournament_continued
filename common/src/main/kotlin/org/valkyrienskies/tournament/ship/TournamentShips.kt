@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceKey
+import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.Level
 import org.joml.Vector3d
 import org.joml.Vector3i
@@ -13,7 +14,9 @@ import org.valkyrienskies.mod.common.util.toBlockPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.util.extension.toDimensionKey
 import org.valkyrienskies.tournament.util.extension.toDouble
+import org.valkyrienskies.tournament.util.extension.toResourceLocation
 import java.util.concurrent.ConcurrentHashMap
 
 @JsonAutoDetect(
@@ -90,18 +93,28 @@ class TournamentShips(
         thrusters[pos.toJOML()] = ThrusterData(force, tier, false)
     }
 
+    fun addThrusters(
+        list: Iterable<Triple<Vector3i, Vector3d, Double>>
+    ) {
+        list.forEach { (pos, force, tier) ->
+            thrusters[pos] = ThrusterData(force, tier, false)
+        }
+    }
+
     fun stopThruster(
-        pos: BlockPos,
-        level: ResourceKey<Level>?
+        pos: BlockPos
     ) {
         thrusters.remove(pos.toJOML())
     }
 
     companion object {
+        fun getOrCreate(ship: ServerShip, level: ResourceKey<Level>) =
+            ship.getAttachment<TournamentShips>()
+                ?: TournamentShips(level).also { ship.saveAttachment(it) }
+
         fun getOrCreate(ship: ServerShip): TournamentShips {
-            ResourceKey<Level>(ship.chunkClaimDimension)
-            return ship.getAttachment<TournamentShips>()
-                ?: TournamentShips().also { ship.saveAttachment(it) }
+            val key = ship.chunkClaimDimension.toResourceLocation().toDimensionKey()
+            return getOrCreate(ship, key)
         }
     }
 }
