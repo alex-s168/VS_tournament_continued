@@ -1,7 +1,6 @@
 package org.valkyrienskies.tournament.forge.mixin.server;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

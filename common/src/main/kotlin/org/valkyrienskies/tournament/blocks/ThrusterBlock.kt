@@ -24,12 +24,15 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
+import org.valkyrienskies.mod.common.shipWorldNullable
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.TournamentProperties
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
+import org.valkyrienskies.tournament.util.extension.toBlock
+import org.valkyrienskies.tournament.util.helper.Helper3d
 import java.util.*
 
 class ThrusterBlock(
@@ -161,12 +164,17 @@ class ThrusterBlock(
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)
 
+        val rp = Helper3d.getShipRenderPosition(level, pos.toJOMLD())
+        if (level.isWaterAt(rp.toBlock())) {
+            return
+        }
+
         if (state.getValue(BlockStateProperties.POWER) > 0) {
             val dir = state.getValue(FACING)
 
-            val x = pos.x.toDouble() + (0.5 * (dir.stepX + 1))
-            val y = pos.y.toDouble() + (0.5 * (dir.stepY + 1))
-            val z = pos.z.toDouble() + (0.5 * (dir.stepZ + 1))
+            val x = rp.x + (0.5 * (dir.stepX + 1))
+            val y = rp.y + (0.5 * (dir.stepY + 1))
+            val z = rp.z + (0.5 * (dir.stepZ + 1))
             val speedX = dir.stepX * -0.4
             val speedY = dir.stepY * -0.4
             val speedZ = dir.stepZ * -0.4
