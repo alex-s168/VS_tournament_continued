@@ -10,7 +10,6 @@
   },
   "minVersion": "0.8",
   "mixins": [
-    "advancements.MixinCriteriaTriggers",
-    "server.MinecraftServerMixin"
+    "advancements.MixinCriteriaTriggers"
   ]
 }

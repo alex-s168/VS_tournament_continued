@@ -21,11 +21,16 @@ object TickScheduler {
     }
 
     fun tickServer(server: MinecraftServer) {
-        serverTickTemp.with(serverTickPerm).forEach { (f, active) ->
-            if (!active) return@forEach
-            f(server)
+        val toRemove = mutableSetOf<Ticking>()
+        serverTickTemp.with(serverTickPerm).forEach { t ->
+            if (!t.active) {
+                toRemove += t
+                return@forEach
+            }
+            t.f(server)
         }
         serverTickTemp.clear()
+        serverTickPerm.removeAll(toRemove)
     }
 
     data class Ticking(

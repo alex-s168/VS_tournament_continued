@@ -1,23 +1,25 @@
 package org.valkyrienskies.tournament.ship
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceKey
-import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.Level
 import org.joml.Vector3d
 import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.*
+import org.valkyrienskies.core.apigame.world.properties.DimensionId
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.mod.common.util.toBlockPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.util.extension.toBlock
 import org.valkyrienskies.tournament.util.extension.toDimensionKey
 import org.valkyrienskies.tournament.util.extension.toDouble
-import org.valkyrienskies.tournament.util.extension.toResourceLocation
+import org.valkyrienskies.tournament.util.helper.Helper3d
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -25,11 +27,13 @@ import java.util.concurrent.ConcurrentHashMap
     isGetterVisibility = JsonAutoDetect.Visibility.NONE,
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
-class TournamentShips(
-    val level: ResourceKey<Level>
-): ShipForcesInducer {
+// TODO: port balloon, pulse and spinner control to this
+class TournamentShips: ShipForcesInducer {
+
+    var level: DimensionId = "minecraft:overworld"
 
     data class ThrusterData(
+        val pos: Vector3i,
         val force: Vector3d,
         val mult: Double,
         var submerged: Boolean,
@@ -37,36 +41,32 @@ class TournamentShips(
     )
 
     private val thrusters =
-        ConcurrentHashMap<Vector3i, ThrusterData>()
+        CopyOnWriteArrayList<ThrusterData>()
 
     @JsonIgnore
     private var hasTicker = false
-
-    @JsonIgnore
-    var overworld: ResourceKey<Level>? =
-        null
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
         if (!hasTicker) {
             TickScheduler.serverTickPerm { server ->
-                overworld = server.overworld().dimension()
-                val lvl = server.getLevel(level)
-                if (lvl == null) {
-                    print("Level $level is null!")
-                    return@serverTickPerm
-                }
-                thrusters.forEach { (pos, d) ->
-                    val water = lvl.isWaterAt(pos.toBlockPos())
-                    d.submerged = water
+                val lvl = server.getLevel(level.toDimensionKey())
+                    ?: return@serverTickPerm
+                thrusters.forEach { t ->
+                    val water = lvl.isWaterAt(
+                        Helper3d
+                            .convertShipToWorldSpace(lvl, t.pos.toDouble())
+                            .toBlock()
+                    )
+                    t.submerged = water
                 }
             }
             hasTicker = true
         }
 
-        thrusters.forEach { (pos, data) ->
-            val (force, tier, submerged) = data
+        thrusters.forEach { data ->
+            val (pos, force, tier, submerged) = data
 
             if (submerged) {
                 return@forEach
@@ -90,31 +90,32 @@ class TournamentShips(
         tier: Double,
         force: Vector3d
     ) {
-        thrusters[pos.toJOML()] = ThrusterData(force, tier, false)
+        thrusters += ThrusterData(pos.toJOML(), force, tier, false)
     }
 
     fun addThrusters(
         list: Iterable<Triple<Vector3i, Vector3d, Double>>
     ) {
         list.forEach { (pos, force, tier) ->
-            thrusters[pos] = ThrusterData(force, tier, false)
+            thrusters += ThrusterData(pos, force, tier, false)
         }
     }
 
     fun stopThruster(
         pos: BlockPos
     ) {
-        thrusters.remove(pos.toJOML())
+        thrusters.removeIf { pos.toJOML() == it.pos }
     }
 
     companion object {
-        fun getOrCreate(ship: ServerShip, level: ResourceKey<Level>) =
+        fun getOrCreate(ship: ServerShip, level: DimensionId) =
             ship.getAttachment<TournamentShips>()
-                ?: TournamentShips(level).also { ship.saveAttachment(it) }
+                ?: TournamentShips().also {
+                    it.level = level
+                    ship.saveAttachment(it)
+                }
 
-        fun getOrCreate(ship: ServerShip): TournamentShips {
-            val key = ship.chunkClaimDimension.toResourceLocation().toDimensionKey()
-            return getOrCreate(ship, key)
-        }
+        fun getOrCreate(ship: ServerShip): TournamentShips =
+            getOrCreate(ship, ship.chunkClaimDimension)
     }
 }
