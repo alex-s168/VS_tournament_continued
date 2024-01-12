@@ -29,21 +29,18 @@ class SpinnerShipControl : ShipForcesInducer {
         }
         spinners.clear()
 
-        spinners.forEach {
-            val (_, torque) = it
-
+        spinners.forEach { (pos, torque) ->
             val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vector3d())
-
             physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.spinnerSpeed))
-
         }
     }
 
     fun addSpinner(pos: Vector3i, torque: Vector3d) {
         spinners.add(pos to torque)
     }
-    fun removeSpinner(pos: Vector3i, torque: Vector3d) {
-        spinners.remove(pos to torque)
+
+    fun stopSpinner(pos: Vector3i) {
+        spinners.removeIf { it.first == pos }
     }
 
     companion object {

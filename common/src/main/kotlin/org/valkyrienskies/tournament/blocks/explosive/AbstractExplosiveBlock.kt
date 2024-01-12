@@ -94,4 +94,16 @@ public abstract class AbstractExplosiveBlock : BaseEntityBlock(
         }
     }
 
+    override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
+        super.onPlace(state, level, pos, oldState, isMoving)
+
+        if (level !is ServerLevel) return
+
+        val signal = level.getBestNeighborSignal(pos)
+
+        if (signal > 0) {
+            ignite(level, pos)
+        }
+    }
+
 }

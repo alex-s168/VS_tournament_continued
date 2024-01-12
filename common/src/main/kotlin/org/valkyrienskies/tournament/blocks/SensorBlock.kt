@@ -78,7 +78,9 @@ class SensorBlock: BaseEntityBlock(
         super.onPlace(state, level, pos, oldState, isMoving)
 
         val facing = state.getValue(FACING)
-        level.neighborChanged(pos.relative(facing.opposite), this, pos)
+        val back = pos.relative(facing.opposite)
+        level.neighborChanged(back, this, pos)
+        level.updateNeighborsAtExceptFromFacing(back, this, facing)
     }
 
     override fun isSignalSource(state: BlockState): Boolean =
