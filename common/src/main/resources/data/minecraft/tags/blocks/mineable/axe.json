@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "vs_tournament:seat"
+    "vs_tournament:seat",
+    "vs_tournament:floater"
   ]
 }

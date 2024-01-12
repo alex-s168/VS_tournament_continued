@@ -26,5 +26,9 @@
   {
     "block": "vs_tournament:sensor",
     "mass": 200.0
+  },
+  {
+    "block": "vs_tournament:floater",
+    "mass": 50.0
   }
 ]
