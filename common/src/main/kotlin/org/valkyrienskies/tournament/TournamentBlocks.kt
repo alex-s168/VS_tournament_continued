@@ -147,6 +147,7 @@ object TournamentBlocks {
     fun makeFlammables() {
         flammableBlock(SEAT.get(), 15, 25)
         flammableBlock(POWERED_BALLOON.get(), 30, 60)
+        flammableBlock(BALLOON.get(), 30, 60)
     }
 
     fun registerItems(items: DeferredRegister<Item>) {
