@@ -20,6 +20,7 @@ import net.minecraft.world.phys.BlockHitResult
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.TournamentLootTables
 import org.valkyrienskies.tournament.TournamentTriggers
 import org.valkyrienskies.tournament.ship.TournamentShips
 
@@ -58,10 +59,12 @@ open class BalloonBlock : Block(
     override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {
         if (level as? ServerLevel == null) return
 
+        val shooter = projectile.owner as? ServerPlayer
+
         fun shotBalloon(pos: BlockPos) {
-            val table = ResourceLocation("vs_tournament", "special/balloon_pop")
+            val table = TournamentLootTables.BALLOON_POP
             val ctx = LootContext.Builder(level)
-                .withLuck(0.0f)
+                .withLuck(shooter?.luck ?: 0f)
                 .create(LootContextParamSets.EMPTY)
             val loot = level.server.lootTables.get(table).getRandomItems(ctx)
 
@@ -72,7 +75,7 @@ open class BalloonBlock : Block(
             }
         }
 
-        (projectile.owner as? ServerPlayer)?.let { player ->
+        shooter?.let { player ->
             TournamentTriggers.BALLOON_SHOT_TRIGGER.trigger(player)
         }
 
