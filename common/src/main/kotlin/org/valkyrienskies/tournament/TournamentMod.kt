@@ -52,7 +52,7 @@ object TournamentMod {
 
                 val pulsesShipCtrl = ship.getAttachment<PulseShipControl>()
                 if (pulsesShipCtrl != null) {
-                    TournamentShips.getOrCreate(ship).addPulses(pulsesShipCtrl.pulses.with(pulsesShipCtrl.Pulses))
+                    pulsesShipCtrl.addToNew(TournamentShips.getOrCreate(ship))
                     ship.saveAttachment<PulseShipControl>(null)
                 }
             }
