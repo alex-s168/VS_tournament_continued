@@ -45,21 +45,27 @@ class tournamentShipControl : ShipForcesInducer {
 
         println("Converting old ship controller (\"tournamentShipControl\") from ship ${ship!!.id} to new one")
 
+        val tournamentShips = TournamentShips.getOrCreate(ship!!)
+
         Balloons.forEach { (pos, force) ->
-            BalloonShipControl.getOrCreate(ship!!).addBalloon(pos.toBlockPos(), force)
+            tournamentShips.addBalloon(pos.toBlockPos(), force)
         }
+        Balloons.clear()
 
         Thrusters.forEach { (pos, dir, strength) ->
-            TournamentShips.getOrCreate(ship!!).addThruster(pos.toBlockPos(), strength, dir)
+            tournamentShips.addThruster(pos.toBlockPos(), strength, dir)
         }
+        Thrusters.clear()
 
         Spinners.forEach { (pos, dir) ->
             SpinnerShipControl.getOrCreate(ship!!).addSpinner(pos, dir)
         }
+        Spinners.clear()
 
         Pulses.forEach {(pos, force) ->
             PulseShipControl.getOrCreate(ship!!).addPulse(pos, force)
         }
+        Pulses.clear()
 
         ship!!.saveAttachment<tournamentShipControl>(null)
     }

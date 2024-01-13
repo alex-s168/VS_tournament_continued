@@ -41,6 +41,9 @@ class TournamentShips: ShipForcesInducer {
     private val thrusters =
         CopyOnWriteArrayList<ThrusterData>()
 
+    private val balloons =
+        CopyOnWriteArrayList<Pair<Vector3i, Double>>()
+
     @JsonIgnore
     private var hasTicker = false
 
@@ -63,6 +66,8 @@ class TournamentShips: ShipForcesInducer {
             hasTicker = true
         }
 
+        val vel = physShip.poseVel.vel
+
         thrusters.forEach { data ->
             val (pos, force, tier, submerged) = data
 
@@ -80,6 +85,30 @@ class TournamentShips: ShipForcesInducer {
             ) {
                 physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.thrusterSpeed * tier), tPos)
             }
+        }
+
+        balloons.forEach {
+            val (pos, pow) = it
+
+            val tPos = Vector3d(pos).add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
+            val tHeight = physShip.transform.positionInWorld.y()
+            var tPValue = TournamentConfig.SERVER.balloonBaseHeight - ((tHeight * tHeight) / 1000.0)
+
+            if (vel.y() > 10.0)    {
+                tPValue = (-vel.y() * 0.25)
+                tPValue -= (vel.y() * 0.25)
+            }
+            if(tPValue <= 0){
+                tPValue = 0.0
+            }
+            physShip.applyInvariantForceToPos(
+                Vector3d(
+                    0.0,
+                    (pow + 1.0) * TournamentConfig.SERVER.balloonPower * tPValue,
+                    0.0
+                ),
+                tPos
+            )
         }
     }
 
@@ -103,6 +132,18 @@ class TournamentShips: ShipForcesInducer {
         pos: BlockPos
     ) {
         thrusters.removeIf { pos.toJOML() == it.pos }
+    }
+
+    fun addBalloon(pos: BlockPos, pow: Double) {
+        balloons.add(pos.toJOML() to pow)
+    }
+
+    fun addBalloons(list: Iterable<Pair<Vector3i, Double>>) {
+        balloons.addAll(list)
+    }
+
+    fun removeBalloon(pos: BlockPos) {
+        balloons.removeAll { it.first == pos.toJOML() }
     }
 
     companion object {

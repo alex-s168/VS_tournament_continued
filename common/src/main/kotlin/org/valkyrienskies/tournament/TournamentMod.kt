@@ -27,7 +27,6 @@ object TournamentMod {
             if (TournamentConfig.SERVER.removeAllAttachments) {
                 ship.saveAttachment<BalloonShipControl>(null)
                 ship.saveAttachment<PulseShipControl>(null)
-                ship.saveAttachment<SimpleShipControl>(null)
                 ship.saveAttachment<SpinnerShipControl>(null)
                 ship.saveAttachment<ThrusterShipControl>(null)
                 ship.saveAttachment<tournamentShipControl>(null)
@@ -38,6 +37,12 @@ object TournamentMod {
                 if (thrusterShipCtrl != null) {
                     TournamentShips.getOrCreate(ship).addThrusters(thrusterShipCtrl.Thrusters.with(thrusterShipCtrl.thrusters))
                     ship.saveAttachment<ThrusterShipControl>(null)
+                }
+
+                val balloonShipCtrl = ship.getAttachment<BalloonShipControl>()
+                if (balloonShipCtrl != null) {
+                    TournamentShips.getOrCreate(ship).addBalloons(balloonShipCtrl.balloons)
+                    ship.saveAttachment<BalloonShipControl>(null)
                 }
             }
         }
