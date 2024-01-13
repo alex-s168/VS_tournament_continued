@@ -3,6 +3,7 @@ package org.valkyrienskies.tournament.util.helper
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
 import org.joml.Vector3d
 import org.valkyrienskies.mod.common.getShipManagingPos
@@ -17,6 +18,13 @@ object Helper3d {
     fun getShipRenderPosition(level: ClientLevel, pos: Vector3d): Vector3d =
         level.getShipObjectManagingPos(pos)?.renderTransform?.shipToWorld?.transformPosition(pos)
             ?: pos
+
+    fun getShipRenderPosition(level: Level, pos: Vector3d): Vector3d =
+        when (level) {
+            is ServerLevel -> convertShipToWorldSpace(level, pos)
+            is ClientLevel -> getShipRenderPosition(level, pos)
+            else -> pos
+        }
 
     fun convertShipToWorldSpace(level: Level, pos: BlockPos): Vector3d =
         level.getShipObjectManagingPos(pos) ?.shipToWorld ?.transformPosition(pos.toJOMLD())

@@ -7,11 +7,10 @@ import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.PhysShip
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.ShipForcesInducer
+import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.mod.common.util.toBlockPos
 import java.util.concurrent.CopyOnWriteArrayList
-
-// THIS CLASS IS JUST FOR COMPAT WITH OLD TOURNAMENT VERSIONS!
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -19,7 +18,11 @@ import java.util.concurrent.CopyOnWriteArrayList
     isGetterVisibility = JsonAutoDetect.Visibility.NONE,
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
-// for compat only!!
+/**
+ * for compat only!!
+ * @see TournamentShips
+  */
+@Deprecated("Use TournamentShips instead")
 class tournamentShipControl : ShipForcesInducer {
 
     @JsonIgnore
@@ -40,14 +43,14 @@ class tournamentShipControl : ShipForcesInducer {
         if (ship == null) return
         physShip as PhysShipImpl
 
-        println("Converting old ship controller from ship ${ship!!.id} to new one")
+        println("Converting old ship controller (\"tournamentShipControl\") from ship ${ship!!.id} to new one")
 
         Balloons.forEach { (pos, force) ->
             BalloonShipControl.getOrCreate(ship!!).addBalloon(pos.toBlockPos(), force)
         }
 
         Thrusters.forEach { (pos, dir, strength) ->
-            ThrusterShipControl.getOrCreate(ship!!).addThruster(pos.toBlockPos(), strength, dir)
+            TournamentShips.getOrCreate(ship!!).addThruster(pos.toBlockPos(), strength, dir)
         }
 
         Spinners.forEach { (pos, dir) ->
@@ -58,7 +61,7 @@ class tournamentShipControl : ShipForcesInducer {
             PulseShipControl.getOrCreate(ship!!).addPulse(pos, force)
         }
 
-        ship!!.saveAttachment(tournamentShipControl::class.java, null)
+        ship!!.saveAttachment<tournamentShipControl>(null)
     }
 
 }

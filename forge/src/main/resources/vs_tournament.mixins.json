@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "org.valkyrienskies.tournament.forge.mixin.ValkyrienForgeMixinConfigPlugin",
   "mixins": [
-    "block.RedStoneWireBlockMixin"
+    "block.RedStoneWireBlockMixin",
+    "server.MinecraftServerMixin"
   ],
   "client": [],
   "injectors": {
