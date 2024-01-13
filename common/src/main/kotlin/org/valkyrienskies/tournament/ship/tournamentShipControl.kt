@@ -9,7 +9,6 @@ import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.ShipForcesInducer
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.mod.common.util.toBlockPos
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
@@ -45,21 +44,19 @@ class tournamentShipControl : ShipForcesInducer {
 
         println("Converting old ship controller (\"tournamentShipControl\") from ship ${ship!!.id} to new one")
 
-        Balloons.forEach { (pos, force) ->
-            BalloonShipControl.getOrCreate(ship!!).addBalloon(pos.toBlockPos(), force)
-        }
+        val tournamentShips = TournamentShips.getOrCreate(ship!!)
 
-        Thrusters.forEach { (pos, dir, strength) ->
-            TournamentShips.getOrCreate(ship!!).addThruster(pos.toBlockPos(), strength, dir)
-        }
+        tournamentShips.addBalloons(Balloons)
+        Balloons.clear()
 
-        Spinners.forEach { (pos, dir) ->
-            SpinnerShipControl.getOrCreate(ship!!).addSpinner(pos, dir)
-        }
+        tournamentShips.addThrusters(Thrusters)
+        Thrusters.clear()
 
-        Pulses.forEach {(pos, force) ->
-            PulseShipControl.getOrCreate(ship!!).addPulse(pos, force)
-        }
+        tournamentShips.addSpinners(Spinners)
+        Spinners.clear()
+
+        tournamentShips.addPulses(Pulses)
+        Pulses.clear()
 
         ship!!.saveAttachment<tournamentShipControl>(null)
     }

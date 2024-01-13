@@ -41,6 +41,15 @@ class TournamentShips: ShipForcesInducer {
     private val thrusters =
         CopyOnWriteArrayList<ThrusterData>()
 
+    private val balloons =
+        CopyOnWriteArrayList<Pair<Vector3i, Double>>()
+
+    private val spinners =
+        CopyOnWriteArrayList<Pair<Vector3i, Vector3d>>()
+
+    private val pulses =
+        CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
+
     @JsonIgnore
     private var hasTicker = false
 
@@ -63,6 +72,8 @@ class TournamentShips: ShipForcesInducer {
             hasTicker = true
         }
 
+        val vel = physShip.poseVel.vel
+
         thrusters.forEach { data ->
             val (pos, force, tier, submerged) = data
 
@@ -74,13 +85,54 @@ class TournamentShips: ShipForcesInducer {
             val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
 
             if (force.isFinite && (
-                        TournamentConfig.SERVER.thrusterShutoffSpeed == -1.0
+                        TournamentConfig.SERVER.thrusterShutoffSpeed == -1
                                 || physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
                         )
             ) {
                 physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.thrusterSpeed * tier), tPos)
             }
         }
+
+        balloons.forEach {
+            val (pos, pow) = it
+
+            val tPos = Vector3d(pos).add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
+            val tHeight = physShip.transform.positionInWorld.y()
+            var tPValue = TournamentConfig.SERVER.balloonBaseHeight - ((tHeight * tHeight) / 1000.0)
+
+            if (vel.y() > 10.0)    {
+                tPValue = (-vel.y() * 0.25)
+                tPValue -= (vel.y() * 0.25)
+            }
+            if(tPValue <= 0){
+                tPValue = 0.0
+            }
+            physShip.applyInvariantForceToPos(
+                Vector3d(
+                    0.0,
+                    (pow + 1.0) * TournamentConfig.SERVER.balloonPower * tPValue,
+                    0.0
+                ),
+                tPos
+            )
+        }
+
+        spinners.forEach {
+            val (_, torque) = it    // TODO: WATF
+
+            val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vector3d())
+
+            physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.spinnerSpeed))
+        }
+
+        pulses.forEach {
+            val (pos, force) = it
+            val tPos = pos.add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
+            val tForce = physShip.transform.worldToShip.transformDirection(force)
+
+            physShip.applyRotDependentForceToPos(tForce, tPos)
+        }
+        pulses.clear()
     }
 
     fun addThruster(
@@ -103,6 +155,38 @@ class TournamentShips: ShipForcesInducer {
         pos: BlockPos
     ) {
         thrusters.removeIf { pos.toJOML() == it.pos }
+    }
+
+    fun addBalloon(pos: BlockPos, pow: Double) {
+        balloons.add(pos.toJOML() to pow)
+    }
+
+    fun addBalloons(list: Iterable<Pair<Vector3i, Double>>) {
+        balloons.addAll(list)
+    }
+
+    fun removeBalloon(pos: BlockPos) {
+        balloons.removeAll { it.first == pos.toJOML() }
+    }
+
+    fun addSpinner(pos: Vector3i, torque: Vector3d) {
+        spinners.add(pos to torque)
+    }
+
+    fun addSpinners(list: Iterable<Pair<Vector3i, Vector3d>>) {
+        spinners.addAll(list)
+    }
+
+    fun removeSpinner(pos: Vector3i) {
+        spinners.removeAll { it.first == pos }
+    }
+
+    fun addPulse(pos: Vector3d, force: Vector3d) {
+        pulses.add(pos to force)
+    }
+
+    fun addPulses(list: Iterable<Pair<Vector3d, Vector3d>>) {
+        pulses.addAll(list)
     }
 
     companion object {
