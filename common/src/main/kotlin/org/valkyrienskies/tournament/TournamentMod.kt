@@ -1,6 +1,5 @@
 package org.valkyrienskies.tournament
 
-import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.config.VSConfigClass
@@ -43,6 +42,18 @@ object TournamentMod {
                 if (balloonShipCtrl != null) {
                     TournamentShips.getOrCreate(ship).addBalloons(balloonShipCtrl.balloons)
                     ship.saveAttachment<BalloonShipControl>(null)
+                }
+
+                val spinnerShipCtrl = ship.getAttachment<SpinnerShipControl>()
+                if (spinnerShipCtrl != null) {
+                    TournamentShips.getOrCreate(ship).addSpinners(spinnerShipCtrl.spinners.with(spinnerShipCtrl.Spinners))
+                    ship.saveAttachment<SpinnerShipControl>(null)
+                }
+
+                val pulsesShipCtrl = ship.getAttachment<PulseShipControl>()
+                if (pulsesShipCtrl != null) {
+                    TournamentShips.getOrCreate(ship).addPulses(pulsesShipCtrl.pulses.with(pulsesShipCtrl.Pulses))
+                    ship.saveAttachment<PulseShipControl>(null)
                 }
             }
         }

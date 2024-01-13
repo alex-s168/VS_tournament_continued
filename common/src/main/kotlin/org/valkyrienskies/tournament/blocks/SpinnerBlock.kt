@@ -13,12 +13,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
-import org.valkyrienskies.tournament.ship.SpinnerShipControl
+import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 
@@ -50,6 +49,11 @@ class SpinnerBlock : DirectionalBlock(
         super.createBlockStateDefinition(builder)
     }
 
+    private fun getShipControl(level: ServerLevel, pos: BlockPos) =
+        (level.getShipObjectManagingPos(pos)
+            ?: level.getShipManagingPos(pos))
+            ?.let { TournamentShips.getOrCreate(it) }
+
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
 
@@ -59,9 +63,7 @@ class SpinnerBlock : DirectionalBlock(
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(BlockStateProperties.POWER, signal), 2)
 
-        SpinnerShipControl.getOrCreate(
-                level.getShipObjectManagingPos(pos) ?: level.getShipManagingPos(pos) ?: return
-        ).addSpinner(
+        getShipControl(level, pos)?.addSpinner(
                 pos.toJOML(),
                 state.getValue(FACING)
                     .opposite
@@ -77,10 +79,8 @@ class SpinnerBlock : DirectionalBlock(
         if (level.isClientSide) return
         level as ServerLevel
 
-        state.setValue(BlockStateProperties.POWER, 0)
-        level.getShipManagingPos(pos)?.getAttachment<SpinnerShipControl>()?.removeSpinner(
-            pos.toJOML(),
-            state.getValue(FACING).normal.toJOMLD().mul(state.getValue(BlockStateProperties.POWER).toDouble())
+        getShipControl(level, pos)?.removeSpinner(
+            pos.toJOML()
         )
     }
 

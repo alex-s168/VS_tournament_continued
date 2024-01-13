@@ -9,7 +9,6 @@ import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.ShipForcesInducer
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.mod.common.util.toBlockPos
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
@@ -47,24 +46,16 @@ class tournamentShipControl : ShipForcesInducer {
 
         val tournamentShips = TournamentShips.getOrCreate(ship!!)
 
-        Balloons.forEach { (pos, force) ->
-            tournamentShips.addBalloon(pos.toBlockPos(), force)
-        }
+        tournamentShips.addBalloons(Balloons)
         Balloons.clear()
 
-        Thrusters.forEach { (pos, dir, strength) ->
-            tournamentShips.addThruster(pos.toBlockPos(), strength, dir)
-        }
+        tournamentShips.addThrusters(Thrusters)
         Thrusters.clear()
 
-        Spinners.forEach { (pos, dir) ->
-            SpinnerShipControl.getOrCreate(ship!!).addSpinner(pos, dir)
-        }
+        tournamentShips.addSpinners(Spinners)
         Spinners.clear()
 
-        Pulses.forEach {(pos, force) ->
-            PulseShipControl.getOrCreate(ship!!).addPulse(pos, force)
-        }
+        tournamentShips.addPulses(Pulses)
         Pulses.clear()
 
         ship!!.saveAttachment<tournamentShipControl>(null)

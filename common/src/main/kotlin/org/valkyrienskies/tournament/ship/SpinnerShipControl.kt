@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import org.joml.Vector3d
 import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.*
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.util.extension.void
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
@@ -14,43 +13,19 @@ import java.util.concurrent.CopyOnWriteArrayList
     isGetterVisibility = JsonAutoDetect.Visibility.NONE,
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
-class SpinnerShipControl : ShipForcesInducer {
+/**
+ * for compat only!!
+ * @see TournamentShips
+ */
+@Deprecated("Use TournamentShips instead")
+class SpinnerShipControl: ShipForcesInducer {
 
     // for compat only!!
-    private val Spinners = mutableListOf<Pair<Vector3i, Vector3d>>()
+    val Spinners = mutableListOf<Pair<Vector3i, Vector3d>>()
 
-    private val spinners = CopyOnWriteArrayList<Pair<Vector3i, Vector3d>>()
+    val spinners = CopyOnWriteArrayList<Pair<Vector3i, Vector3d>>()
 
-    override fun applyForces(physShip: PhysShip) {
-        physShip as PhysShipImpl
-
-        Spinners.forEach {
-            spinners.add(it)
-        }
-        spinners.clear()
-
-        spinners.forEach {
-            val (_, torque) = it
-
-            val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vector3d())
-
-            physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.spinnerSpeed))
-
-        }
-    }
-
-    fun addSpinner(pos: Vector3i, torque: Vector3d) {
-        spinners.add(pos to torque)
-    }
-    fun removeSpinner(pos: Vector3i, torque: Vector3d) {
-        spinners.remove(pos to torque)
-    }
-
-    companion object {
-        fun getOrCreate(ship: ServerShip): SpinnerShipControl {
-            return ship.getAttachment<SpinnerShipControl>()
-                ?: SpinnerShipControl().also { ship.saveAttachment(it) }
-        }
-    }
+    override fun applyForces(physShip: PhysShip) =
+        void()
 
 }

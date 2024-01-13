@@ -1,13 +1,8 @@
 package org.valkyrienskies.tournament.ship
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
-import net.minecraft.core.BlockPos
-import org.joml.Vector3d
 import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.*
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
-import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.extension.void
 import java.util.concurrent.CopyOnWriteArrayList
 

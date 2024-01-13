@@ -44,6 +44,12 @@ class TournamentShips: ShipForcesInducer {
     private val balloons =
         CopyOnWriteArrayList<Pair<Vector3i, Double>>()
 
+    private val spinners =
+        CopyOnWriteArrayList<Pair<Vector3i, Vector3d>>()
+
+    private val pulses =
+        CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
+
     @JsonIgnore
     private var hasTicker = false
 
@@ -110,6 +116,23 @@ class TournamentShips: ShipForcesInducer {
                 tPos
             )
         }
+
+        spinners.forEach {
+            val (_, torque) = it    // TODO: WATF
+
+            val torqueGlobal = physShip.transform.shipToWorldRotation.transform(torque, Vector3d())
+
+            physShip.applyInvariantTorque(torqueGlobal.mul(TournamentConfig.SERVER.spinnerSpeed))
+        }
+
+        pulses.forEach {
+            val (pos, force) = it
+            val tPos = pos.add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
+            val tForce = physShip.transform.worldToShip.transformDirection(force)
+
+            physShip.applyRotDependentForceToPos(tForce, tPos)
+        }
+        pulses.clear()
     }
 
     fun addThruster(
@@ -144,6 +167,26 @@ class TournamentShips: ShipForcesInducer {
 
     fun removeBalloon(pos: BlockPos) {
         balloons.removeAll { it.first == pos.toJOML() }
+    }
+
+    fun addSpinner(pos: Vector3i, torque: Vector3d) {
+        spinners.add(pos to torque)
+    }
+
+    fun addSpinners(list: Iterable<Pair<Vector3i, Vector3d>>) {
+        spinners.addAll(list)
+    }
+
+    fun removeSpinner(pos: Vector3i) {
+        spinners.removeAll { it.first == pos }
+    }
+
+    fun addPulse(pos: Vector3d, force: Vector3d) {
+        pulses.add(pos to force)
+    }
+
+    fun addPulses(list: Iterable<Pair<Vector3d, Vector3d>>) {
+        pulses.addAll(list)
     }
 
     companion object {
