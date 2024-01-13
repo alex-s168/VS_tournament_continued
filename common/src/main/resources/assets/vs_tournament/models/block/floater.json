@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "tournament:block/floater_top",
+    "east": "tournament:block/floater_side",
+    "north": "tournament:block/floater_side",
+    "particle": "tournament:block/floater_top",
+    "south": "tournament:block/floater_side",
+    "up": "tournament:block/floater_top",
+    "west": "tournament:block/floater_side"
+  }
+}
