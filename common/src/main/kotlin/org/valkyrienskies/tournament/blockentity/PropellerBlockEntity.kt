@@ -9,14 +9,13 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.state.BlockState
 import org.valkyrienskies.tournament.TournamentBlockEntities
+import org.valkyrienskies.tournament.blocks.PropellerBlock
 
 class PropellerBlockEntity(
     pos: BlockPos,
     state: BlockState,
-    private val redstoneFun: (state: BlockState, level: Level, pos: BlockPos) -> Int = { _, level, bp ->
-        println("[Tournament] PropellerBlockEntity.redstoneFun default constructor called! This should not happen!")
-        level.getBestNeighborSignal(bp)
-    }
+    val maxSpeed: Float,
+    val accel: Float
 ): BlockEntity(TournamentBlockEntities.PROPELLER.get(), pos, state) {
 
     var signal: Int = -1
@@ -25,13 +24,13 @@ class PropellerBlockEntity(
 
     fun tick(level: Level) {
         if (signal == -1) {
-            signal = redstoneFun(blockState, level, blockPos)
+            signal = PropellerBlock.getPropSignal(blockState, level, blockPos)
         }
-        val targetSpeed = signal
+        val targetSpeed = signal / 15.0f * maxSpeed
         if (speed < targetSpeed) {
-            speed += 0.1f
+            speed += accel
         } else if (speed > targetSpeed) {
-            speed -= 0.2f
+            speed -= accel * 2
         }
         if (speed < 0.0f) {
             speed = 0.0f

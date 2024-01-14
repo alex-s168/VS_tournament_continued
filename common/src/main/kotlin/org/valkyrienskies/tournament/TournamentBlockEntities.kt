@@ -19,7 +19,14 @@ object TournamentBlockEntities {
 
     val SENSOR              = TournamentBlocks.SENSOR    withBE ::SensorBlockEntity    byName "sensor"
     val ROPE_HOOK           = TournamentBlocks.ROPE_HOOK withBE ::RopeHookBlockEntity  byName "rope_hook"
-    val PROPELLER           = TournamentBlocks.PROP_BIG  withBE ::PropellerBlockEntity byName "propeller"
+    val PROPELLER           = TournamentBlocks.PROP_BIG  withBE {pos, state ->
+        PropellerBlockEntity(
+            pos,
+            state,
+            TournamentConfig.SERVER.propellerBigSpeed,
+            TournamentConfig.SERVER.propellerBigAccel
+        )
+    } byName "propeller"
 
     // explosives:
     val EXPLOSIVE           = TournamentBlocks.EXPLOSIVE_INSTANT_SMALL  withBE ::ExplosiveBlockEntity byName "explosive_instant_small"

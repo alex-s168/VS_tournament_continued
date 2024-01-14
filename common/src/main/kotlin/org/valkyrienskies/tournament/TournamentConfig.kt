@@ -62,6 +62,15 @@ object TournamentConfig {
         @JsonSchema(description = "Maximum distance a sensor can detect a ship from")
         var sensorDistance = 17.0
 
+        @JsonSchema(description = "The force of a big propeller at max speed")
+        var propellerBigForce = 10000.0
+
+        @JsonSchema(description = "The max speed of a big propeller at max redstone input")
+        var propellerBigSpeed = 8.0f
+
+        @JsonSchema(description = "The acceleration of a big propeller. (deaccel = accel * 2)")
+        var propellerBigAccel = 0.1f
+
         @JsonSchema(description = "The list of blocks that don't get assembled by the ship assembler")
         var blockBlacklist = setOf(
             "minecraft:dirt",

@@ -16,12 +16,22 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
+import org.valkyrienskies.core.api.ships.ServerShip
+import org.valkyrienskies.mod.common.getShipManagingPos
+import org.valkyrienskies.mod.common.getShipObjectManagingPos
+import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
+import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
 
-class PropellerBlock: DirectionalBaseEntityBlock(
+class PropellerBlock(
+    val mult: Double,
+    val maxSpeed: Float,
+    val accel: Float
+): DirectionalBaseEntityBlock(
     Properties.of(Material.STONE)
         .sound(SoundType.STONE)
         .strength(1.0f, 2.0f)
@@ -31,6 +41,14 @@ class PropellerBlock: DirectionalBaseEntityBlock(
         private val SHAPE = RotShapes.box(0.1, 0.1, 8.1, 15.9, 15.9, 15.9)
 
         private val DIRECTIONAL_SHAPE = DirectionalShape.south(SHAPE)
+
+        fun getPropSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+            val sides = Direction.entries - state.getValue(FACING).opposite
+            val best = sides.maxOf {
+                level.getSignal(pos.relative(it), it)
+            }
+            return best
+        }
     }
 
     init {
@@ -51,13 +69,10 @@ class PropellerBlock: DirectionalBaseEntityBlock(
                 .add(FACING)
         )
 
-    fun getPropSignal(state: BlockState, level: Level, pos: BlockPos): Int {
-        val sides = Direction.entries - state.getValue(FACING).opposite
-        val best = sides.maxOf {
-            level.getSignal(pos.relative(it), it)
-        }
-        return best
-    }
+    private fun getShipControl(level: Level, pos: BlockPos)  =
+        ((level.getShipObjectManagingPos(pos)
+            ?: level.getShipManagingPos(pos))
+                as? ServerShip)?.let { TournamentShips.getOrCreate(it) }
 
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
@@ -72,10 +87,20 @@ class PropellerBlock: DirectionalBaseEntityBlock(
         be.signal = signal
 
         be.update()
+
+        getShipControl(level, pos)?.addPropeller(
+            pos.toJOML(),
+            state.getValue(FACING)
+                .normal
+                .toJOMLD()
+                .mul(mult)
+        )
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         if (level !is ServerLevel) return
+
+        getShipControl(level, pos)?.removePropeller(pos.toJOML())
 
         super.onRemove(state, level, pos, newState, isMoving)
     }
@@ -113,7 +138,7 @@ class PropellerBlock: DirectionalBaseEntityBlock(
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity =
-        PropellerBlockEntity(pos, state, ::getPropSignal)
+        PropellerBlockEntity(pos, state, maxSpeed, accel)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T: BlockEntity> getTicker(

@@ -84,7 +84,13 @@ object TournamentBlocks {
         SPINNER                  = register("spinner", ::SpinnerBlock)
         SEAT                     = register("seat", ::SeatBlock)
         SENSOR                   = register("sensor", ::SensorBlock)
-        PROP_BIG                 = register("prop_big", ::PropellerBlock)
+        PROP_BIG                 = register("prop_big") {
+            PropellerBlock(
+                TournamentConfig.SERVER.propellerBigForce,
+                TournamentConfig.SERVER.propellerBigSpeed,
+                TournamentConfig.SERVER.propellerBigAccel,
+            )
+        }
 
         EXPLOSIVE_INSTANT_SMALL  = register("explosive_instant_small") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {

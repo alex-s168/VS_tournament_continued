@@ -13,6 +13,7 @@ import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
 import org.valkyrienskies.tournament.util.extension.toBlock
 import org.valkyrienskies.tournament.util.extension.toDimensionKey
 import org.valkyrienskies.tournament.util.extension.toDouble
@@ -25,7 +26,6 @@ import java.util.concurrent.CopyOnWriteArrayList
     isGetterVisibility = JsonAutoDetect.Visibility.NONE,
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
-// TODO: port balloon, pulse and spinner control to this
 class TournamentShips: ShipForcesInducer {
 
     var level: DimensionId = "minecraft:overworld"
@@ -34,8 +34,7 @@ class TournamentShips: ShipForcesInducer {
         val pos: Vector3i,
         val force: Vector3d,
         val mult: Double,
-        var submerged: Boolean,
-        var level: ResourceKey<Level>? = null
+        var submerged: Boolean
     )
 
     private val thrusters =
@@ -50,16 +49,27 @@ class TournamentShips: ShipForcesInducer {
     private val pulses =
         CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
 
+    data class PropellerData(
+        val pos: Vector3i,
+        val force: Vector3d,
+        var speed: Float,
+        var touchingWater: Boolean
+    )
+
+    private val propellers =
+        CopyOnWriteArrayList<PropellerData>()
+
     @JsonIgnore
-    private var hasTicker = false
+    private var ticker: TickScheduler.Ticking? = null
 
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
-        if (!hasTicker) {
-            TickScheduler.serverTickPerm { server ->
+        if (ticker == null) {
+            ticker = TickScheduler.serverTickPerm { server ->
                 val lvl = server.getLevel(level.toDimensionKey())
                     ?: return@serverTickPerm
+
                 thrusters.forEach { t ->
                     val water = lvl.isWaterAt(
                         Helper3d
@@ -68,8 +78,26 @@ class TournamentShips: ShipForcesInducer {
                     )
                     t.submerged = water
                 }
+
+                propellers.forEach { p ->
+                    val water = lvl.isWaterAt(
+                        Helper3d
+                            .convertShipToWorldSpace(lvl, p.pos.toDouble())
+                            .toBlock()
+                    )
+                    p.touchingWater = water
+
+                    val be = lvl.getBlockEntity(
+                        Helper3d
+                            .convertShipToWorldSpace(lvl, p.pos.toDouble())
+                            .toBlock()
+                    ) as PropellerBlockEntity?
+
+                    if (be != null) {
+                        p.speed = be.speed
+                    }
+                }
             }
-            hasTicker = true
         }
 
         val vel = physShip.poseVel.vel
@@ -133,6 +161,19 @@ class TournamentShips: ShipForcesInducer {
             physShip.applyRotDependentForceToPos(tForce, tPos)
         }
         pulses.clear()
+
+        propellers.forEach {
+            val (pos, force, speed, touchingWater) = it
+
+            if (!touchingWater) {
+                return@forEach
+            }
+
+            val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
+            val tForce = physShip.transform.shipToWorld.transformDirection(force, Vector3d())
+
+            physShip.applyInvariantForceToPos(tForce.mul(speed.toDouble()), tPos)
+        }
     }
 
     fun addThruster(
@@ -187,6 +228,14 @@ class TournamentShips: ShipForcesInducer {
 
     fun addPulses(list: Iterable<Pair<Vector3d, Vector3d>>) {
         pulses.addAll(list)
+    }
+
+    fun addPropeller(pos: Vector3i, force: Vector3d) {
+        propellers.add(PropellerData(pos, force, 0.0f, false))
+    }
+
+    fun removePropeller(pos: Vector3i) {
+        propellers.removeIf { it.pos == pos }
     }
 
     companion object {

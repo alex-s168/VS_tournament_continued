@@ -2,7 +2,6 @@
   "block.vs_tournament.ballast": "Ballast",
   "block.vs_tournament.balloon": "Powered Balloon",
   "block.vs_tournament.balloon_unpowered": "Balloon",
-  "block.vs_tournament.floater": "Floater",
   "block.vs_tournament.spinner": "Spinner",
   "block.vs_tournament.thruster": "Thruster",
   "block.vs_tournament.tiny_thruster": "Tiny Thruster",
@@ -12,7 +11,8 @@
   "block.vs_tournament.rope_hook": "Rope Hook",
   "block.vs_tournament.fuel_container_full": "Fuel Container",
   "block.vs_tournament.fuel_gauge": "Fuel Gauge",
-  "block.vs_tournament.floater": "Floater"
+  "block.vs_tournament.floater": "Floater",
+  "block.vs_tournament.prop_big": "Propeller (big)",
 
   "block.vs_tournament.explosive_instant_small": "Instant Explosive (small)",
   "block.vs_tournament.explosive_instant_medium": "Instant Explosive (medium)",
