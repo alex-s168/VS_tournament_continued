@@ -6,7 +6,6 @@ import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.DirectionalBlock
 import net.minecraft.world.level.block.RenderShape
 import net.minecraft.world.level.block.SoundType
-import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
@@ -181,9 +179,15 @@ class ThrusterBlock(
         level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.POWER, signal))
     }
 
-    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState =
-        defaultBlockState()
-            .setValue(FACING, ctx.nearestLookingDirection)
+    override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
+        var dir = ctx.nearestLookingDirection
+
+        if(ctx.player != null && ctx.player!!.isShiftKeyDown)
+            dir = dir.opposite
+
+        return defaultBlockState()
+            .setValue(BlockStateProperties.FACING, dir)
+    }
 
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)

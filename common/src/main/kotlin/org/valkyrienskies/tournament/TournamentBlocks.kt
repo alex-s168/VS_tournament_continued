@@ -38,6 +38,7 @@ object TournamentBlocks {
     lateinit var SEAT                     : RegistrySupplier<SeatBlock>
     lateinit var ROPE_HOOK                : RegistrySupplier<RopeHookBlock>
     lateinit var SENSOR                   : RegistrySupplier<SensorBlock>
+    lateinit var PROP_BIG                 : RegistrySupplier<PropellerBlock>
 
     lateinit var EXPLOSIVE_INSTANT_SMALL  : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_MEDIUM : RegistrySupplier<AbstractExplosiveBlock>
@@ -58,8 +59,8 @@ object TournamentBlocks {
                 ParticleTypes.CAMPFIRE_SIGNAL_SMOKE
             ) {
                 val t = TournamentConfig.SERVER.thrusterTiersNormal
-                if (t !in 1..255) {
-                    throw IllegalStateException("Thruster tier must be in range 1..255")
+                if (t !in 1..5) {
+                    throw IllegalStateException("Thruster tier must be in range 1..5")
                 }
                 t
             }
@@ -70,8 +71,8 @@ object TournamentBlocks {
                 ParticleTypes.CAMPFIRE_COSY_SMOKE
             ) {
                 val t = TournamentConfig.SERVER.thrusterTiersTiny
-                if (t !in 1..255) {
-                    throw IllegalStateException("Thruster tier must be in range 1..255")
+                if (t !in 1..5) {
+                    throw IllegalStateException("Thruster tier must be in range 1..5")
                 }
                 t
             }
@@ -79,6 +80,7 @@ object TournamentBlocks {
         SPINNER                  = register("spinner", ::SpinnerBlock)
         SEAT                     = register("seat", ::SeatBlock)
         SENSOR                   = register("sensor", ::SensorBlock)
+        PROP_BIG                 = register("prop_big", ::PropellerBlock)
 
         EXPLOSIVE_INSTANT_SMALL  = register("explosive_instant_small") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {

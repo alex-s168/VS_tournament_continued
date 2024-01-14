@@ -2,11 +2,15 @@ package org.valkyrienskies.tournament.forge
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
 import net.minecraftforge.client.event.ModelRegistryEvent
+import net.minecraftforge.client.model.ForgeModelBakery
 import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
@@ -18,6 +22,8 @@ import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.TournamentMod
 import org.valkyrienskies.tournament.TournamentMod.init
 import org.valkyrienskies.tournament.TournamentMod.initClient
+import org.valkyrienskies.tournament.TournamentMod.initClientRenderers
+import org.valkyrienskies.tournament.TournamentModels
 import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
 
@@ -69,11 +75,22 @@ class TournamentModForge {
     }
 
     private fun entityRenderers(event: RegisterRenderers) {
-
+        initClientRenderers(
+            object : TournamentMod.ClientRenderers {
+                override fun <T : BlockEntity> registerBlockEntityRenderer(
+                    t: BlockEntityType<T>,
+                    r: BlockEntityRendererProvider<T>
+                ) = event.registerBlockEntityRenderer(t, r)
+            }
+        )
     }
 
     private fun onModelRegistry(event: ModelRegistryEvent?) {
-
+        println("[Tournament] Registering models")
+        TournamentModels.MODELS.forEach { rl ->
+            println("[Tournament] Registering model $rl")
+            ForgeModelBakery.addSpecialModel(rl)
+        }
     }
 
     companion object {
