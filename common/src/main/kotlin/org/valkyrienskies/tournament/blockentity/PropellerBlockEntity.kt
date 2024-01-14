@@ -33,6 +33,9 @@ class PropellerBlockEntity(
         } else if (speed > targetSpeed) {
             speed -= 0.2f
         }
+        if (speed < 0.0f) {
+            speed = 0.0f
+        }
         rotation += speed
         rotation %= 360.0f
     }

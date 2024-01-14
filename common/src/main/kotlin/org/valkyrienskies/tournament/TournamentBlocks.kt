@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.Explosion
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.material.Material
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.util.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
