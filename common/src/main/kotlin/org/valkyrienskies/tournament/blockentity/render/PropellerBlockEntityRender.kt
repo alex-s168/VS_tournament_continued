@@ -1,12 +1,12 @@
 package org.valkyrienskies.tournament.blockentity.render
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.math.Vector3f
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.world.level.block.DirectionalBlock
 import org.valkyrienskies.tournament.TournamentModels
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
+import org.valkyrienskies.tournament.util.extension.pose
 
 class PropellerBlockEntityRender:
     BlockEntityRenderer<PropellerBlockEntity>
@@ -20,19 +20,21 @@ class PropellerBlockEntityRender:
         packedLight: Int,
         packedOverlay: Int
     ) {
-        pose.pushPose()
-        pose.translate(-0.5, 0.5, 0.5)
-        pose.mulPose(be.blockState.getValue(DirectionalBlock.FACING).opposite.rotation)
-        // pose.mulPose(Vector3f.ZP.rotationDegrees(20.0f))
-        TournamentModels.PROP_BIG.renderer.render(
-            pose,
-            be,
-            bufferSource,
-            packedLight,
-            packedOverlay
-        )
-
-        pose.popPose()
+        pose.pose {
+            pose.translate(0.5, 0.0, 0.5)
+            pose.mulPose(be.blockState.getValue(DirectionalBlock.FACING).opposite.rotation)
+            // pose.mulPose(Vector3f.ZP.rotationDegrees(20.0f))
+            pose.pose {
+                pose.translate(-0.5, -0.5, -0.5)
+                TournamentModels.PROP_BIG.renderer.render(
+                    pose,
+                    be,
+                    bufferSource,
+                    packedLight,
+                    packedOverlay
+                )
+            }
+        }
     }
 
 }
