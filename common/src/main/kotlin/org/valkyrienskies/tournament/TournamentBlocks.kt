@@ -10,10 +10,7 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Explosion
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.FireBlock
-import net.minecraft.world.level.block.OreBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.Material
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
@@ -35,7 +32,7 @@ object TournamentBlocks {
     lateinit var BALLAST                  : RegistrySupplier<BallastBlock>
     lateinit var POWERED_BALLOON          : RegistrySupplier<BalloonBlock>
     lateinit var BALLOON                  : RegistrySupplier<BalloonBlock>
-    lateinit var FLOATER                  : RegistrySupplier<FloaterBlock>
+    lateinit var FLOATER                  : RegistrySupplier<Block>
     lateinit var THRUSTER                 : RegistrySupplier<ThrusterBlock>
     lateinit var THRUSTER_TINY            : RegistrySupplier<ThrusterBlock>
     lateinit var SPINNER                  : RegistrySupplier<SpinnerBlock>
@@ -57,7 +54,11 @@ object TournamentBlocks {
         BALLAST                  = register("ballast", ::BallastBlock)
         POWERED_BALLOON          = register("balloon", ::PoweredBalloonBlock)
         BALLOON                  = register("balloon_unpowered", ::BalloonBlock)
-        FLOATER                  = register("floater", ::FloaterBlock)
+        FLOATER                  = register("floater") { Block(
+                BlockBehaviour.Properties.of(Material.WOOD)
+                        .sound(SoundType.WOOD)
+                        .strength(1.0f, 2.0f)
+        )}
         THRUSTER                 = register("thruster") { ThrusterBlock(
             1.0,
             ParticleTypes.CAMPFIRE_SIGNAL_SMOKE,
