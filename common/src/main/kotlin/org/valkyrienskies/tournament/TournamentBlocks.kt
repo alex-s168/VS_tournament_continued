@@ -8,10 +8,7 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.Explosion
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.FireBlock
-import net.minecraft.world.level.block.OreBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.util.extension.explodeShip
@@ -32,6 +29,7 @@ object TournamentBlocks {
     lateinit var BALLAST                  : RegistrySupplier<BallastBlock>
     lateinit var POWERED_BALLOON          : RegistrySupplier<BalloonBlock>
     lateinit var BALLOON                  : RegistrySupplier<BalloonBlock>
+    lateinit var FLOATER                  : RegistrySupplier<Block>
     lateinit var THRUSTER                 : RegistrySupplier<ThrusterBlock>
     lateinit var THRUSTER_TINY            : RegistrySupplier<ThrusterBlock>
     lateinit var SPINNER                  : RegistrySupplier<SpinnerBlock>
@@ -53,6 +51,11 @@ object TournamentBlocks {
         BALLAST                  = register("ballast", ::BallastBlock)
         POWERED_BALLOON          = register("balloon", ::PoweredBalloonBlock)
         BALLOON                  = register("balloon_unpowered", ::BalloonBlock)
+        FLOATER                  = register("floater") { Block(
+                BlockBehaviour.Properties.of(Material.WOOD)
+                        .sound(SoundType.WOOD)
+                        .strength(1.0f, 2.0f)
+        )}
         THRUSTER                 = register("thruster") {
             ThrusterBlock(
                 { 1.0 },
@@ -159,6 +162,8 @@ object TournamentBlocks {
     fun makeFlammables() {
         flammableBlock(SEAT.get(), 15, 25)
         flammableBlock(POWERED_BALLOON.get(), 30, 60)
+        flammableBlock(BALLOON.get(), 30, 60)
+        flammableBlock(FLOATER.get(), 30, 60)
     }
 
     fun registerItems(items: DeferredRegister<Item>) {
