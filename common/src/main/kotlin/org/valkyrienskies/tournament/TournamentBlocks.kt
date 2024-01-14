@@ -4,18 +4,15 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Explosion
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.FireBlock
 import net.minecraft.world.level.block.OreBlock
 import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraft.world.level.material.Material
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.util.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
@@ -50,22 +47,35 @@ object TournamentBlocks {
 
     lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
 
-
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
         BALLAST                  = register("ballast", ::BallastBlock)
         POWERED_BALLOON          = register("balloon", ::PoweredBalloonBlock)
         BALLOON                  = register("balloon_unpowered", ::BalloonBlock)
-        THRUSTER                 = register("thruster") { ThrusterBlock(
-            1.0,
-            ParticleTypes.CAMPFIRE_SIGNAL_SMOKE,
-            5
-        )}
-        THRUSTER_TINY            = register("tiny_thruster") { ThrusterBlock(
-            0.2,
-            ParticleTypes.CAMPFIRE_COSY_SMOKE,
-            3
-        ) }
+        THRUSTER                 = register("thruster") {
+            ThrusterBlock(
+                { 1.0 },
+                ParticleTypes.CAMPFIRE_SIGNAL_SMOKE
+            ) {
+                val t = TournamentConfig.SERVER.thrusterTiersNormal
+                if (t !in 1..255) {
+                    throw IllegalStateException("Thruster tier must be in range 1..255")
+                }
+                t
+            }
+        }
+        THRUSTER_TINY            = register("tiny_thruster") {
+            ThrusterBlock(
+                { TournamentConfig.SERVER.thrusterTinyForceMultiplier },
+                ParticleTypes.CAMPFIRE_COSY_SMOKE
+            ) {
+                val t = TournamentConfig.SERVER.thrusterTiersTiny
+                if (t !in 1..255) {
+                    throw IllegalStateException("Thruster tier must be in range 1..255")
+                }
+                t
+            }
+        }
         SPINNER                  = register("spinner", ::SpinnerBlock)
         SEAT                     = register("seat", ::SeatBlock)
         SENSOR                   = register("sensor", ::SensorBlock)
