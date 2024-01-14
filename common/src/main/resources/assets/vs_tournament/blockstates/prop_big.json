@@ -1,0 +1,32 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "vs_tournament:block/prop_big",
+      "y": 0,
+      "x": 90
+    },
+    "facing=east": {
+      "model": "vs_tournament:block/prop_big",
+      "y": 90,
+      "x": 90
+    },
+    "facing=south": {
+      "model": "vs_tournament:block/prop_big",
+      "y": 180,
+      "x": 90
+    },
+    "facing=west": {
+      "model": "vs_tournament:block/prop_big",
+      "y": 270,
+      "x": 90
+    },
+    "facing=up": {
+      "model": "vs_tournament:block/prop_big",
+      "x": 0
+    },
+    "facing=down": {
+      "model": "vs_tournament:block/prop_big",
+      "x": 180
+    }
+  }
+}

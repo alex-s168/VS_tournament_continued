@@ -35,8 +35,17 @@ object TournamentConfig {
         @JsonSchema(description = "Base height of a balloon")
         var balloonBaseHeight = 100.0
 
-        @JsonSchema(description = "The force a thruster applies to a ship")
+        @JsonSchema(description = "The force a thruster applies to a ship * tier")
         var thrusterSpeed = 10000.0
+
+        @JsonSchema(description = "The maximum amount of tiers a normal thruster can have (1-255)")
+        var thrusterTiersNormal = 4
+
+        @JsonSchema(description = "The maximum amount of tiers a normal thruster can have (1-255)")
+        var thrusterTiersTiny = 2
+
+        @JsonSchema(description = "The force multiplier of a tiny thruster")
+        var thrusterTinyForceMultiplier = 0.2
 
         @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
         var thrusterShutoffSpeed = 80.0
