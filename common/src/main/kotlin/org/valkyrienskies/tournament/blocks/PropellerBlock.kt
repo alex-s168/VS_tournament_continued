@@ -28,7 +28,7 @@ class PropellerBlock: DirectionalBaseEntityBlock(
 
 ) {
     companion object {
-        private val SHAPE = RotShapes.box(0.1, 8.1, 0.1, 15.9, 15.9, 15.9)
+        private val SHAPE = RotShapes.box(0.1, 0.1, 8.1, 15.9, 15.9, 15.9)
 
         private val DIRECTIONAL_SHAPE = DirectionalShape.south(SHAPE)
     }
