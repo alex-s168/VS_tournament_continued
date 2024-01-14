@@ -26,7 +26,7 @@ class PropellerBlock: DirectionalBaseEntityBlock(
         .sound(SoundType.STONE)
         .strength(1.0f, 2.0f)
 
-) {
+), RedstoneConnectingBlock {
     companion object {
         private val SHAPE = RotShapes.box(0.1, 0.1, 8.1, 15.9, 15.9, 15.9)
 
@@ -51,17 +51,27 @@ class PropellerBlock: DirectionalBaseEntityBlock(
                 .add(FACING)
         )
 
+    fun getPropSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+        val sides = Direction.entries - state.getValue(FACING).opposite
+        val best = sides.maxOf {
+            level.getSignal(pos.relative(it), it)
+        }
+        return best
+    }
+
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
 
         if (level !is ServerLevel) return
 
-        val signal = level.getBestNeighborSignal(pos)
+        val signal = getPropSignal(state, level, pos)
 
         val be = level.getBlockEntity(pos) as? PropellerBlockEntity
             ?: return
 
         be.signal = signal
+
+        be.update()
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -82,12 +92,14 @@ class PropellerBlock: DirectionalBaseEntityBlock(
 
         if (level !is ServerLevel) return
 
-        val signal = level.getBestNeighborSignal(pos)
+        val signal = getPropSignal(state, level, pos)
 
         val be = level.getBlockEntity(pos) as? PropellerBlockEntity
             ?: return
 
         be.signal = signal
+
+        be.update()
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
@@ -101,7 +113,7 @@ class PropellerBlock: DirectionalBaseEntityBlock(
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity =
-        PropellerBlockEntity(pos, state)
+        PropellerBlockEntity(pos, state, ::getPropSignal)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T: BlockEntity> getTicker(
@@ -110,5 +122,8 @@ class PropellerBlock: DirectionalBaseEntityBlock(
         blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T> =
         PropellerBlockEntity.ticker as BlockEntityTicker<T>
+
+    override fun canConnectTo(state: BlockState, direction: Direction): Boolean =
+        direction in Direction.entries - state.getValue(FACING)
 
 }
