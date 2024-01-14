@@ -105,16 +105,29 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
             try {
                 val pbe = (be.conPos?.let { level.getBlockEntity(it) } as RopeHookBlockEntity)
                 if (pbe.ropeId != 0) {
-                    ItemEntity(level, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), ItemStack(TournamentItems.ROPE.get())).also {
+                    ItemEntity(
+                        level,
+                        pos.x.toDouble(),
+                        pos.y.toDouble(),
+                        pos.z.toDouble(),
+                        ItemStack(TournamentItems.ROPE.get())
+                    ).also {
                         level.addFreshEntity(it)
                     }
                 }
-                pbe.ropeId?.let { level.shipObjectWorld.removeConstraint( it ) }
+                pbe.ropeId?.let {
+                    level.shipObjectWorld.removeConstraint( it )
+                }
                 TournamentDebugHelper.removeObject(pbe.debugID)
                 pbe.otherPos = null
                 pbe.ropeId = 0
                 pbe.debugID = -1
-                level.sendBlockUpdated(pbe.blockPos, pbe.blockState, pbe.blockState, Block.UPDATE_ALL_IMMEDIATE)
+                level.sendBlockUpdated(
+                    pbe.blockPos,
+                    pbe.blockState,
+                    pbe.blockState,
+                    Block.UPDATE_ALL_IMMEDIATE
+                )
             } catch (_: Exception) {}
 
             be.conPos?.let { level.removeBlock(it, false) }

@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
@@ -17,14 +16,13 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.BlockHitResult
-import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.TournamentLootTables
 import org.valkyrienskies.tournament.TournamentTriggers
-import org.valkyrienskies.tournament.ship.BalloonShipControl
+import org.valkyrienskies.tournament.ship.TournamentShips
 
 open class BalloonBlock : Block(
     Properties.of(Material.WOOL)
@@ -34,15 +32,16 @@ open class BalloonBlock : Block(
         entity.causeFallDamage(f, 0.2f, DamageSource.FALL)
     }
 
+    protected fun getShipControl(level: ServerLevel, pos: BlockPos) =
+        (level.getShipObjectManagingPos(pos)
+            ?: level.getShipManagingPos(pos))
+            ?.let { TournamentShips.getOrCreate(it) }
+
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         if (level.isClientSide) return
         level as ServerLevel
 
-        BalloonShipControl.getOrCreate(
-            level.getShipObjectManagingPos(pos)
-                ?: level.getShipManagingPos(pos)
-                ?: return
-        ).addBalloon(
+        getShipControl(level, pos)?.addBalloon(
             pos,
             TournamentConfig.SERVER.unpoweredBalloonMul * TournamentConfig.SERVER.balloonAnalogStrength
         )
@@ -54,16 +53,18 @@ open class BalloonBlock : Block(
         if (level.isClientSide) return
         level as ServerLevel
 
-        level.getShipManagingPos(pos)?.getAttachment<BalloonShipControl>()?.removeBalloon(pos)
+        getShipControl(level, pos)?.removeBalloon(pos)
     }
 
     override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {
         if (level as? ServerLevel == null) return
 
+        val shooter = projectile.owner as? ServerPlayer
+
         fun shotBalloon(pos: BlockPos) {
-            val table = ResourceLocation("vs_tournament", "special/balloon_pop")
+            val table = TournamentLootTables.BALLOON_POP
             val ctx = LootContext.Builder(level)
-                .withLuck(0.0f)
+                .withLuck(shooter?.luck ?: 0f)
                 .create(LootContextParamSets.EMPTY)
             val loot = level.server.lootTables.get(table).getRandomItems(ctx)
 
@@ -74,7 +75,7 @@ open class BalloonBlock : Block(
             }
         }
 
-        (projectile.owner as? ServerPlayer)?.let { player ->
+        shooter?.let { player ->
             TournamentTriggers.BALLOON_SHOT_TRIGGER.trigger(player)
         }
 

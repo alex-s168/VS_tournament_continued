@@ -7,12 +7,9 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
-import org.valkyrienskies.mod.common.getShipManagingPos
-import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
-import org.valkyrienskies.tournament.ship.BalloonShipControl
 
-class PoweredBalloonBlock : BalloonBlock() {
+class PoweredBalloonBlock: BalloonBlock() {
 
     init {
         registerDefaultState(defaultBlockState()
@@ -58,11 +55,7 @@ class PoweredBalloonBlock : BalloonBlock() {
 
         val signal = level.getBestNeighborSignal(pos)
 
-        BalloonShipControl.getOrCreate(
-            level.getShipObjectManagingPos(pos)
-                ?: level.getShipManagingPos(pos)
-                ?: return
-        ).addBalloon(
+        getShipControl(level, pos)?.addBalloon(
             pos,
             signal.toDouble() * TournamentConfig.SERVER.balloonAnalogStrength
         )

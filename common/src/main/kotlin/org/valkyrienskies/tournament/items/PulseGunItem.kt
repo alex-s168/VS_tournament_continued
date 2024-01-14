@@ -11,13 +11,13 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
-import org.valkyrienskies.tournament.ship.PulseShipControl
+import org.valkyrienskies.tournament.ship.TournamentShips
 
-class PulseGunItem : Item(
+class PulseGunItem: Item(
     Properties().stacksTo(1).tab(TournamentItems.TAB)
 ){
 
-    private var pulseForce : Vector3d? = null
+    private var pulseForce: Vector3d? = null
 
     override fun getRarity(stack: ItemStack): Rarity {
         return Rarity.COMMON
@@ -43,7 +43,7 @@ class PulseGunItem : Item(
 
         pulseForce = player.lookAngle.normalize().scale(force * ship.inertiaData.mass).toJOML()
 
-        PulseShipControl.getOrCreate(ship).addPulse(blockLocation.toJOML(), pulseForce!!)
+        TournamentShips.getOrCreate(ship).addPulse(blockLocation.toJOML(), pulseForce!!)
 
         return super.useOn(context)
     }

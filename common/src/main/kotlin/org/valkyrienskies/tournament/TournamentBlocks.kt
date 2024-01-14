@@ -4,15 +4,12 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Explosion
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraft.world.level.material.Material
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.util.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
@@ -39,6 +36,7 @@ object TournamentBlocks {
     lateinit var SEAT                     : RegistrySupplier<SeatBlock>
     lateinit var ROPE_HOOK                : RegistrySupplier<RopeHookBlock>
     lateinit var SENSOR                   : RegistrySupplier<SensorBlock>
+    lateinit var PROP_BIG                 : RegistrySupplier<PropellerBlock>
 
     lateinit var EXPLOSIVE_INSTANT_SMALL  : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_MEDIUM : RegistrySupplier<AbstractExplosiveBlock>
@@ -47,7 +45,6 @@ object TournamentBlocks {
     lateinit var EXPLOSIVE_STAGED_SMALL   : RegistrySupplier<AbstractExplosiveBlock>
 
     lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
-
 
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
@@ -59,19 +56,34 @@ object TournamentBlocks {
                         .sound(SoundType.WOOD)
                         .strength(1.0f, 2.0f)
         )}
-        THRUSTER                 = register("thruster") { ThrusterBlock(
-            1.0,
-            ParticleTypes.CAMPFIRE_SIGNAL_SMOKE,
-            5
-        )}
-        THRUSTER_TINY            = register("tiny_thruster") { ThrusterBlock(
-            0.2,
-            ParticleTypes.CAMPFIRE_COSY_SMOKE,
-            3
-        ) }
+        THRUSTER                 = register("thruster") {
+            ThrusterBlock(
+                { 1.0 },
+                ParticleTypes.CAMPFIRE_SIGNAL_SMOKE
+            ) {
+                val t = TournamentConfig.SERVER.thrusterTiersNormal
+                if (t !in 1..5) {
+                    throw IllegalStateException("Thruster tier must be in range 1..5")
+                }
+                t
+            }
+        }
+        THRUSTER_TINY            = register("tiny_thruster") {
+            ThrusterBlock(
+                { TournamentConfig.SERVER.thrusterTinyForceMultiplier },
+                ParticleTypes.CAMPFIRE_COSY_SMOKE
+            ) {
+                val t = TournamentConfig.SERVER.thrusterTiersTiny
+                if (t !in 1..5) {
+                    throw IllegalStateException("Thruster tier must be in range 1..5")
+                }
+                t
+            }
+        }
         SPINNER                  = register("spinner", ::SpinnerBlock)
         SEAT                     = register("seat", ::SeatBlock)
         SENSOR                   = register("sensor", ::SensorBlock)
+        PROP_BIG                 = register("prop_big", ::PropellerBlock)
 
         EXPLOSIVE_INSTANT_SMALL  = register("explosive_instant_small") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
