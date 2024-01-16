@@ -78,5 +78,6 @@ object TournamentModels {
     }
 
     val PROP_BIG = model("block/prop_big_prop")
+    val PROP_SMALL = model("block/prop_small_prop")
 
 }

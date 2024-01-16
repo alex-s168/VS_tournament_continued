@@ -13,6 +13,7 @@
   "block.vs_tournament.fuel_gauge": "Fuel Gauge",
   "block.vs_tournament.floater": "Floater",
   "block.vs_tournament.prop_big": "Propeller (big)",
+  "block.vs_tournament.prop_small": "Propeller (small)",
 
   "block.vs_tournament.explosive_instant_small": "Instant Explosive (small)",
   "block.vs_tournament.explosive_instant_medium": "Instant Explosive (medium)",
@@ -37,9 +38,6 @@
   "chat.vs_tournament.rope.connected": "Rope connected!",
   "chat.vs_tournament.rope.first": "First position set!",
   "chat.vs_tournament.delete_wand.deleted": "Deleted ship!",
-  "chat.vs_tournament.fuel_container.amount": "Fuel: %s / %s kg",
-  "chat.vs_tournament.fuel_gauge.not_on_ship": "Not on a ship!",
-  "chat.vs_tournament.fuel_gauge.amount": "Total fuel: %s kg",
 
   "advancements.vs_tournament.ship_assemble.title": "Assemble a ship",
   "advancements.vs_tournament.ship_assemble.description": "Create a VS2 ship with the ship assembler",

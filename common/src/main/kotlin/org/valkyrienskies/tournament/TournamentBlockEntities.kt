@@ -17,16 +17,10 @@ import org.valkyrienskies.tournament.registry.RegistrySupplier
 object TournamentBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
 
-    val SENSOR              = TournamentBlocks.SENSOR    withBE ::SensorBlockEntity    byName "sensor"
-    val ROPE_HOOK           = TournamentBlocks.ROPE_HOOK withBE ::RopeHookBlockEntity  byName "rope_hook"
-    val PROPELLER           = TournamentBlocks.PROP_BIG  withBE {pos, state ->
-        PropellerBlockEntity(
-            pos,
-            state,
-            TournamentConfig.SERVER.propellerBigSpeed,
-            TournamentConfig.SERVER.propellerBigAccel
-        )
-    } byName "propeller"
+    val SENSOR              = TournamentBlocks.SENSOR     withBE ::SensorBlockEntity            byName "sensor"
+    val ROPE_HOOK           = TournamentBlocks.ROPE_HOOK  withBE ::RopeHookBlockEntity          byName "rope_hook"
+    val PROP_BIG            = TournamentBlocks.PROP_BIG   withBE ::BigPropellerBlockEntity      byName "prop_big"
+    val PROP_SMALL          = TournamentBlocks.PROP_SMALL withBE ::SmallPropellerBlockEntity    byName "prop_small"
 
     // explosives:
     val EXPLOSIVE           = TournamentBlocks.EXPLOSIVE_INSTANT_SMALL  withBE ::ExplosiveBlockEntity byName "explosive_instant_small"

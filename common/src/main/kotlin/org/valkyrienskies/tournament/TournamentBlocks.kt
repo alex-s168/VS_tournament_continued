@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.Material
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
+import org.valkyrienskies.tournament.blockentity.BigPropellerBlockEntity
+import org.valkyrienskies.tournament.blockentity.SmallPropellerBlockEntity
 import org.valkyrienskies.tournament.util.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
 import org.valkyrienskies.tournament.blocks.explosive.AbstractExplosiveBlock
@@ -38,6 +40,7 @@ object TournamentBlocks {
     lateinit var ROPE_HOOK                : RegistrySupplier<RopeHookBlock>
     lateinit var SENSOR                   : RegistrySupplier<SensorBlock>
     lateinit var PROP_BIG                 : RegistrySupplier<PropellerBlock>
+    lateinit var PROP_SMALL               : RegistrySupplier<PropellerBlock>
 
     lateinit var EXPLOSIVE_INSTANT_SMALL  : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_MEDIUM : RegistrySupplier<AbstractExplosiveBlock>
@@ -87,8 +90,13 @@ object TournamentBlocks {
         PROP_BIG                 = register("prop_big") {
             PropellerBlock(
                 TournamentConfig.SERVER.propellerBigForce,
-                TournamentConfig.SERVER.propellerBigSpeed,
-                TournamentConfig.SERVER.propellerBigAccel,
+                ::BigPropellerBlockEntity
+            )
+        }
+        PROP_SMALL               = register("prop_small") {
+            PropellerBlock(
+                TournamentConfig.SERVER.propellerSmallForce,
+                ::SmallPropellerBlockEntity
             )
         }
 

@@ -29,8 +29,7 @@ import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
 
 class PropellerBlock(
     val mult: Double,
-    val maxSpeed: Float,
-    val accel: Float
+    val beConstr: (BlockPos, BlockState) -> PropellerBlockEntity<*>,
 ): DirectionalBaseEntityBlock(
     Properties.of(Material.STONE)
         .sound(SoundType.STONE)
@@ -81,7 +80,7 @@ class PropellerBlock(
 
         val signal = getPropSignal(state, level, pos)
 
-        val be = level.getBlockEntity(pos) as? PropellerBlockEntity
+        val be = level.getBlockEntity(pos) as? PropellerBlockEntity<*>
             ?: return
 
         be.signal = signal
@@ -119,7 +118,7 @@ class PropellerBlock(
 
         val signal = getPropSignal(state, level, pos)
 
-        val be = level.getBlockEntity(pos) as? PropellerBlockEntity
+        val be = level.getBlockEntity(pos) as? PropellerBlockEntity<*>
             ?: return
 
         be.signal = signal
@@ -138,7 +137,7 @@ class PropellerBlock(
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity =
-        PropellerBlockEntity(pos, state, maxSpeed, accel)
+        beConstr(pos, state)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T: BlockEntity> getTicker(

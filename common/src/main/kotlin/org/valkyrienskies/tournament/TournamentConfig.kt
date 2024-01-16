@@ -71,6 +71,15 @@ object TournamentConfig {
         @JsonSchema(description = "The acceleration of a big propeller. (deaccel = accel * 2)")
         var propellerBigAccel = 0.1f
 
+        @JsonSchema(description = "The force of a big propeller at max speed")
+        var propellerSmallForce = 1000.0
+
+        @JsonSchema(description = "The max speed of a big propeller at max redstone input")
+        var propellerSmallSpeed = 50.0f
+
+        @JsonSchema(description = "The acceleration of a big propeller. (deaccel = accel * 2)")
+        var propellerSmallAccel = 1.0f
+
         @JsonSchema(description = "The list of blocks that don't get assembled by the ship assembler")
         var blockBlacklist = setOf(
             "minecraft:dirt",

@@ -7,16 +7,19 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import org.valkyrienskies.tournament.TournamentBlockEntities
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.blocks.PropellerBlock
 
-class PropellerBlockEntity(
+abstract class PropellerBlockEntity<T: BlockEntity>(
+    be: BlockEntityType<T>,
     pos: BlockPos,
     state: BlockState,
     val maxSpeed: Float,
     val accel: Float
-): BlockEntity(TournamentBlockEntities.PROPELLER.get(), pos, state) {
+): BlockEntity(be, pos, state) {
 
     var signal: Int = -1
     var rotation: Double = 0.0
@@ -40,7 +43,7 @@ class PropellerBlockEntity(
     }
 
     companion object {
-        val ticker = BlockEntityTicker<PropellerBlockEntity> { level, _, _, be ->
+        val ticker = BlockEntityTicker<PropellerBlockEntity<*>> { level, _, _, be ->
             be.tick(level)
         }
     }
@@ -74,3 +77,25 @@ class PropellerBlockEntity(
     }
 
 }
+
+class BigPropellerBlockEntity(
+    pos: BlockPos,
+    state: BlockState,
+): PropellerBlockEntity<BigPropellerBlockEntity>(
+    TournamentBlockEntities.PROP_BIG.get(),
+    pos,
+    state,
+    TournamentConfig.SERVER.propellerBigSpeed,
+    TournamentConfig.SERVER.propellerBigAccel
+)
+
+class SmallPropellerBlockEntity(
+    pos: BlockPos,
+    state: BlockState,
+): PropellerBlockEntity<SmallPropellerBlockEntity>(
+    TournamentBlockEntities.PROP_SMALL.get(),
+    pos,
+    state,
+    TournamentConfig.SERVER.propellerSmallSpeed,
+    TournamentConfig.SERVER.propellerSmallAccel
+)

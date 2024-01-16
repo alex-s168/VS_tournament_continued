@@ -9,12 +9,12 @@ import org.valkyrienskies.tournament.TournamentModels
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
 import org.valkyrienskies.tournament.util.extension.pose
 
-class PropellerBlockEntityRender:
-    BlockEntityRenderer<PropellerBlockEntity>
-{
+class PropellerBlockEntityRender<T: PropellerBlockEntity<T>>(
+    val model: TournamentModels.Model
+): BlockEntityRenderer<T> {
 
     override fun render(
-        be: PropellerBlockEntity,
+        be: T,
         partial: Float,
         pose: PoseStack,
         bufferSource: MultiBufferSource,
@@ -26,7 +26,7 @@ class PropellerBlockEntityRender:
             mulPose(be.blockState.getValue(DirectionalBlock.FACING).opposite.rotation)
             pose.mulPose(Vector3f.YP.rotationDegrees(be.rotation.toFloat()))
             translate(-0.5, -0.5, -0.5)
-            TournamentModels.PROP_BIG.renderer.render(
+            model.renderer.render(
                 pose,
                 be,
                 bufferSource,

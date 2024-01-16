@@ -1,0 +1,26 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"2": "vs_tournament:block/prop_small",
+		"particle": "vs_tournament:block/prop_small"
+	},
+	"elements": [
+		{
+			"name": "Base",
+			"from": [0, 8, 0],
+			"to": [16,16, 16],
+			"faces": {
+				"north": {"uv": [4, 0, 8, 1.75], "texture": "#2"},
+				"east": {"uv": [4, 1.75, 8, 3.5], "texture": "#2"},
+				"south": {"uv": [4, 3.5, 8, 5.25], "texture": "#2"},
+				"west": {"uv": [4, 5.25, 8, 7], "texture": "#2"},
+				"up": {"uv": [4, 4, 0, 0], "texture": "#2"},
+				"down": {"uv": [4, 4, 0, 8], "texture": "#2"}
+			}
+		}
+	],
+	"groups": [
+
+	]
+}

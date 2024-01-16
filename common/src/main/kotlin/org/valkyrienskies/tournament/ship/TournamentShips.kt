@@ -92,7 +92,7 @@ class TournamentShips: ShipForcesInducer {
 
                     val be = lvl.getBlockEntity(
                         p.pos.toBlockPos()
-                    ) as PropellerBlockEntity?
+                    ) as PropellerBlockEntity<*>?
 
                     if (be != null) {
                         p.speed.set(be.speed)

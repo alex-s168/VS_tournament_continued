@@ -78,6 +78,11 @@ object TournamentMod {
             clientRenderers.registerBlockEntityRenderer(be, renderer)
         }
 
-        renderer(TournamentBlockEntities.PROPELLER.get()) { PropellerBlockEntityRender() }
+        renderer(TournamentBlockEntities.PROP_BIG.get()) {
+            PropellerBlockEntityRender(TournamentModels.PROP_BIG)
+        }
+        renderer(TournamentBlockEntities.PROP_SMALL.get()) {
+            PropellerBlockEntityRender(TournamentModels.PROP_SMALL)
+        }
     }
 }
