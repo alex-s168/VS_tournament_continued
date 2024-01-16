@@ -24,7 +24,7 @@ class PropellerBlockEntityRender:
         pose.pose {
             translate(0.5, 0.5, 0.5)
             mulPose(be.blockState.getValue(DirectionalBlock.FACING).opposite.rotation)
-            pose.mulPose(Vector3f.YP.rotationDegrees(be.rotation))
+            pose.mulPose(Vector3f.YP.rotationDegrees(be.rotation.toFloat()))
             translate(-0.5, -0.5, -0.5)
             TournamentModels.PROP_BIG.renderer.render(
                 pose,

@@ -19,8 +19,8 @@ class PropellerBlockEntity(
 ): BlockEntity(TournamentBlockEntities.PROPELLER.get(), pos, state) {
 
     var signal: Int = -1
-    var rotation: Float = 0.0f
-    var speed: Float = 0.0f
+    var rotation: Double = 0.0
+    var speed: Double = 0.0
 
     fun tick(level: Level) {
         if (signal == -1) {
@@ -33,10 +33,10 @@ class PropellerBlockEntity(
             speed -= accel * 2
         }
         if (speed < 0.0f) {
-            speed = 0.0f
+            speed = 0.0
         }
-        rotation += speed
-        rotation %= 360.0f
+        rotation -= speed
+        rotation %= 360.0
     }
 
     companion object {
@@ -54,16 +54,16 @@ class PropellerBlockEntity(
         ClientboundBlockEntityDataPacket.create(this)
 
     override fun saveAdditional(tag: CompoundTag) {
-        tag.putFloat("speed", speed)
-        tag.putFloat("rotation", rotation)
+        tag.putDouble("speed", speed)
+        tag.putDouble("rotation", rotation)
         tag.putInt("signal", signal)
 
         super.saveAdditional(tag)
     }
 
     override fun load(tag: CompoundTag) {
-        speed = tag.getFloat("speed")
-        rotation = tag.getFloat("rotation")
+        speed = tag.getDouble("speed")
+        rotation = tag.getDouble("rotation")
         signal = tag.getInt("signal")
 
         super.load(tag)

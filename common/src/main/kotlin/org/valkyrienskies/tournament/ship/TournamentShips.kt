@@ -2,11 +2,12 @@ package org.valkyrienskies.tournament.ship
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.google.common.util.concurrent.AtomicDouble
 import net.minecraft.core.BlockPos
-import net.minecraft.resources.ResourceKey
-import net.minecraft.world.level.Level
+import net.minecraft.world.phys.AABB
 import org.joml.Vector3d
 import org.joml.Vector3i
+import org.joml.primitives.AABBd
 import org.valkyrienskies.core.api.ships.*
 import org.valkyrienskies.core.apigame.world.properties.DimensionId
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
@@ -52,7 +53,7 @@ class TournamentShips: ShipForcesInducer {
     data class PropellerData(
         val pos: Vector3i,
         val force: Vector3d,
-        var speed: Float,
+        var speed: AtomicDouble,
         var touchingWater: Boolean
     )
 
@@ -80,6 +81,7 @@ class TournamentShips: ShipForcesInducer {
                 }
 
                 propellers.forEach { p ->
+                    // TODO: check if water is on the outside if big propeller
                     val water = lvl.isWaterAt(
                         Helper3d
                             .convertShipToWorldSpace(lvl, p.pos.toDouble())
@@ -94,7 +96,7 @@ class TournamentShips: ShipForcesInducer {
                     ) as PropellerBlockEntity?
 
                     if (be != null) {
-                        p.speed = be.speed
+                        p.speed.set(be.speed)
                     }
                 }
             }
@@ -113,9 +115,9 @@ class TournamentShips: ShipForcesInducer {
             val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
 
             if (force.isFinite && (
-                        TournamentConfig.SERVER.thrusterShutoffSpeed == -1.0
-                                || physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
-                        )
+                TournamentConfig.SERVER.thrusterShutoffSpeed == -1.0
+                    || physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
+                )
             ) {
                 physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.thrusterSpeed * tier), tPos)
             }
@@ -172,7 +174,7 @@ class TournamentShips: ShipForcesInducer {
             val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
             val tForce = physShip.transform.shipToWorld.transformDirection(force, Vector3d())
 
-            physShip.applyInvariantForceToPos(tForce.mul(speed.toDouble()), tPos)
+            physShip.applyInvariantForceToPos(tForce.mul(speed.get()), tPos)
         }
     }
 
@@ -231,7 +233,7 @@ class TournamentShips: ShipForcesInducer {
     }
 
     fun addPropeller(pos: Vector3i, force: Vector3d) {
-        propellers.add(PropellerData(pos, force, 0.0f, false))
+        propellers += PropellerData(pos, force, AtomicDouble(), false)
     }
 
     fun removePropeller(pos: Vector3i) {

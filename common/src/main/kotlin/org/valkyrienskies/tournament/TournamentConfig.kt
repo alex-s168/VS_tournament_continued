@@ -66,7 +66,7 @@ object TournamentConfig {
         var propellerBigForce = 10000.0
 
         @JsonSchema(description = "The max speed of a big propeller at max redstone input")
-        var propellerBigSpeed = 8.0f
+        var propellerBigSpeed = 7.0f
 
         @JsonSchema(description = "The acceleration of a big propeller. (deaccel = accel * 2)")
         var propellerBigAccel = 0.1f
