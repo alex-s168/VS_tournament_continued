@@ -11,6 +11,7 @@ import org.joml.primitives.AABBd
 import org.valkyrienskies.core.api.ships.*
 import org.valkyrienskies.core.apigame.world.properties.DimensionId
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
+import org.valkyrienskies.mod.common.util.toBlockPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
@@ -90,9 +91,7 @@ class TournamentShips: ShipForcesInducer {
                     p.touchingWater = water
 
                     val be = lvl.getBlockEntity(
-                        Helper3d
-                            .convertShipToWorldSpace(lvl, p.pos.toDouble())
-                            .toBlock()
+                        p.pos.toBlockPos()
                     ) as PropellerBlockEntity?
 
                     if (be != null) {
