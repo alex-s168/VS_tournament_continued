@@ -1,8 +1,8 @@
 # TODO
 ## Survival Ready
-- [ ] What material are floaters made of? -> Change recipe and tool to break
+- [x] What material are floaters made of? -> Change recipe and tool to break
 - [ ] Ensure that all blocks have the correct hardness values and tools needed to break / faster to break
-- [ ] Make sure sensor works correctly
+- [x] Make sure sensor works correctly
 - [ ] Bully Illuc into making propeller blade items (small and big) and a motor item for crafting
 
 ## Redstone Update
@@ -21,3 +21,4 @@
 - [ ] Propeller particles
 - [ ] Better thruster particles
 - [ ] New ship assembler
+- [ ] Fix propellers rendering weird underwater

@@ -1,16 +1,16 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "#C#",
+        "###",
         "CRC",
-        "#C#"
+        "###"
     ],
     "key": {
         "#": {
-            "item": "minecraft:stone"
+            "item": "minecraft:iron_ingot"
         },
         "C": {
-            "item": "minecraft:cobblestone"
+            "item": "minecraft:iron_block"
         },
         "R": {
             "item": "minecraft:redstone"

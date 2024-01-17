@@ -4,6 +4,8 @@
     "vs_tournament:ballast",
     "vs_tournament:spinner",
     "vs_tournament:thruster",
-    "vs_tournament:tiny_thruster"
+    "vs_tournament:tiny_thruster",
+    "vs_tournament:prop_big",
+    "vs_tournament:prop_small"
   ]
 }
