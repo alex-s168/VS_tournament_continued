@@ -52,10 +52,11 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState):
             .location
             .toJOML()
 
-        val value = lerp(1.0, 15.0, 1 - (start.distance(hit) / TournamentConfig.SERVER.sensorDistance))
+        println("start to end distance: ${start.distance(end)}")
+        println("start to hit distance: ${start.distance(hit)}")
 
         return if (clipResult.type != HitResult.Type.MISS) {
-            value.toInt()
+            ceil(lerp(1.0, 15.0, start.distance(hit) / TournamentConfig.SERVER.sensorDistance))
         } else {
             0
         }
