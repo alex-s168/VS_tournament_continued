@@ -54,13 +54,13 @@ object TournamentConfig {
         var ballastWeight = 10000.0
 
         @JsonSchema(description = "The weight of a ballast when redstone powered")
-        var ballastNoWeight = 10.0
+        var ballastNoWeight = 800.0
 
         @JsonSchema(description = "The force the pulse gun applies to a ship")
         var pulseGunForce = 300.0
 
         @JsonSchema(description = "Maximum distance a sensor can detect a ship from")
-        var sensorDistance = 17.0
+        var sensorDistance = 10.0
 
         @JsonSchema(description = "The force of a big propeller at max speed")
         var propellerBigForce = 10000.0

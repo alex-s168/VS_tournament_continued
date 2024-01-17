@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.phys.HitResult
+import org.joml.Vector3d
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
@@ -32,11 +33,15 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState):
 
         val start = Helper3d.convertShipToWorldSpace(level, blockPos)
             .add(0.5, 0.5,0.5)
-            .add(lookingTowards.mul(0.5))
+            .add(lookingTowards.mul(0.5, Vector3d()))
 
-        val end = Helper3d.convertShipToWorldSpace(level, blockPos)
-            .add(0.5, 0.5,0.5)
-            .add(lookingTowards.mul(0.5 + TournamentConfig.SERVER.sensorDistance))
+        val end = Helper3d.convertShipToWorldSpace(
+            level,
+            blockPos
+                .toJOMLD()
+                .add(0.5, 0.5,0.5)
+                .add(lookingTowards.mul(TournamentConfig.SERVER.sensorDistance))
+        )
 
         val clipResult = level.clipIncludeShips(
             ClipContext(
@@ -57,7 +62,7 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState):
         println("start to hit distance: ${start.distance(hit)}")
 
         return if (clipResult.type != HitResult.Type.MISS) {
-            ceil(lerp(1.0, 15.0, start.distance(hit) / TournamentConfig.SERVER.sensorDistance)).toInt()
+            ceil(lerp(15.0, 1.0, start.distance(hit) / TournamentConfig.SERVER.sensorDistance)).toInt()
         } else {
             0
         }

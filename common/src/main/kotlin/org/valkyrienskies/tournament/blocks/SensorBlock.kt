@@ -22,7 +22,6 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.tournament.blockentity.SensorBlockEntity
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
-import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
 
 class SensorBlock: BaseEntityBlock(
     Properties.of(Material.STONE)
@@ -40,7 +39,7 @@ class SensorBlock: BaseEntityBlock(
     init {
         registerDefaultState(
             defaultBlockState()
-                .setValue(DirectionalBaseEntityBlock.FACING, Direction.NORTH)
+                .setValue(FACING, Direction.NORTH)
                 .setValue(BlockStateProperties.POWER, 0)
         )
     }
