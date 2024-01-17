@@ -2,17 +2,17 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "###",
-        "iCi",
+        "TiT",
         "###"
     ],
     "key": {
-        "#": {
-            "item": "minecraft:redstone"
+        "T": {
+            "item": "vs_tournament:tiny_thruster"
         },
         "i": {
             "item": "minecraft:iron_ingot"
         },
-        "C": {
+        "#": {
             "item": "minecraft:cobblestone"
         }
     },

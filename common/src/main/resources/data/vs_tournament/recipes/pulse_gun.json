@@ -1,7 +1,7 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        " # ",
+        "U#U",
         " / ",
         " / "
     ],
@@ -11,6 +11,9 @@
         },
         "/": {
             "item": "minecraft:stick"
+        },
+        "U": {
+            "item": "vs_tournament:upgrade_thruster"
         }
     },
     "result": {
