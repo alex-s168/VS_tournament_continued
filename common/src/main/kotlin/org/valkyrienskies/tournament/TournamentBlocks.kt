@@ -48,7 +48,7 @@ object TournamentBlocks {
 
     lateinit var EXPLOSIVE_STAGED_SMALL   : RegistrySupplier<AbstractExplosiveBlock>
 
-    lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
+    // lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
 
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
@@ -87,6 +87,7 @@ object TournamentBlocks {
         SPINNER                  = register("spinner", ::SpinnerBlock)
         SEAT                     = register("seat", ::SeatBlock)
         SENSOR                   = register("sensor", ::SensorBlock)
+        ROPE_HOOK                = register("rope_hook", ::RopeHookBlock)
         PROP_BIG                 = register("prop_big") {
             PropellerBlock(
                 TournamentConfig.SERVER.propellerBigForce,
@@ -125,13 +126,15 @@ object TournamentBlocks {
                 Explosion.BlockInteraction.BREAK
             ) {}
         }
-        EXPLOSIVE_TEST           = register("explosive_test", ::TestExplosiveBlock)
+        // EXPLOSIVE_TEST           = register("explosive_test", ::TestExplosiveBlock)
 
+        /*
         register("ore_phynite") {
             OreBlock(BlockBehaviour.Properties.of(TournamentMaterials.PHYNITE)
                 .strength(3.0f, 3.0f)
             )
         }
+         */
 
 
         // old:
@@ -140,8 +143,6 @@ object TournamentBlocks {
         register("instantexplosive_big", null) { OldBlock(EXPLOSIVE_INSTANT_LARGE.get()) }
         register("stagedexplosive", null) { OldBlock(EXPLOSIVE_STAGED_SMALL.get()) }
         register("stagedexplosive_big", null) { OldBlock(Blocks.AIR) }
-        ROPE_HOOK                = register("rope_hook", ::RopeHookBlock)
-
 
         BLOCKS.applyAll()
         VSGameEvents.registriesCompleted.on { _, _ ->
