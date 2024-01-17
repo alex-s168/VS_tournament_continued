@@ -19,7 +19,7 @@ object TournamentItems {
 
     lateinit var ROPE              :  RegistrySupplier<RopeItem>
     lateinit var TOOL_PULSEGUN     :  RegistrySupplier<PulseGunItem>
-    lateinit var TOOL_DELETEWAND: RegistrySupplier<ShipDeleteWandItem>
+    lateinit var TOOL_DELETEWAND   : RegistrySupplier<ShipDeleteWandItem>
     lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
     lateinit var GIFT_BAG          :  RegistrySupplier<GiftBagItem>
 

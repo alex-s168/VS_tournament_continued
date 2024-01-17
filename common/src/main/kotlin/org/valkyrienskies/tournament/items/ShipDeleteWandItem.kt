@@ -12,13 +12,14 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.util.extension.delete
 
-class ShipDeleteWandItem : Item(
-        Properties().stacksTo(1).tab(TournamentItems.TAB)
-){
+class ShipDeleteWandItem:Item(
+        Properties()
+            .stacksTo(1)
+            .tab(TournamentItems.TAB)
+) {
 
-    override fun getRarity(stack: ItemStack): Rarity {
-        return Rarity.EPIC
-    }
+    override fun getRarity(stack: ItemStack) =
+        Rarity.EPIC
 
     override fun useOn(context: UseOnContext): InteractionResult {
         if(context.level.isClientSide || context.player == null) {
@@ -30,7 +31,8 @@ class ShipDeleteWandItem : Item(
             return InteractionResult.PASS
         }
 
-        val ship = level.getShipObjectManagingPos(context.clickedPos) ?: return InteractionResult.PASS
+        val ship = level.getShipObjectManagingPos(context.clickedPos)
+            ?: return InteractionResult.PASS
 
         ship.delete(level)
 

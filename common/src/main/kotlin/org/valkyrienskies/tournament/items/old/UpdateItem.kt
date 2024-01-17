@@ -7,21 +7,21 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class UpdateItem(val new: Item) : Item(
-    Properties()
-) {
+class UpdateItem(
+    val new: Item
+): Item(Properties()) {
 
     override fun getDescriptionId(): String =
         "item.vs_tournament.old_item"
 
     override fun inventoryTick(stack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
-        if (entity as? Player == null) return
-        if (level as? ServerLevel == null) return
+        if (level !is ServerLevel) return
+        if (entity !is Player) return
 
         val am = stack.count
         stack.shrink(am)
 
-        (entity).inventory.add(ItemStack(new, am))
+        entity.inventory.add(ItemStack(new, am))
     }
 
 }

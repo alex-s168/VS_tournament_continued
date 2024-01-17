@@ -1,16 +1,23 @@
 package org.valkyrienskies.tournament.util
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.server.level.ServerLevel
 import org.apache.commons.lang3.mutable.MutableInt
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet
 import org.valkyrienskies.mod.common.util.toJOML
-import java.util.concurrent.atomic.AtomicInteger
 
 object ShipAssembler {
 
-    private fun findStructureLoop(level: ServerLevel, pos: BlockPos, blacklist: Set<String>, set : DenseBlockPosSet, checked : MutableSet<BlockPos>, amount : MutableInt) {
+    private fun findStructureLoop(
+        level: ServerLevel,
+        pos: BlockPos,
+        blacklist: Set<String>,
+        set: DenseBlockPosSet,
+        checked: MutableSet<BlockPos>,
+        amount: MutableInt
+    ) {
         if(amount.value > 2000)
             return
 
@@ -19,23 +26,19 @@ object ShipAssembler {
 
         checked.add(pos)
 
-        if(blacklist.contains(Registry.BLOCK.getKey(level.getBlockState(pos).block).toString()))
+        if(Registry.BLOCK.getKey(level.getBlockState(pos).block).toString() in blacklist)
             return
 
         if(level.getBlockState(pos).isAir)
             return
 
-        set.add(pos.toJOML())
+        set += pos.toJOML()
 
         amount.increment()
 
-        findStructureLoop(level, BlockPos(pos.x+1, pos.y, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x, pos.y+1, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x, pos.y, pos.z+1), blacklist, set, checked, amount)
-
-        findStructureLoop(level, BlockPos(pos.x-1, pos.y, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x, pos.y-1, pos.z), blacklist, set, checked, amount)
-        findStructureLoop(level, BlockPos(pos.x, pos.y, pos.z-1), blacklist, set, checked, amount)
+        Direction.entries.forEach {
+            findStructureLoop(level, pos.relative(it), blacklist, set, checked, amount)
+        }
     }
 
     fun findStructure(level : ServerLevel, pos : BlockPos, blacklist : Set<String>) : DenseBlockPosSet {

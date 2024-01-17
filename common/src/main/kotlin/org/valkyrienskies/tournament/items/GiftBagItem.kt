@@ -1,6 +1,5 @@
 package org.valkyrienskies.tournament.items
 
-import net.minecraft.client.Minecraft
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.TranslatableComponent
@@ -8,9 +7,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
-import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Rarity
@@ -20,7 +17,6 @@ import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import org.valkyrienskies.tournament.TournamentItems
-import org.valkyrienskies.tournament.screen.GiftBagScreen
 
 class GiftBagItem : Item(
     Properties().stacksTo(1).tab(TournamentItems.TAB)

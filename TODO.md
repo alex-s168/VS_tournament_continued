@@ -22,3 +22,7 @@
 - [ ] Better thruster particles
 - [ ] New ship assembler
 - [ ] Fix propellers rendering weird underwater
+
+## Code
+- [ ] Better ship assembler structure finder algorithm
+- [ ] Use tab create function in TournamentPlatformHelper

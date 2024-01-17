@@ -22,7 +22,6 @@ abstract class SimpleExplosiveStagedBlock(
             pos, Blocks.AIR.defaultBlockState()
         )
         level.explodeShip(
-            level,
             pos.x + 0.5 + spreadX.random(),
             pos.y + 0.5 + spreadY.random(),
             pos.z + 0.5 + spreadZ.random(),

@@ -103,17 +103,17 @@ object TournamentBlocks {
 
         EXPLOSIVE_INSTANT_SMALL  = register("explosive_instant_small") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
-                level.explodeShip(level, pos.x+0.5, pos.y+0.5, pos.z+0.5, 3.0f, Explosion.BlockInteraction.BREAK)
+                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 3.0f, Explosion.BlockInteraction.BREAK)
             }}
         }
         EXPLOSIVE_INSTANT_MEDIUM = register("explosive_instant_medium") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
-                level.explodeShip(level, pos.x+0.5, pos.y+0.5, pos.z+0.5, 6.0f, Explosion.BlockInteraction.BREAK)
+                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 6.0f, Explosion.BlockInteraction.BREAK)
             }}
         }
         EXPLOSIVE_INSTANT_LARGE  = register("explosive_instant_large") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
-                level.explodeShip(level, pos.x+0.5, pos.y+0.5, pos.z+0.5, 12.0f, Explosion.BlockInteraction.BREAK)
+                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 12.0f, Explosion.BlockInteraction.BREAK)
             }}
         }
         EXPLOSIVE_STAGED_SMALL   = register("explosive_staged_small") {
