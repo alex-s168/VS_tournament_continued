@@ -16,6 +16,7 @@ import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.util.helper.Helper3d
 import org.valkyrienskies.tournament.util.math.lerp
+import kotlin.math.ceil
 
 class SensorBlockEntity(pos: BlockPos, state: BlockState):
     BlockEntity(TournamentBlockEntities.SENSOR.get(), pos, state)
@@ -56,7 +57,7 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState):
         println("start to hit distance: ${start.distance(hit)}")
 
         return if (clipResult.type != HitResult.Type.MISS) {
-            ceil(lerp(1.0, 15.0, start.distance(hit) / TournamentConfig.SERVER.sensorDistance))
+            ceil(lerp(1.0, 15.0, start.distance(hit) / TournamentConfig.SERVER.sensorDistance)).toInt()
         } else {
             0
         }
