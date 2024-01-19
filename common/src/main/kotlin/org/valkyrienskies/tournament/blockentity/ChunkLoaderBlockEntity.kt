@@ -44,7 +44,8 @@ class ChunkLoaderBlockEntity(pos: BlockPos, state: BlockState):
         level
             ?.getShipObjectManagingPos(blockPos)
             ?.velocity
-            ?.add(getCurrPos(), Vector3d())
+            ?.mul(3.0, Vector3d())
+            ?.add(getCurrPos())
             ?.let {
                 ChunkPos(it.x.toInt() shr 4, it.z.toInt() shr 4)
             } ?: ChunkPos(blockPos.x shr 4, blockPos.z shr 4)

@@ -17,4 +17,11 @@ interface ChunkLoader {
      * The predicted chunk where it will be in the next (few) tick(s)
      */
     fun getFutureChunk(): ChunkPos
+
+    /**
+     * Returns a list of chunks to be loaded and ticked when the level gets re-loaded.
+     */
+    fun getChunksToLoad(destination: MutableList<ChunkPos>) {
+        destination.add(getCurrentChunk())
+    }
 }

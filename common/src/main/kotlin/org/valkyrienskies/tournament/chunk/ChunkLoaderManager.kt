@@ -2,26 +2,25 @@ package org.valkyrienskies.tournament.chunk
 
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ChunkHolder
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.chunk.ChunkStatus
-import org.apache.commons.lang3.mutable.MutableInt
 import org.joml.Vector2i
 import org.joml.primitives.Rectanglei
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
-import org.valkyrienskies.tournament.util.extension.*
-import java.util.concurrent.ConcurrentHashMap
+import org.valkyrienskies.tournament.util.extension.fix
+import org.valkyrienskies.tournament.util.extension.itTake
+import org.valkyrienskies.tournament.util.extension.scaleFrom
+import org.valkyrienskies.tournament.util.extension.values
 import java.util.function.Consumer
 
 // TODO: make multiple blocks of tickets that cycle trough every tick so that not too many chunks are tried to be loaded at once
 class ChunkLoaderManager private constructor(
     val level: ServerLevel
 ) {
-    internal val tickets = mutableListOf<ChunkLoadingTicket>()
+    private val tickets = mutableListOf<ChunkLoadingTicket>()
 
     private var sorted = true
 
@@ -31,6 +30,8 @@ class ChunkLoaderManager private constructor(
         amountOfActualChunksPerTicket: Int,
         loader: Consumer<ChunkPos>
     ) {
+        lastTickChunks.clear()
+
         if (!sorted) {
             tickets.sortBy {
                 it.priority
@@ -49,10 +50,7 @@ class ChunkLoaderManager private constructor(
             val top = ticket.loader.getFutureChunk().toJOML()
             val bottom = top.sub(mid, Vector2i()).negate().add(mid)
 
-            val box = Rectanglei(
-                top,
-                bottom
-            ).fix()
+            val box = Rectanglei(top, bottom).fix()
 
             val t = box.area().toFloat() / amountOfChunksPerTicket
 
@@ -61,8 +59,10 @@ class ChunkLoaderManager private constructor(
                 .sortedBy { it.distanceSquared(mid) }
                 .take(amountOfActualChunksPerTicket)
                 .map { ChunkPos(it.x, it.y) }
-                .filter { !processing.containsKey(it) }
-                .forEach(loader::accept)
+                .also { lastTickChunks.addAll(it) }
+                .forEach {
+                    loader.accept(it)
+                }
         }
     }
 
@@ -81,9 +81,11 @@ class ChunkLoaderManager private constructor(
         }
     }
 
-    private val processing = ConcurrentHashMap<ChunkPos, MutableInt>(
-        TournamentConfig.SERVER.chunksPerTicket * 5
-    )
+    fun dispose(ticket: ChunkLoadingTicket) {
+        tickets -= ticket
+    }
+
+    private val lastTickChunks = mutableListOf<ChunkPos>()
 
     companion object {
         private val map =
@@ -113,27 +115,15 @@ class ChunkLoaderManager private constructor(
             }
             server.allLevels.forEach { level ->
                 val manager = getFor(level)
-                manager.processing.forEach { (k, v) ->
-                    val t = v.getAndAdd(1)
-                    if (t >= TournamentConfig.SERVER.chunkLoadTimeout * 2) {
-                        throw Exception("[Tournament] Chunk loading timed out: still not finished after $t ticks ($k)!")
-                    }
-                    if (t >= TournamentConfig.SERVER.chunkLoadTimeout) {
-                        println("[Tournament] Chunk loading taking longer than expected: took $t ticks to load chunk at $k!")
-                    }
+                manager.lastTickChunks.forEach { pos ->
+                    level.setChunkForced(pos.x, pos.z, false)
                 }
                 manager.tick(
                     amountOfTickets = cpt,
                     amountOfChunksPerTicket = TournamentConfig.SERVER.chunksPerTicket * 10,
                     amountOfActualChunksPerTicket = TournamentConfig.SERVER.chunksPerTicket,
                     loader = { pos ->
-                        manager.processing[pos] = MutableInt(0)
-                        level.chunkSource.chunkMap.schedule(
-                            ChunkHolder(pos, 0, level, level.lightEngine, null, null),
-                            ChunkStatus.EMPTY               // load chunks
-                        ).thenRun {
-                            manager.processing.remove(pos)
-                        }
+                        level.setChunkForced(pos.x, pos.z, true)
                     }
                 )
             }

@@ -28,6 +28,7 @@
 - [ ] Better ship assembler structure finder algorithm
 - [ ] Use tab create function in TournamentPlatformHelper
 - [ ] Proper logging
+- [ ] Add debug info (optional). Stores info lick amount of chunk loading tickets in a debug info file
 
 ## Others
 - [ ] Make big propeller work if water below or above the prop too

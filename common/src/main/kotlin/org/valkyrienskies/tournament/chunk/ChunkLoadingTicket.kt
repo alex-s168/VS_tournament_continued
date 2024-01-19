@@ -10,6 +10,6 @@ data class ChunkLoadingTicket internal constructor(
 
     fun dispose() {
         active = false
-        manager.tickets -= this
+        manager.dispose(this)
     }
 }
