@@ -22,7 +22,12 @@
 - [ ] Better thruster particles
 - [ ] New ship assembler
 - [ ] Fix propellers rendering weird underwater (something alpha blend something)
+- [ ] Thruster particles are sometimes in the wrong direction
 
 ## Code
 - [ ] Better ship assembler structure finder algorithm
 - [ ] Use tab create function in TournamentPlatformHelper
+- [ ] Proper logging
+
+## Others
+- [ ] Make big propeller work if water below or above the prop too

@@ -3,12 +3,13 @@ package org.valkyrienskies.tournament.util.math
 import org.joml.Vector2i
 import org.joml.primitives.Rectanglei
 
+// TODO: remove?
 data class AxisExpandableBox2i(
-    val mid: Vector2i,
-    val expansionLeft: Double,
-    val expansionRight: Double,
-    val expansionUp: Double,
-    val expansionDown: Double
+    var mid: Vector2i,
+    var expansionLeft: Double,
+    var expansionRight: Double,
+    var expansionUp: Double,
+    var expansionDown: Double
 ) {
     var value: Double = 0.0
 

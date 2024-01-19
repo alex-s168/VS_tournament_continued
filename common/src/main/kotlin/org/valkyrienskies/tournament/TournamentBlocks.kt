@@ -41,6 +41,7 @@ object TournamentBlocks {
     lateinit var SENSOR                   : RegistrySupplier<SensorBlock>
     lateinit var PROP_BIG                 : RegistrySupplier<PropellerBlock>
     lateinit var PROP_SMALL               : RegistrySupplier<PropellerBlock>
+    lateinit var CHUNK_LOADER             : RegistrySupplier<ChunkLoaderBlock>
 
     lateinit var EXPLOSIVE_INSTANT_SMALL  : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_MEDIUM : RegistrySupplier<AbstractExplosiveBlock>
@@ -56,9 +57,9 @@ object TournamentBlocks {
         POWERED_BALLOON          = register("balloon", ::PoweredBalloonBlock)
         BALLOON                  = register("balloon_unpowered", ::BalloonBlock)
         FLOATER                  = register("floater") { Block(
-                BlockBehaviour.Properties.of(Material.WOOD)
-                        .sound(SoundType.WOOD)
-                        .strength(1.0f, 2.0f)
+            BlockBehaviour.Properties.of(Material.WOOD)
+                .sound(SoundType.WOOD)
+                .strength(1.0f, 2.0f)
         )}
         THRUSTER                 = register("thruster") {
             ThrusterBlock(
@@ -100,6 +101,7 @@ object TournamentBlocks {
                 ::SmallPropellerBlockEntity
             )
         }
+        CHUNK_LOADER             = register("chunk_loader", ::ChunkLoaderBlock)
 
         EXPLOSIVE_INSTANT_SMALL  = register("explosive_instant_small") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {

@@ -1,5 +1,7 @@
 package org.valkyrienskies.tournament.util.extension
 
+// TODO: replace with Sequence<T>
+
 fun <T> Iterable<T>.with(other: Iterable<T>): Iterable<T> =
     object: Iterable<T> {
         override fun iterator(): Iterator<T> =
