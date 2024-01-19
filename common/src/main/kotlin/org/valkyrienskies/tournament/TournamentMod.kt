@@ -75,20 +75,6 @@ object TournamentMod {
 
     @JvmStatic
     fun initClientRenderers(clientRenderers: ClientRenderers) {
-        fun <T: BlockEntity> renderer(be: BlockEntityType<T>, renderer: BlockEntityRendererProvider<T>) {
-            clientRenderers.registerBlockEntityRenderer(be, renderer)
-        }
-
-        renderer(TournamentBlockEntities.PROP_BIG.get()) {
-            PropellerBlockEntityRender(TournamentModels.PROP_BIG)
-        }
-
-        renderer(TournamentBlockEntities.PROP_SMALL.get()) {
-            PropellerBlockEntityRender(TournamentModels.PROP_SMALL)
-        }
-
-        renderer(TournamentBlockEntities.SENSOR.get()) {
-            SensorBlockEntityRender()
-        }
+        TournamentBlockEntities.initClientRenderers(clientRenderers)
     }
 }

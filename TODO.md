@@ -4,6 +4,7 @@
 - [ ] Ensure that all blocks have the correct hardness values and tools needed to break / faster to break
 - [x] Make sure sensor works correctly
 - [ ] Bully Illuc into making propeller blade items (small and big) and a motor item for crafting
+- [ ] Chunk loader recipe, loot table, block state, model, texture
 
 ## Redstone Update
 - [ ] half-second delay block (solid)
@@ -29,6 +30,8 @@
 - [ ] Use tab create function in TournamentPlatformHelper
 - [ ] Proper logging
 - [ ] Add debug info (optional). Stores info lick amount of chunk loading tickets in a debug info file
+- [ ] All the TODOs in the code
+- [ ] Clean up utils package
 
 ## Others
 - [ ] Make big propeller work if water below or above the prop too

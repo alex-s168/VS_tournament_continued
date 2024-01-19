@@ -7,6 +7,7 @@ import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.saveddata.SavedData
 import kotlin.reflect.KProperty
 
+// TODO: make separate NBTSerializable interface instead of this chaos
 abstract class PersistentLevelStorage<T: PersistentLevelStorage<T>>(
     val id: ResourceLocation
 ): SavedData() {
