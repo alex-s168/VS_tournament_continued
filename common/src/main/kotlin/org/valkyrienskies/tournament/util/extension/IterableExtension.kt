@@ -13,3 +13,18 @@ fun <T> Iterable<T>.with(other: Iterable<T>): Iterable<T> =
 
             }
     }
+
+fun <T> Iterable<T>.itTake(n: Int): Iterable<T> =
+    object: Iterable<T> {
+        override fun iterator(): Iterator<T> =
+            object: Iterator<T> {
+                var itbg = this@itTake.iterator()
+                var pos = 0
+
+                override fun hasNext(): Boolean =
+                    pos < n && itbg.hasNext()
+
+                override fun next(): T =
+                    itbg.next()
+            }
+    }

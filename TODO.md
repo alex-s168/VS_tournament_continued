@@ -6,7 +6,7 @@
 - [ ] Bully Illuc into making propeller blade items (small and big) and a motor item for crafting
 
 ## Redstone Update
-- [ ] one-second delay block (solid)
+- [ ] half-second delay block (solid)
 - [ ] Wireless links (linked with ID card) (+ Directional variants for greater range)
 - [ ] Redstone controlled flaps (small)
 - [ ] Redstone controlled fins (small, for torpedos)
@@ -21,7 +21,7 @@
 - [ ] Propeller particles
 - [ ] Better thruster particles
 - [ ] New ship assembler
-- [ ] Fix propellers rendering weird underwater
+- [ ] Fix propellers rendering weird underwater (something alpha blend something)
 
 ## Code
 - [ ] Better ship assembler structure finder algorithm
