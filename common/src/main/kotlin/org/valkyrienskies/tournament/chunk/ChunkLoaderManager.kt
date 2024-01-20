@@ -10,6 +10,7 @@ import org.joml.primitives.Rectanglei
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.storage.readStorage
 import org.valkyrienskies.tournament.util.extension.fix
 import org.valkyrienskies.tournament.util.extension.itTake
 import org.valkyrienskies.tournament.util.extension.scaleFrom
@@ -24,13 +25,15 @@ class ChunkLoaderManager private constructor(
 
     private var sorted = true
 
+    private val storage = level.readStorage(ChunkLoaderManagerStorage())
+
     fun tick(
         amountOfTickets: Int? = null,
         amountOfChunksPerTicket: Int,
         amountOfActualChunksPerTicket: Int,
         loader: Consumer<ChunkPos>
     ) {
-        lastTickChunks.clear()
+        storage.toLoad.clear()
 
         if (!sorted) {
             tickets.sortBy {
@@ -44,6 +47,13 @@ class ChunkLoaderManager private constructor(
         if (tickets.size > am) {
             throw Exception("[Tournament] Too many chunk-loading tickets in dimension ${level.dimension()}: ${tickets.size} > $am!")
         }
+
+        val tl = storage.toLoad
+        tl.clear()
+        tickets.forEach {
+            tl += it.loader.getCurrentChunk()
+        }
+        storage.toLoad = tl
 
         tickets.itTake(am).forEach { ticket ->
             val mid = ticket.loader.getCurrentChunk().toJOML()

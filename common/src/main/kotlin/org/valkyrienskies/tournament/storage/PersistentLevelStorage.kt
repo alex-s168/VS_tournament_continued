@@ -3,11 +3,9 @@ package org.valkyrienskies.tournament.storage
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.saveddata.SavedData
 import kotlin.reflect.KProperty
 
-// TODO: make separate NBTSerializable interface instead of this chaos
 abstract class PersistentLevelStorage<T: PersistentLevelStorage<T>>(
     val id: ResourceLocation
 ): SavedData() {
@@ -39,124 +37,70 @@ abstract class PersistentLevelStorage<T: PersistentLevelStorage<T>>(
             }
     }
 
+    open class SerializingNBTDelegate<T, X: PersistentLevelStorage<X>> internal constructor(
+        private val serial: NBTSerializer<T>,
+    ): NBTDelegate<T, X>(
+        get = { nbt, key ->
+            if (!nbt.contains(key))
+                nbt.put(key, CompoundTag())
+            serial.read(nbt.getCompound(key))
+        },
+        set = { nbt, key, value ->
+            serial.write(nbt.getCompound(key), value)
+        }
+    ), NBTSerializer<T> {
+        override fun write(nbt: CompoundTag, t: T) {
+            serial.write(nbt, t)
+        }
+
+        override fun read(nbt: CompoundTag): T {
+            return serial.read(nbt)
+        }
+    }
+
     fun <E> nbtDelegate(
-        get: (CompoundTag, String) -> E,
-        set: (CompoundTag, String, E) -> Unit,
-    ) = object : NBTDelegate<E, T>(get, set) {}
-
-    fun <E: NBTDelegate<O, T>, O> nbtList(factory: () -> E): NBTDelegate<NBTList<O>, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key))
-                    nbt.put(key, CompoundTag().also {
-                        it.putInt("size", 0)
-                    })
-
-                NBTList<O>(
-                    nbt.getCompound(key),
-                    { c -> factory().get(c, "value") },
-                    { c, e -> factory().also {
-                        it.set(c, "value", e)
-                    } }
-                )
-            },
-            set = { nbt, key, value ->
-                nbt.put(key, value.nbt)
+        get: (CompoundTag) -> E,
+        set: (CompoundTag, E) -> Unit,
+    ) = object: SerializingNBTDelegate<E, T>(
+        serial = object: NBTSerializer<E> {
+            override fun write(nbt: CompoundTag, t: E) {
+                set(nbt, t)
             }
-        )
 
-    fun nbtChunkPos(default: ChunkPos = ChunkPos(0, 0)): NBTDelegate<ChunkPos, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key))
-                    nbt.put(key, CompoundTag().also {
-                        it.putInt("x", default.x)
-                        it.putInt("z", default.z)
-                    })
-                ChunkPos(
-                    nbt.getCompound(key).getInt("x"),
-                    nbt.getCompound(key).getInt("z")
-                )
-            },
-            set = { nbt, key, value ->
-                nbt.put(key, CompoundTag().also {
-                    it.putInt("x", value.x)
-                    it.putInt("z", value.z)
-                })
+            override fun read(nbt: CompoundTag): E {
+                return get(nbt)
             }
-        )
+        }
+    ) {}
 
-    fun nbtStr(default: String? = null): NBTDelegate<String, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key) && default != null)
-                    nbt.putString(key, default)
-                nbt.getString(key)
-            },
-            set = { nbt, key, value ->
-                nbt.putString(key, value)
-            }
-        )
+    fun <E> nbtDelegate(
+        serial: NBTSerializer<E>,
+    ) = SerializingNBTDelegate<E, T>(serial = serial)
 
-    fun nbtInt(default: Int? = null): NBTDelegate<Int, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key) && default != null)
-                    nbt.putInt(key, default)
-                nbt.getInt(key)
-            },
-            set = { nbt, key, value ->
-                nbt.putInt(key, value)
-            }
-        )
+    fun <E> nbtList(
+        elemSerial: NBTSerializer<E>,
+    ) = nbtDelegate(NBTList.serializer(elemSerial))
 
-    fun nbtLong(default: Long? = null): NBTDelegate<Long, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key) && default != null)
-                    nbt.putLong(key, default)
-                nbt.getLong(key)
-            },
-            set = { nbt, key, value ->
-                nbt.putLong(key, value)
-            }
-        )
+    val nbtInt =
+        nbtDelegate(NBTInt)
 
-    fun nbtFloat(default: Float? = null): NBTDelegate<Float, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key) && default != null)
-                    nbt.putFloat(key, default)
-                nbt.getFloat(key)
-            },
-            set = { nbt, key, value ->
-                nbt.putFloat(key, value)
-            }
-        )
+    val nbtLong =
+        nbtDelegate(NBTLong)
 
-    fun nbtDouble(default: Double? = null): NBTDelegate<Double, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key) && default != null)
-                    nbt.putDouble(key, default)
-                nbt.getDouble(key)
-            },
-            set = { nbt, key, value ->
-                nbt.putDouble(key, value)
-            }
-        )
+    val nbtFloat =
+        nbtDelegate(NBTFloat)
 
-    fun nbtBool(default: Boolean? = null): NBTDelegate<Boolean, T> =
-        nbtDelegate(
-            get = { nbt, key ->
-                if (!nbt.contains(key) && default != null)
-                    nbt.putBoolean(key, default)
-                nbt.getBoolean(key)
-            },
-            set = { nbt, key, value ->
-                nbt.putBoolean(key, value)
-            }
-        )
+    val nbtDouble =
+        nbtDelegate(NBTDouble)
+
+    val nbtBool =
+        nbtDelegate(NBTBool)
+
+    val nbtStr =
+        nbtDelegate(NBTString)
+
+    val nbtChunkPos =
+        nbtDelegate(NBTChunkPos)
 }
 
 fun <T: PersistentLevelStorage<T>> ServerLevel.readStorage(storage: T): T =

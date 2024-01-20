@@ -20,6 +20,8 @@ import org.valkyrienskies.tournament.registry.RegistrySupplier
 object TournamentBlockEntities {
     private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
 
+    private val renderers = mutableListOf<RendererEntry<*>>()
+
     /* ================================================================== */
     val SENSOR              = TournamentBlocks.SENSOR
         .withBE(::SensorBlockEntity)
@@ -83,14 +85,22 @@ object TournamentBlockEntities {
 
     private infix fun <T : BlockEntity> Block.withBE(blockEntity: (BlockPos, BlockState) -> T) = Pair(this, blockEntity)
 
-    private val renderers = mutableListOf<Pair<BlockEntityType<BlockEntity>, BlockEntityRendererProvider<BlockEntity>>>()
+    private data class RendererEntry<T: BlockEntity>(
+        val type: RegistrySupplier<BlockEntityType<T>>,
+        val renderer: BlockEntityRendererProvider<T>
+    )
 
+    @Suppress("UNCHECKED_CAST")
     fun initClientRenderers(clientRenderers: TournamentMod.ClientRenderers) {
-        renderers.forEach { (type, renderer) ->
-            clientRenderers.registerBlockEntityRenderer(type, renderer)
+        renderers.forEach { x ->
+            clientRenderers.registerBlockEntityRenderer(
+                x.type.get() as BlockEntityType<BlockEntity>,
+                x.renderer as BlockEntityRendererProvider<BlockEntity>
+            )
         }
     }
 
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     private infix fun <T : BlockEntity> Pair<Set<RegistrySupplier<out Block>>, (BlockPos, BlockState) -> T>.byName(name: String): RegistrySupplier<BlockEntityType<T>> =
         BLOCKENTITIES.register(name) {
             val type = Util.fetchChoiceType(References.BLOCK_ENTITY, name)
@@ -101,10 +111,8 @@ object TournamentBlockEntities {
             ).build(type)
         }
 
-    @Suppress("UNCHECKED_CAST")
     private infix fun <T : BlockEntity> RegistrySupplier<BlockEntityType<T>>.withRenderer(renderer: BlockEntityRendererProvider<T>) =
         this.also {
-            renderers += it.get() as BlockEntityType<BlockEntity> to
-                    renderer as BlockEntityRendererProvider<BlockEntity>
+            renderers += RendererEntry(it, renderer)
         }
 }
