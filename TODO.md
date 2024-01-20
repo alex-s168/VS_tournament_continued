@@ -4,7 +4,7 @@
 - [ ] Ensure that all blocks have the correct hardness values and tools needed to break / faster to break
 - [x] Make sure sensor works correctly
 - [ ] Bully Illuc into making propeller blade items (small and big) and a motor item for crafting
-- [ ] Chunk loader recipe, loot table, block state, model, texture
+- [ ] Chunk loader recipe
 
 ## Redstone Update
 - [ ] half-second delay block (solid)
@@ -21,7 +21,7 @@
 ## Look & Feel
 - [ ] Propeller particles
 - [ ] Better thruster particles
-- [ ] New ship assembler
+- [x] New ship assembler
 - [ ] Fix propellers rendering weird underwater (something alpha blend something)
 - [ ] Thruster particles are sometimes in the wrong direction
 

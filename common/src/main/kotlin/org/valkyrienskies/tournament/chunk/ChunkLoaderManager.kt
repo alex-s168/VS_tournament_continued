@@ -3,6 +3,8 @@ package org.valkyrienskies.tournament.chunk
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.Ticket
+import net.minecraft.server.level.TicketType
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
 import org.joml.Vector2i
@@ -33,8 +35,6 @@ class ChunkLoaderManager private constructor(
         amountOfActualChunksPerTicket: Int,
         loader: Consumer<ChunkPos>
     ) {
-        storage.toLoad.clear()
-
         if (!sorted) {
             tickets.sortBy {
                 it.priority
@@ -70,6 +70,7 @@ class ChunkLoaderManager private constructor(
                 .take(amountOfActualChunksPerTicket)
                 .map { ChunkPos(it.x, it.y) }
                 .also { lastTickChunks.addAll(it) }
+                .plus(tl)
                 .forEach {
                     loader.accept(it)
                 }
@@ -133,7 +134,15 @@ class ChunkLoaderManager private constructor(
                     amountOfChunksPerTicket = TournamentConfig.SERVER.chunksPerTicket * 10,
                     amountOfActualChunksPerTicket = TournamentConfig.SERVER.chunksPerTicket,
                     loader = { pos ->
+                        // force chunk
                         level.setChunkForced(pos.x, pos.z, true)
+                        // add ticket (for VS2)
+                        level.chunkSource.chunkMap.distanceManager.addTicket(
+                            TicketType.UNKNOWN,
+                            pos,
+                            33, // magic number used in minecraft
+                            pos
+                        )
                     }
                 )
             }

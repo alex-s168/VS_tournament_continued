@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vs_tournament:prop_small"
+          "name": "vs_tournament:chunk_loader"
         }
       ],
       "conditions": [
