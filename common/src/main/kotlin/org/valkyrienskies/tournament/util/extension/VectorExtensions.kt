@@ -34,5 +34,9 @@ fun BlockPos.toChunkPos(of: Vector2i): ChunkPos =
 fun Vector3d.toChunkPos(ofX: Int, ofZ: Int): ChunkPos =
     ChunkPos((x.toInt() shr 4) + ofX, (z.toInt() shr 4) + ofZ)
 
+fun Vector3d.toChunkPos(of: Vector2i): ChunkPos =
+    ChunkPos((x.toInt() shr 4) + of.x, (z.toInt() shr 4) + of.y)
+
+
 fun Vector2d.asChunkPos(): ChunkPos =
     ChunkPos(x.toInt(), y.toInt())

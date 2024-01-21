@@ -7,6 +7,8 @@ import dan200.computercraft.shared.computer.core.ServerComputer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.ChunkPos
 import org.joml.Vector2i
+import org.valkyrienskies.mod.common.getShipObjectManagingPos
+import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.chunk.ChunkLoader
 import org.valkyrienskies.tournament.chunk.ChunkLoaderManager
 import org.valkyrienskies.tournament.chunk.ChunkLoadingTicket
@@ -65,9 +67,16 @@ class CCChunkLoadingAPI(
         |The higher the priority, the more likely it is that the chunks will be loaded.
         """.trimMargin()
 
+    private fun getCurrPos() =
+        level
+            .getShipObjectManagingPos(computer.position)
+            ?.shipToWorld
+            ?.transformPosition(computer.position.toJOMLD())
+            ?: computer.position.toJOMLD()
+
     override fun getCurrentChunk(): ChunkPos =
-        computer.position.toChunkPos()
+        getCurrPos().toChunkPos()
 
     override fun getFutureChunk(): ChunkPos =
-        computer.position.toChunkPos(frontOff!!)
+        getCurrPos().toChunkPos(frontOff!!)
 }
