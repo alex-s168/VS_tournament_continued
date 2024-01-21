@@ -6,6 +6,7 @@
     "vs_tournament:thruster",
     "vs_tournament:tiny_thruster",
     "vs_tournament:prop_big",
-    "vs_tournament:prop_small"
+    "vs_tournament:prop_small",
+    "vs_tournament:chunk_loader"
   ]
 }

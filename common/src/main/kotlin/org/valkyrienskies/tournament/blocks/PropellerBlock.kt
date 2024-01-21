@@ -34,7 +34,6 @@ class PropellerBlock(
     Properties.of(Material.STONE)
         .sound(SoundType.STONE)
         .strength(1.0f, 2.0f)
-
 ), RedstoneConnectingBlock {
     companion object {
         private val SHAPE = RotShapes.box(0.1, 0.1, 8.1, 15.9, 15.9, 15.9)

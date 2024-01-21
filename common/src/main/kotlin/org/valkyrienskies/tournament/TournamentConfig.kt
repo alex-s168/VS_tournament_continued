@@ -80,6 +80,16 @@ object TournamentConfig {
         @JsonSchema(description = "The acceleration of a big propeller. (deaccel = accel * 2)")
         var propellerSmallAccel = 1.0f
 
+        @JsonSchema(description = "How many chunk tickets can be processed each level tick? (-1 means unlimited)")
+        var chunkTicketsPerTick = -1
+
+        @JsonSchema(description = "How many chunks can be loaded per chunk ticket?")
+        var chunksPerTicket = 100
+
+        @JsonSchema(description = "After how many ticks to error when loading chunk still not finished? (throws error when double this amount of ticks has passed)")
+        var chunkLoadTimeout = 40
+
+        // TODO: add stuff idk
         @JsonSchema(description = "The list of blocks that don't get assembled by the ship assembler")
         var blockBlacklist = setOf(
             "minecraft:dirt",

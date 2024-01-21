@@ -4,9 +4,10 @@
 - [ ] Ensure that all blocks have the correct hardness values and tools needed to break / faster to break
 - [x] Make sure sensor works correctly
 - [ ] Bully Illuc into making propeller blade items (small and big) and a motor item for crafting
+- [ ] Chunk loader recipe
 
 ## Redstone Update
-- [ ] one-second delay block (solid)
+- [ ] half-second delay block (solid)
 - [ ] Wireless links (linked with ID card) (+ Directional variants for greater range)
 - [ ] Redstone controlled flaps (small)
 - [ ] Redstone controlled fins (small, for torpedos)
@@ -20,9 +21,17 @@
 ## Look & Feel
 - [ ] Propeller particles
 - [ ] Better thruster particles
-- [ ] New ship assembler
-- [ ] Fix propellers rendering weird underwater
+- [x] New ship assembler
+- [ ] Fix propellers rendering weird underwater (something alpha blend something)
+- [ ] Thruster particles are sometimes in the wrong direction
 
 ## Code
 - [ ] Better ship assembler structure finder algorithm
 - [ ] Use tab create function in TournamentPlatformHelper
+- [ ] Proper logging
+- [ ] Add debug info (optional). Stores info lick amount of chunk loading tickets in a debug info file
+- [ ] All the TODOs in the code
+- [ ] Clean up utils package
+
+## Others
+- [ ] Make big propeller work if water below or above the prop too
