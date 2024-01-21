@@ -1,6 +1,7 @@
 package org.valkyrienskies.tournament
 
 import net.minecraft.Util
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
@@ -38,7 +39,7 @@ object TournamentBlockEntities {
         .withBE(::BigPropellerBlockEntity)
         .byName ("prop_big")
         .withRenderer {
-            PropellerBlockEntityRender(
+            PropellerBlockEntityRender<BigPropellerBlockEntity>(
                 TournamentModels.PROP_BIG
             )
         }
@@ -47,7 +48,7 @@ object TournamentBlockEntities {
         .withBE(::SmallPropellerBlockEntity)
         .byName ("prop_small")
         .withRenderer {
-            PropellerBlockEntityRender(
+            PropellerBlockEntityRender<SmallPropellerBlockEntity>(
                 TournamentModels.PROP_SMALL
             )
         }
@@ -87,15 +88,18 @@ object TournamentBlockEntities {
 
     private data class RendererEntry<T: BlockEntity>(
         val type: RegistrySupplier<BlockEntityType<T>>,
-        val renderer: BlockEntityRendererProvider<T>
+        val renderer: () -> Any
     )
 
     @Suppress("UNCHECKED_CAST")
     fun initClientRenderers(clientRenderers: TournamentMod.ClientRenderers) {
         renderers.forEach { x ->
+            val rp = BlockEntityRendererProvider {
+                x.renderer() as BlockEntityRenderer<BlockEntity>
+            }
             clientRenderers.registerBlockEntityRenderer(
                 x.type.get() as BlockEntityType<BlockEntity>,
-                x.renderer as BlockEntityRendererProvider<BlockEntity>
+                rp
             )
         }
     }
@@ -111,7 +115,7 @@ object TournamentBlockEntities {
             ).build(type)
         }
 
-    private infix fun <T : BlockEntity> RegistrySupplier<BlockEntityType<T>>.withRenderer(renderer: BlockEntityRendererProvider<T>) =
+    private infix fun <T : BlockEntity> RegistrySupplier<BlockEntityType<T>>.withRenderer(renderer: () -> Any) =
         this.also {
             renderers += RendererEntry(it, renderer)
         }
