@@ -37,6 +37,8 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    modImplementation("curse.maven:cc-restitched-462672:3838648")
 }
 
 processResources {

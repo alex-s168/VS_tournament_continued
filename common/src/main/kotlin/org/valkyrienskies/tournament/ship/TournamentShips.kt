@@ -39,7 +39,7 @@ class TournamentShips: ShipForcesInducer {
         var submerged: Boolean
     )
 
-    private val thrusters =
+    val thrusters =
         CopyOnWriteArrayList<ThrusterData>()
 
     private val balloons =
