@@ -15,7 +15,7 @@
     "sources": "https://github.com/ValkyrienSkies/Tournament"
   },
   "license": "Apache-2.0",
-  "icon": "assets/vs_tournament/icon.png",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -33,7 +33,8 @@
   },
   "mixins": [
     "vs_tournament-common.mixins.json",
-    "vs_tournament.mixins.json"
+    "vs_tournament.mixins.json",
+    "vs_tournament-optional.mixins.json"
   ],
   "depends": {
     "minecraft": ">=1.18.2",

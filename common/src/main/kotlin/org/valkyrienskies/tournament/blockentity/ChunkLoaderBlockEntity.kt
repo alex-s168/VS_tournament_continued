@@ -13,6 +13,7 @@ import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.chunk.ChunkLoader
 import org.valkyrienskies.tournament.chunk.ChunkLoaderManager
 import org.valkyrienskies.tournament.chunk.ChunkLoadingTicket
+import org.valkyrienskies.tournament.util.extension.toChunkPos
 
 class ChunkLoaderBlockEntity(pos: BlockPos, state: BlockState):
     BlockEntity(TournamentBlockEntities.CHUNK_LOADER.get(), pos, state),
@@ -37,9 +38,8 @@ class ChunkLoaderBlockEntity(pos: BlockPos, state: BlockState):
 
     override fun getCurrentChunk(): ChunkPos =
         getCurrPos()
-            ?.let {
-                ChunkPos(it.x.toInt() shr 4, it.z.toInt() shr 4)
-            } ?: ChunkPos(blockPos.x shr 4, blockPos.z shr 4)
+            ?.toChunkPos()
+            ?: blockPos.toChunkPos()
 
     override fun getFutureChunk(): ChunkPos =
         level
@@ -47,9 +47,8 @@ class ChunkLoaderBlockEntity(pos: BlockPos, state: BlockState):
             ?.velocity
             ?.mul(3.0, Vector3d())
             ?.add(getCurrPos())
-            ?.let {
-                ChunkPos(it.x.toInt() shr 4, it.z.toInt() shr 4)
-            } ?: ChunkPos(blockPos.x shr 4, blockPos.z shr 4)
+            ?.toChunkPos()
+            ?: blockPos.toChunkPos()
 
     companion object {
         val ticker = BlockEntityTicker<ChunkLoaderBlockEntity> { level, _, _, be ->

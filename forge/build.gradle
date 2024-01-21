@@ -30,6 +30,7 @@ loom {
         convertAccessWideners = true
         mixinConfig "vs_tournament.mixins.json"
         mixinConfig "vs_tournament-common.mixins.json"
+        mixinConfig "vs_tournament-optional.mixins.json"
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
     }
 }
@@ -55,6 +56,8 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     implementation "thedarkcolour:kotlinforforge:$forge_kotlin_version"
+
+    modImplementation("curse.maven:cc-tweaked-282001:4630521")
 }
 
 processResources {

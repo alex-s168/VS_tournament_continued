@@ -1,0 +1,15 @@
+{
+  "required": false,
+  "package": "org.valkyrienskies.tournament.fabric.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "cc.TileComputerMixin",
+    "cc.TileTurtleMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

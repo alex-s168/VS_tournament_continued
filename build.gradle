@@ -121,7 +121,15 @@ allprojects {
             url = 'https://thedarkcolour.github.io/KotlinForForge/'
             content { includeGroup "thedarkcolour" }
         }
-        maven { url 'https://jitpack.io' }
+        maven {
+            url 'https://jitpack.io'
+        }
+        maven {
+            url "https://cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
     }
 
     tasks.withType(JavaCompile) {
