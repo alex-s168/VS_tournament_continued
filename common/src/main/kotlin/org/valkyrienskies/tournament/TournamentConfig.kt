@@ -38,10 +38,10 @@ object TournamentConfig {
         @JsonSchema(description = "The force a thruster applies to a ship * tier")
         var thrusterSpeed = 10000.0
 
-        @JsonSchema(description = "The maximum amount of tiers a normal thruster can have (1-255)")
+        @JsonSchema(description = "The maximum amount of tiers a normal thruster can have (1-5)")
         var thrusterTiersNormal = 4
 
-        @JsonSchema(description = "The maximum amount of tiers a normal thruster can have (1-255)")
+        @JsonSchema(description = "The maximum amount of tiers a tiny thruster can have (1-5)")
         var thrusterTiersTiny = 2
 
         @JsonSchema(description = "The force multiplier of a tiny thruster")
