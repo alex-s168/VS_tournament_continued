@@ -23,7 +23,5 @@ public class TileTurtleMixin {
         Level level = computer.getLevel();
 
         TournamentCC.applyCCAPIs(computer, (ServerLevel) level);
-
-        cir.setReturnValue(computer);
     }
 }
