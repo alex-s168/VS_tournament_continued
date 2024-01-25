@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ccc",
+    "nnn",
+    "   "
+  ],
+  "key": {
+    "c": {
+      "tag": "minecraft:carpets"
+    },
+    "n": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "item": "valkyrienskies:test_flap",
+    "count": 3
+  }
+}

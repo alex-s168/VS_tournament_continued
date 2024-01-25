@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ggg",
+    "g*g",
+    "ggg"
+  ],
+  "key": {
+    "*": {
+      "item": "minecraft:nether_start"
+    },
+    "g": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "vs_tournament:chunk_loader",
+    "count": 1
+  }
+}
