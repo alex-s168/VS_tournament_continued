@@ -36,6 +36,5 @@
 ## Others
 - [ ] Make big propeller work if water below or above the prop too
 - [ ] Add JSON verify action
-- [ ] Fix ChunkLoader not allowing ships to continue moving
 - [ ] CC API
 - [ ] Documentation

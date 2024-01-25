@@ -3,7 +3,6 @@ package org.valkyrienskies.tournament.chunk
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.Ticket
 import net.minecraft.server.level.TicketType
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
@@ -69,13 +68,18 @@ class ChunkLoaderManager private constructor(
                 .sortedBy { it.distanceSquared(mid) }
                 .take(amountOfActualChunksPerTicket)
                 .map { ChunkPos(it.x, it.y) }
-                .also { lastTickChunks.addAll(it) }
                 .plus(tl)
                 .forEach {
+                    lastTickChunks += it
                     loader.accept(it)
                 }
         }
     }
+
+    private var unloading = false
+
+    fun shouldCancelUnload(chunk: ChunkPos): Boolean =
+        !unloading && chunk in lastTickChunks
 
     fun allocate(loader: ChunkLoader, priority: Int): ChunkLoadingTicket {
         val i = tickets.indexOfFirst { it.loader == loader }
@@ -102,6 +106,9 @@ class ChunkLoaderManager private constructor(
         private val map =
             HashMap<ResourceKey<Level>, ChunkLoaderManager>()
 
+        fun getForOrNull(level: ServerLevel): ChunkLoaderManager? =
+            map[level.dimension()]
+
         fun getFor(level: ServerLevel): ChunkLoaderManager {
             val dim = level.dimension()
             if (dim in map)
@@ -127,7 +134,9 @@ class ChunkLoaderManager private constructor(
             server.allLevels.forEach { level ->
                 val manager = getFor(level)
                 manager.lastTickChunks.forEach { pos ->
+                    manager.unloading = true
                     level.setChunkForced(pos.x, pos.z, false)
+                    manager.unloading = false
                 }
                 manager.tick(
                     amountOfTickets = cpt,
@@ -136,7 +145,7 @@ class ChunkLoaderManager private constructor(
                     loader = { pos ->
                         // force chunk
                         level.setChunkForced(pos.x, pos.z, true)
-                        // add ticket (for VS2)
+                        // add ticket
                         level.chunkSource.chunkMap.distanceManager.addTicket(
                             TicketType.UNKNOWN,
                             pos,
