@@ -39,9 +39,9 @@
   "chat.vs_tournament.rope.connected": "绳索已连接！",
   "chat.vs_tournament.rope.first": "第一位置确定！",
   "chat.vs_tournament.delete_wand.deleted": "船舶已删除！",
-  "chat.vs_tournament.fuel_container.amount": "燃料: %s / %s kg",
+  "chat.vs_tournament.fuel_container.amount": "燃料: %s / %s 千克",
   "chat.vs_tournament.fuel_gauge.not_on_ship": "不在一艘船舶上",
-  "chat.vs_tournament.fuel_gauge.amount": "总燃料: %s kg",
+  "chat.vs_tournament.fuel_gauge.amount": "总燃料: %s 千克",
 
   "advancements.vs_tournament.ship_assemble.title": "组装一艘船舶",
   "advancements.vs_tournament.ship_assemble.description": "使用船舶组装器创建瓦尔基里天空2的船舶",
