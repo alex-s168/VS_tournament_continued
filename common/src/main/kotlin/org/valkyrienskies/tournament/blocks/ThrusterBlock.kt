@@ -147,7 +147,6 @@ class ThrusterBlock(
                 state.getValue(TournamentProperties.TIER).toDouble(),
                 state.getValue(FACING).normal.toJOMLD()
                     .mul(state.getValue(BlockStateProperties.POWER).toDouble()
-                            * state.getValue(TournamentProperties.TIER).toDouble()
                             * mult())
             )
         }
