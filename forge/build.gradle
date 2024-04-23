@@ -43,9 +43,25 @@ configurations {
             developmentForge.extendsFrom common
 }
 
+repositories {
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+//    forRepositories(fg.repository) // Only add this if you're using ForgeGradle, otherwise remove this line
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+}
+
 dependencies {
     forge "net.minecraftforge:forge:$forge_version"
-    modApi("org.valkyrienskies:valkyrienskies-118-forge:$vs2_version") { transitive = false }
+    modApi("org.valkyrienskies:valkyrienskies-1200-forge:$vs2_version") { transitive = false }
 
     implementation("org.valkyrienskies.core:api:$vs_core_version")
     implementation("org.valkyrienskies.core:api-game:$vs_core_version")
@@ -55,7 +71,7 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
-    implementation "thedarkcolour:kotlinforforge:$forge_kotlin_version"
+    implementation "maven.modrinth:kotlin-for-forge:$forge_kotlin_version"
 
     modImplementation("curse.maven:cc-tweaked-282001:4630521")
 }
