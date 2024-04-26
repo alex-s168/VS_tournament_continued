@@ -73,7 +73,7 @@ dependencies {
 
     implementation "maven.modrinth:kotlin-for-forge:$forge_kotlin_version"
 
-    modImplementation("curse.maven:cc-tweaked-282001:4630521")
+    modImplementation("curse.maven:cc-tweaked-282001:4395619")
 }
 
 processResources {

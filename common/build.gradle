@@ -22,7 +22,7 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
     api "org.jetbrains.kotlin:kotlin-reflect:1.9.10"
 
-    modCompileOnly("curse.maven:cc-restitched-462672:3838648")
+    modCompileOnly("curse.maven:cc-restitched-462672:3908334")
 }
 
 publishing {
