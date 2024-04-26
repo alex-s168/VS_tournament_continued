@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
-import net.minecraft.world.level.material.Material
+import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.mod.common.shipObjectWorld
@@ -36,8 +37,10 @@ import java.util.*
 import kotlin.math.absoluteValue
 
 class RopeHookBlock : DirectionalBaseEntityBlock(
-    Properties.of(Material.STONE)
-        .sound(SoundType.STONE).strength(1.0f, 2.0f)
+    Properties.of()
+        .mapColor(MapColor.STONE)
+        .sound(SoundType.STONE)
+        .strength(1.0f, 2.0f)
 ) {
 
     val SHAPE = RotShapes.box(0.25, 0.0, 0.25, 15.75, 16.0, 15.75)
@@ -49,8 +52,8 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = RopeHookBlockEntity(pos, state)
 
-    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
-        super.animateTick(state, level, pos, random)
+    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, randomSource: RandomSource) {
+        super.animateTick(state, level, pos, randomSource)
         val be = level.getBlockEntity(pos) as RopeHookBlockEntity
         if (be.otherPos != null && !be.isSecondary && TournamentDebugHelper.exists(be.debugID)) {
             level as ClientLevel

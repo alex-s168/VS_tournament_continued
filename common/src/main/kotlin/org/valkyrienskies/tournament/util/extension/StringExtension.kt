@@ -1,6 +1,6 @@
 package org.valkyrienskies.tournament.util.extension
 
-import net.minecraft.core.Registry
+import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import org.valkyrienskies.core.apigame.world.properties.DimensionId
@@ -14,4 +14,4 @@ fun String.toResourceLocation() =
     ResourceLocation(this)
 
 fun ResourceLocation.toDimensionKey() =
-    ResourceKey.create(Registry.DIMENSION_REGISTRY, this)
+    ResourceKey.create(Registries.DIMENSION, this)

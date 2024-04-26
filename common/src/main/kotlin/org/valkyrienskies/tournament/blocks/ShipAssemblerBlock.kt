@@ -3,7 +3,7 @@ package org.valkyrienskies.tournament.blocks
 import net.minecraft.Util
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.network.chat.TextComponent
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
-import net.minecraft.world.level.material.Material
+import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -33,8 +33,10 @@ import org.valkyrienskies.tournament.util.RotShapes
 import org.valkyrienskies.tournament.util.ShipAssembler
 
 class ShipAssemblerBlock : DirectionalBlock (
-    Properties.of(Material.STONE)
-        .sound(SoundType.STONE).strength(1.0f, 2.0f)
+    Properties.of()
+        .mapColor(MapColor.STONE)
+        .sound(SoundType.STONE)
+        .strength(1.0f, 2.0f)
 ) {
 
     val SHAPE = RotShapes.cube()
@@ -92,9 +94,9 @@ class ShipAssemblerBlock : DirectionalBlock (
         if(level.getShipManagingPos(pos) != null) return InteractionResult.PASS
 
         if(asm(state, level, pos, player as? ServerPlayer)) {
-            player.sendMessage(TextComponent("Assembled ship!"), Util.NIL_UUID)
+            player.sendSystemMessage(Component.literal("Assembled ship!"))
         } else {
-            player.sendMessage(TextComponent("That chunk is already part of a ship!"), Util.NIL_UUID)
+            player.sendSystemMessage(Component.literal("That chunk is already part of a ship!"))
         }
 
         return InteractionResult.SUCCESS

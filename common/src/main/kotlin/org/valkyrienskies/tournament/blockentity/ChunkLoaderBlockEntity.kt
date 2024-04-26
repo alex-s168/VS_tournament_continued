@@ -27,7 +27,6 @@ class ChunkLoaderBlockEntity(pos: BlockPos, state: BlockState):
             val manager = ChunkLoaderManager.getFor(level)
             ticket = manager.allocate(this, 200)
         }
-        println("tick")
     }
 
     private fun getCurrPos() =

@@ -1,8 +1,7 @@
 package org.valkyrienskies.tournament.items
 
-import net.minecraft.Util
 import net.minecraft.core.BlockPos
-import net.minecraft.network.chat.TranslatableComponent
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.Item
@@ -17,12 +16,10 @@ import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.blocks.RopeHookBlock
 import org.valkyrienskies.tournament.TournamentBlocks
 import org.valkyrienskies.tournament.TournamentConfig
-import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
 
-
 class RopeItem : Item(
-        Properties().stacksTo(1).tab(TournamentItems.TAB)
+        Properties().stacksTo(1)
 ) {
 
     private var clickedPosition: BlockPos? = null
@@ -42,12 +39,9 @@ class RopeItem : Item(
                 //hook it up
                 connectRope(level.getBlockState(blockPos).block as RopeHookBlock, blockPos, shipID, level)
                 if (clickedPosition == null)
-                    context.player!!.sendMessage(
-                        TranslatableComponent("chat.vs_tournament.rope.connected"),
-                        Util.NIL_UUID
-                    )
+                    context.player!!.sendSystemMessage(Component.translatable("chat.vs_tournament.rope.connected"))
                 else
-                    context.player!!.sendMessage(TranslatableComponent("chat.vs_tournament.rope.first"), Util.NIL_UUID)
+                    context.player!!.sendSystemMessage(Component.translatable("chat.vs_tournament.rope.first"))
 
                 println("  ROPE --> " + TournamentBlocks.ROPE_HOOK.get() + " < == > " + level.getBlockState(blockPos).block)
 

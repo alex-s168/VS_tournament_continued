@@ -1,10 +1,11 @@
 package org.valkyrienskies.tournament.blockentity.render
 
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.math.Vector3f
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.world.level.block.DirectionalBlock
+import org.joml.AxisAngle4f
+import org.joml.Quaternionf
 import org.valkyrienskies.tournament.TournamentModels
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
 import org.valkyrienskies.tournament.util.extension.pose
@@ -24,7 +25,7 @@ class PropellerBlockEntityRender<T: PropellerBlockEntity<T>>(
         pose.pose {
             translate(0.5, 0.5, 0.5)
             mulPose(be.blockState.getValue(DirectionalBlock.FACING).opposite.rotation)
-            pose.mulPose(Vector3f.YP.rotationDegrees(be.rotation.toFloat()))
+            pose.mulPose(Quaternionf(AxisAngle4f(Math.toRadians(be.rotation).toFloat(), 0f, 1f, 0f)))
             translate(-0.5, -0.5, -0.5)
             model.renderer.render(
                 pose,

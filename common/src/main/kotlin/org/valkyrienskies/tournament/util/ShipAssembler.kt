@@ -3,6 +3,7 @@ package org.valkyrienskies.tournament.util
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
+import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import org.apache.commons.lang3.mutable.MutableInt
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet
@@ -26,7 +27,7 @@ object ShipAssembler {
 
         checked.add(pos)
 
-        if(Registry.BLOCK.getKey(level.getBlockState(pos).block).toString() in blacklist)
+        if(Registries.BLOCK.getKey(level.getBlockState(pos).block).toString() in blacklist)
             return
 
         if(level.getBlockState(pos).isAir)

@@ -2,10 +2,9 @@ package org.valkyrienskies.tournament.blocks
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageSources
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.projectile.Projectile
@@ -13,8 +12,8 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.material.Material
-import net.minecraft.world.level.storage.loot.LootContext
+import net.minecraft.world.level.material.MapColor
+import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.phys.BlockHitResult
 import org.valkyrienskies.mod.common.getShipManagingPos
@@ -25,11 +24,13 @@ import org.valkyrienskies.tournament.TournamentTriggers
 import org.valkyrienskies.tournament.ship.TournamentShips
 
 open class BalloonBlock : Block(
-    Properties.of(Material.WOOL)
-        .sound(SoundType.WOOL).strength(1.0f, 2.0f)
+    Properties.of()
+        .mapColor(MapColor.WOOL)
+        .sound(SoundType.WOOL)
+        .strength(1.0f, 2.0f)
 ) {
     override fun fallOn(level: Level, state: BlockState, blockPos: BlockPos, entity: Entity, f: Float) {
-        entity.causeFallDamage(f, 0.2f, DamageSource.FALL)
+        entity.causeFallDamage(f, 0.2f, DamageSources().fall())
     }
 
     protected fun getShipControl(level: ServerLevel, pos: BlockPos) =
@@ -63,10 +64,10 @@ open class BalloonBlock : Block(
 
         fun shotBalloon(pos: BlockPos) {
             val table = TournamentLootTables.BALLOON_POP
-            val ctx = LootContext.Builder(level)
+            val ctx = LootParams.Builder(level)
                 .withLuck(shooter?.luck ?: 0f)
-                .create(LootContextParamSets.EMPTY)
-            val loot = level.server.lootTables.get(table).getRandomItems(ctx)
+                .create(LootContextParamSets.PIGLIN_BARTER)
+            val loot = level.server.lootData.getLootTable(table).getRandomItems(ctx)
 
             loot.forEach { itemStack ->
                 ItemEntity(level, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, itemStack).also {

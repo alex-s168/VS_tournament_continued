@@ -15,18 +15,17 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockRotProcessor
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
-import org.valkyrienskies.tournament.TournamentItems
 import java.util.*
 
 class ShipSpawnerItem : Item(
-    Properties().stacksTo(1).tab(TournamentItems.TAB)
+    Properties().stacksTo(1)
 ) {
 
     private val integrity = 0.5f
     private lateinit var structure : ResourceLocation
 
     override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
-        if(player.isCrouching) {
+        if (player.isCrouching) {
             if (level.isClientSide) {
                 return InteractionResultHolder.pass(player.getItemInHand(usedHand))
             }
@@ -35,11 +34,10 @@ class ShipSpawnerItem : Item(
             }
 
             //todo: open gui
-
         }
 
         if (this::structure.isInitialized) {
-            if (level.isClientSide || player == null) {
+            if (level.isClientSide) {
                 return InteractionResultHolder.pass(player.getItemInHand(usedHand))
             }
 
@@ -69,16 +67,15 @@ class ShipSpawnerItem : Item(
         val structurePlaceSettings = StructurePlaceSettings()
         if (this.integrity < 1.0f) {
             structurePlaceSettings.clearProcessors()
-                .addProcessor(BlockRotProcessor(Mth.clamp(this.integrity, 0.0f, 1.0f))).setRandom(
-                    this.createRandom(level.seed)
-                )
+                .addProcessor(BlockRotProcessor(Mth.clamp(this.integrity, 0.0f, 1.0f)))
+                .setRandom(level.random)
         }
         structureTemplate.placeInWorld(
             level,
             pos,
             pos,
             structurePlaceSettings,
-            this.createRandom(level.seed),
+            level.random,
             2
         )
         return true

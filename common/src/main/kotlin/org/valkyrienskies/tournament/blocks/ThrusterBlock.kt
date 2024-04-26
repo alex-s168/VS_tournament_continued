@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
@@ -18,8 +19,9 @@ import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
-import net.minecraft.world.level.material.Material
+import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.storage.loot.LootContext
+import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -41,7 +43,8 @@ class ThrusterBlock(
     private val particle: ParticleOptions,
     private val maxTier: () -> Int
 ) : DirectionalBlock(
-    Properties.of(Material.STONE)
+    Properties.of()
+        .mapColor(MapColor.STONE)
         .sound(SoundType.STONE)
         .strength(1.0f, 2.0f)
 ) {
@@ -123,7 +126,7 @@ class ThrusterBlock(
         super.onRemove(state, level, pos, newState, isMoving)
     }
 
-    override fun getDrops(state: BlockState, builder: LootContext.Builder): MutableList<ItemStack> {
+    override fun getDrops(state: BlockState, builder: LootParams.Builder): MutableList<ItemStack> {
         val drops = super.getDrops(state, builder)
 
         val tier = state.getValue(TournamentProperties.TIER)
@@ -189,8 +192,8 @@ class ThrusterBlock(
             .setValue(BlockStateProperties.FACING, dir)
     }
 
-    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
-        super.animateTick(state, level, pos, random)
+    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, randomSource: RandomSource) {
+        super.animateTick(state, level, pos, randomSource)
 
         val rp = Helper3d.getShipRenderPosition(level, pos.toJOMLD())
         if (level.isWaterAt(rp.toBlock())) {

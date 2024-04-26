@@ -4,7 +4,7 @@ import net.minecraft.Util
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Registry
+import net.minecraft.core.registries.Registries
 import net.minecraft.util.datafix.fixes.References
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -19,7 +19,7 @@ import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 @Suppress("unused")
 object TournamentBlockEntities {
-    private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_ENTITY_TYPE_REGISTRY)
+    private val BLOCKENTITIES = DeferredRegister.create(TournamentMod.MOD_ID, Registries.BLOCK_ENTITY_TYPE)
 
     private val renderers = mutableListOf<RendererEntry<*>>()
 

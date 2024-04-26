@@ -2,7 +2,7 @@ package org.valkyrienskies.tournament.blocks.explosive
 
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.Explosion
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import org.valkyrienskies.tournament.util.extension.explodeShip
 
@@ -12,7 +12,7 @@ abstract class SimpleExplosiveStagedBlock(
     private val spreadX: IntRange,
     private val spreadY: IntRange,
     private val spreadZ: IntRange,
-    private val expBlockInteraction: Explosion.BlockInteraction
+    private val expBlockInteraction: Level.ExplosionInteraction
 ) : AbstractExplosiveBlock() {
 
     override fun explosionTicks(): Int = tickCount.random()
