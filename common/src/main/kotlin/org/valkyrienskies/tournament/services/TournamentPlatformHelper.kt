@@ -9,8 +9,6 @@ import java.util.function.Supplier
 
 interface TournamentPlatformHelper {
 
-    fun createCreativeTab(id: ResourceLocation, stack: Supplier<ItemStack>): CreativeModeTab
-
     fun loadBakedModel(modelLocation: ResourceLocation): BakedModel?
 
     companion object {

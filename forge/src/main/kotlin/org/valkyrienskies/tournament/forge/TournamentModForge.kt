@@ -7,10 +7,7 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
-import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers
-import net.minecraftforge.client.event.ModelRegistryEvent
-import net.minecraftforge.client.model.ForgeModelBakery
 import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
@@ -26,12 +23,17 @@ import org.valkyrienskies.tournament.TournamentMod.initClientRenderers
 import org.valkyrienskies.tournament.TournamentModels
 import thedarkcolour.kotlinforforge.forge.LOADING_CONTEXT
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
+import thedarkcolour.kotlinforforge.forge.runForDist
 
 @Mod(TournamentMod.MOD_ID)
 class TournamentModForge {
     private var happendClientSetup = false
 
     init {
+        // ServerTickEvents.END_SERVER_TICK.register(TickScheduler.INSTANCE::tickServer);
+
+
+
         // Submit our event bus to let architectury register our content on the right time
         MOD_BUS.addListener { event: FMLClientSetupEvent? ->
             clientSetup(

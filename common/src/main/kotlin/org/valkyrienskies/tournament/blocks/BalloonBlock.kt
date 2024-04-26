@@ -30,7 +30,7 @@ open class BalloonBlock : Block(
         .strength(1.0f, 2.0f)
 ) {
     override fun fallOn(level: Level, state: BlockState, blockPos: BlockPos, entity: Entity, f: Float) {
-        entity.causeFallDamage(f, 0.2f, DamageSources().fall())
+        entity.causeFallDamage(f, 0.2f, DamageSources(level.registryAccess()).fall())
     }
 
     protected fun getShipControl(level: ServerLevel, pos: BlockPos) =

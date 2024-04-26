@@ -6,13 +6,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +19,7 @@ import org.valkyrienskies.core.impl.config.VSConfigClass;
 import org.valkyrienskies.tournament.*;
 import org.valkyrienskies.mod.compat.clothconfig.VSClothConfig;
 import org.valkyrienskies.mod.fabric.common.ValkyrienSkiesModFabric;
+import org.valkyrienskies.tournament.registry.CreativeTabs;
 
 public class TournamentModFabric implements ModInitializer {
     @Override
@@ -27,10 +27,11 @@ public class TournamentModFabric implements ModInitializer {
         // force VS2 to load before Tournament
         new ValkyrienSkiesModFabric().onInitialize();
 
-        TournamentItems.TAB = FabricItemGroupBuilder
-                .create(new ResourceLocation(TournamentMod.MOD_ID, "main_tab"))
-                .icon(() -> new ItemStack(TournamentBlocks.INSTANCE.getSHIP_ASSEMBLER().get()))
-                .build();
+        Registry.register(
+                BuiltInRegistries.CREATIVE_MODE_TAB,
+                TournamentItems.INSTANCE.getTAB(),
+                CreativeTabs.INSTANCE.create()
+        );
 
         ServerTickEvents.END_SERVER_TICK.register(TickScheduler.INSTANCE::tickServer);
 

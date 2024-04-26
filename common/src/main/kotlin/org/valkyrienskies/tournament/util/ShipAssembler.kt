@@ -2,7 +2,6 @@ package org.valkyrienskies.tournament.util
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import org.apache.commons.lang3.mutable.MutableInt
@@ -27,10 +26,10 @@ object ShipAssembler {
 
         checked.add(pos)
 
-        if(Registries.BLOCK.getKey(level.getBlockState(pos).block).toString() in blacklist)
+        if (level.registryAccess().registry(Registries.BLOCK).get().getKey(level.getBlockState(pos).block).toString() in blacklist)
             return
 
-        if(level.getBlockState(pos).isAir)
+        if (level.getBlockState(pos).isAir)
             return
 
         set += pos.toJOML()

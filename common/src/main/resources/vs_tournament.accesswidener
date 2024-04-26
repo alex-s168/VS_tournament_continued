@@ -1,5 +1,2 @@
 accessWidener   v1  named
 accessible method net/minecraft/world/level/block/FireBlock setFlammable (Lnet/minecraft/world/level/block/Block;II)V
-accessible class net/minecraft/world/inventory/MenuType$MenuSupplier
-accessible method net/minecraft/world/inventory/MenuType <init> (Lnet/minecraft/world/inventory/MenuType$MenuSupplier;)V
-accessible class net/minecraft/world/inventory/MenuType$MenuSupplier

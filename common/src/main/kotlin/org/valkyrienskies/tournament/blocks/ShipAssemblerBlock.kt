@@ -68,7 +68,7 @@ class ShipAssemblerBlock : DirectionalBlock (
         } else if (!state.isAir) {
             val structure = ShipAssembler.findStructure(level, pos, blacklist)
             println(structure.size)
-            val shipData = createNewShipWithBlocks(pos, structure, level)
+            //val shipData = createNewShipWithBlocks(pos, structure, level) // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             player?.let {
                 TournamentTriggers.SHIP_ASSEMBLY_TRIGGER.trigger(player, structure.size)

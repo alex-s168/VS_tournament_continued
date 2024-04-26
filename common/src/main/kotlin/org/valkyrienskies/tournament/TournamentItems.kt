@@ -1,6 +1,8 @@
 package org.valkyrienskies.tournament
 
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import org.valkyrienskies.tournament.items.GiftBagItem
@@ -14,7 +16,7 @@ import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 @Suppress("unused")
 object TournamentItems {
-    private val ITEMS = DeferredRegister.create(TournamentMod.MOD_ID, Registries.ITEM)
+    val ITEMS = DeferredRegister.create(TournamentMod.MOD_ID, Registries.ITEM)
 
     lateinit var ROPE              :  RegistrySupplier<RopeItem>
     lateinit var TOOL_PULSEGUN     :  RegistrySupplier<PulseGunItem>
@@ -22,7 +24,8 @@ object TournamentItems {
     lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
     lateinit var GIFT_BAG          :  RegistrySupplier<GiftBagItem>
 
-    lateinit var TAB: CreativeModeTab
+    val TAB: ResourceKey<CreativeModeTab> =
+        ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation(TournamentMod.MOD_ID, "main_tab"))
 
     fun register() {
         ROPE                    = ITEMS.register("rope", ::RopeItem)
