@@ -38,3 +38,4 @@
 - [ ] Add JSON verify action
 - [ ] CC API
 - [ ] Documentation
+- [ ] Allow for changeable sensor distance
