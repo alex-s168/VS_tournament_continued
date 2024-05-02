@@ -72,8 +72,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     implementation "maven.modrinth:kotlin-for-forge:$forge_kotlin_version"
-
-    modImplementation(cc_tweaked.toString())
 }
 
 processResources {

@@ -7,8 +7,6 @@ import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.config.VSConfigClass
 import org.valkyrienskies.core.impl.hooks.VSEvents
-import org.valkyrienskies.tournament.blockentity.render.PropellerBlockEntityRender
-import org.valkyrienskies.tournament.blockentity.render.SensorBlockEntityRender
 import org.valkyrienskies.tournament.ship.*
 import org.valkyrienskies.tournament.util.extension.with
 
