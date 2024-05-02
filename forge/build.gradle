@@ -39,27 +39,16 @@ configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
-            runtimeClasspath.extendsFrom common
-            developmentForge.extendsFrom common
-}
-
-repositories {
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "Modrinth"
-                url = "https://api.modrinth.com/maven"
-            }
-        }
-//    forRepositories(fg.repository) // Only add this if you're using ForgeGradle, otherwise remove this line
-        filter {
-            includeGroup "maven.modrinth"
-        }
-    }
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
 }
 
 dependencies {
+    implementation("thedarkcolour:kotlinforforge:$forge_kotlin_version")
+
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:$mixin_extras_version"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:$mixin_extras_version"))
+
     forge "net.minecraftforge:forge:$forge_version"
     modApi("org.valkyrienskies:valkyrienskies-$vs2_mc_version-forge:$vs2_version") { transitive = false }
 
@@ -70,8 +59,6 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
-
-    implementation "maven.modrinth:kotlin-for-forge:$forge_kotlin_version"
 }
 
 processResources {

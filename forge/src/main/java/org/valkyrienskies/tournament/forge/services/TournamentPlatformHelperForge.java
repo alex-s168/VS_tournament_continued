@@ -1,5 +1,6 @@
 package org.valkyrienskies.tournament.forge.services;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
@@ -11,11 +12,8 @@ public class TournamentPlatformHelperForge implements TournamentPlatformHelper {
     @Nullable
     @Override
     public BakedModel loadBakedModel(@NotNull ResourceLocation modelLocation) {
-        ModelBakery fmb = new ModelBakery();
-        if (fmb == null) {
-            return null;
-        }
-        return fmb.getBakedTopLevelModels()
+        ModelBakery mb = Minecraft.getInstance().getModelManager().getModelBakery();
+        return mb.getBakedTopLevelModels()
                 .getOrDefault(
                     modelLocation,
                     null
