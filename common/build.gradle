@@ -1,5 +1,5 @@
 architectury {
-    common(rootProject.enabled_platforms.split(","))
+    common(enabled_platforms.split(","))
 }
 
 loom {
@@ -9,20 +9,20 @@ loom {
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     // Remove the next line if you don't want to depend on the API
     // modApi "me.shedaniel:architectury:${rootProject.architectury_version}"
-    modApi("org.valkyrienskies:valkyrienskies-1201-common:${rootProject.vs2_version}")
+    modApi("org.valkyrienskies:valkyrienskies-$vs2_mc_version-common:${vs2_version}")
 
-    compileOnly("org.valkyrienskies.core:api:${rootProject.vs_core_version}")
-    compileOnly("org.valkyrienskies.core:api-game:${rootProject.vs_core_version}")
-    compileOnly("org.valkyrienskies.core:util:${rootProject.vs_core_version}")
-    compileOnly("org.valkyrienskies.core:impl:${rootProject.vs_core_version}")
+    compileOnly("org.valkyrienskies.core:api:${vs_core_version}")
+    compileOnly("org.valkyrienskies.core:api-game:${vs_core_version}")
+    compileOnly("org.valkyrienskies.core:util:${vs_core_version}")
+    compileOnly("org.valkyrienskies.core:impl:${vs_core_version}")
 
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
-    api "org.jetbrains.kotlin:kotlin-reflect:1.9.10"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    modCompileOnly("curse.maven:cc-restitched-462672:3908334")
+    modCompileOnly(cc_restitched.toString())
 }
 
 publishing {

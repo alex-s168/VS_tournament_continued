@@ -4,14 +4,14 @@ buildscript {
     }
     dependencies {
         // Make sure this version matches the one included in Kotlin for Forge
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         // OPTIONAL Gradle plugin for Kotlin Serialization
-        classpath 'org.jetbrains.kotlin:kotlin-serialization:1.6.10'
+        classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
     }
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "$shadow_version"
     id "com.matthewprenger.cursegradle"
     id "com.modrinth.minotaur"
 }
@@ -61,7 +61,7 @@ repositories {
 
 dependencies {
     forge "net.minecraftforge:forge:$forge_version"
-    modApi("org.valkyrienskies:valkyrienskies-1201-forge:$vs2_version") { transitive = false }
+    modApi("org.valkyrienskies:valkyrienskies-$vs2_mc_version-forge:$vs2_version") { transitive = false }
 
     implementation("org.valkyrienskies.core:api:$vs_core_version")
     implementation("org.valkyrienskies.core:api-game:$vs_core_version")
@@ -73,20 +73,19 @@ dependencies {
 
     implementation "maven.modrinth:kotlin-for-forge:$forge_kotlin_version"
 
-    modImplementation("curse.maven:cc-tweaked-282001:4395619")
+    modImplementation(cc_tweaked.toString())
 }
 
 processResources {
     inputs.property "version", project.version
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version, "vs2_version": project.vs2_version.substring(0, project.vs2_version.indexOf('+'))
+        expand "version": project.version, "vs2_version": vs2_version.substring(0, vs2_version.indexOf('+'))
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-    it.options.release = 17
+    it.options.release = jvm_version.toInteger()
 }
 
 shadowJar {
@@ -146,7 +145,7 @@ publishing {
             println "Publishing to Github Packages"
             maven {
                 name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/ConstantDust/VS2_tournament")
+                url = uri("https://github.com/alex-s168/VS_tournament_continued")
                 credentials {
                     username = System.getenv("GITHUB_ACTOR")
                     password = System.getenv("GITHUB_TOKEN")

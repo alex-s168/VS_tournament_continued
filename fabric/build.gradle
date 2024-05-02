@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "$shadow_version"
     id "com.matthewprenger.cursegradle"
     id "com.modrinth.minotaur"
 }
@@ -24,29 +24,29 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10")
+    modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
+    modApi "net.fabricmc.fabric-api:fabric-api:$fabric_api_version"
+    modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version+kotlin.$kotlin_version")
 
     // Mod menu
     modImplementation("com.terraformersmc:modmenu:3.2.3")
-    modImplementation("me.shedaniel.cloth:cloth-config:${cloth_config_version}")
+    modImplementation("me.shedaniel.cloth:cloth-config:$cloth_config_version")
 
     // Remove the next line if you don't want to depend on the API
-    modApi("org.valkyrienskies:valkyrienskies-1201-fabric:${rootProject.vs2_version}")
-    implementation("org.valkyrienskies.core:api:${rootProject.vs_core_version}") { transitive = false }
+    modApi("org.valkyrienskies:valkyrienskies-$vs2_mc_version-fabric:$vs2_version")
+    implementation("org.valkyrienskies.core:api:$vs_core_version") { transitive = false }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
-    modImplementation("curse.maven:cc-restitched-462672:3908334")
+    modImplementation(cc_restitched.toString())
 }
 
 processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version, "vs2_version": project.vs2_version.substring(0, project.vs2_version.indexOf('+'))
+        expand "version": project.version, "vs2_version": vs2_version.substring(0, vs2_version.indexOf('+'))
     }
 }
 
@@ -85,7 +85,7 @@ publishing {
         mavenCommon(MavenPublication) {
             groupId = "org.valkyrienskies.tournament"
             version = project.version
-            artifactId = rootProject.archives_base_name + "-" + project.name
+            artifactId = archives_base_name + "-" + project.name
             from components.java
         }
     }
@@ -107,7 +107,7 @@ publishing {
             println "Publishing to Github Packages"
             maven {
                 name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/ConstantDust/VS2_tournament")
+                url = uri("https://github.com/alex-s168/VS_tournament_continued")
                 credentials {
                     username = System.getenv("GITHUB_ACTOR")
                     password = System.getenv("GITHUB_TOKEN")

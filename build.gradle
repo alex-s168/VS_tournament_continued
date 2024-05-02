@@ -1,9 +1,9 @@
 plugins {
     // Needed for Forge+Fabric
-    id "architectury-plugin" version "3.4.146"
-    id "dev.architectury.loom" version "1.3.355" apply false
+    id "architectury-plugin" version "$architectury_plugin_version"
+    id "dev.architectury.loom" version "$architectury_loom_version" apply false
     // Kotlin
-    id "org.jetbrains.kotlin.jvm" version "1.9.10" apply false
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version" apply false
     // Kotlin linter
     id "org.jlleitschuh.gradle.ktlint" version "10.3.0"
     // Java linter
@@ -12,16 +12,6 @@ plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
     id "com.modrinth.minotaur" version "2.4.5" apply false
 }
-
-// Determine the version
-//if (project.hasProperty("CustomReleaseVersion")) {
-//    // Remove release/ from the version if present
-//    version = project.property("CustomReleaseVersion").replaceFirst("^release/", "")
-//} else {
-//    String gitRevision = "git rev-parse HEAD".execute().text.trim()
-//
-//    version = Tournament_version + '+' + gitRevision.substring(0, 10)
-//}
 
 String gitRevision = "git rev-parse HEAD".execute().text.trim()
 if (gitRevision.length() == 0) {
@@ -32,7 +22,7 @@ else {
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
+    minecraft = minecraft_version
 }
 
 subprojects {
@@ -54,11 +44,11 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        minecraft("com.mojang:minecraft:$minecraft_version")
         // The following line declares the mojmap mappings, you may use other mappings as well
         mappings(loom.layered {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2023.09.03@zip")
+            parchment("org.parchmentmc.data:parchment-$minecraft_version:$parchment_version@zip")
         })
 
         implementation("org.joml:joml:1.10.4") { transitive = false }
@@ -76,7 +66,7 @@ subprojects {
 
     // configure checkstyle, but different
     // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
-    tasks.withType(Checkstyle) {
+    tasks.withType(Checkstyle).configureEach {
         reports {
             // Do not output html reports
             html.required = false
@@ -95,7 +85,7 @@ subprojects {
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(jvm_version.toInteger())
     }
 }
 
@@ -136,10 +126,10 @@ allprojects {
         }
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
 
-        options.release = 17
+        options.release = jvm_version.toInteger()
     }
 
     java {
