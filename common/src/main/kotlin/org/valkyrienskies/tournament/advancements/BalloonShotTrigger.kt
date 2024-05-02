@@ -16,19 +16,18 @@ class BalloonShotTrigger
 
     override fun createInstance(
         json: JsonObject,
-        entityPredicate: EntityPredicate.Composite,
+        predicate: ContextAwarePredicate,
         conditionsParser: DeserializationContext
     ): TriggerInstance
     {
-        return TriggerInstance(entityPredicate)
+        return TriggerInstance(predicate)
     }
 
-    fun trigger(player: ServerPlayer) {
-        this.trigger(player) { true }
-    }
+    fun trigger(player: ServerPlayer) =
+        trigger(player) { true }
 
     class TriggerInstance(
-        composite: EntityPredicate.Composite
-    ): AbstractCriterionTriggerInstance(ID, composite)
+        predicate: ContextAwarePredicate
+    ): AbstractCriterionTriggerInstance(ID, predicate)
 
 }

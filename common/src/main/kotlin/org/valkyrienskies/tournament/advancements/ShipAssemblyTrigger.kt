@@ -17,25 +17,23 @@ class ShipAssemblyTrigger
 
     override fun createInstance(
         json: JsonObject,
-        entityPredicate: EntityPredicate.Composite,
+        predicate: ContextAwarePredicate,
         conditionsParser: DeserializationContext
     ): TriggerInstance
     {
         val ints = Ints.fromJson(json["ship_size"])
-        return TriggerInstance(entityPredicate, ints)
+        return TriggerInstance(predicate, ints)
     }
 
-    fun trigger(player: ServerPlayer, shipSize: Int) {
-        this.trigger(player) { triggerInstance: TriggerInstance ->
+    fun trigger(player: ServerPlayer, shipSize: Int) =
+        trigger(player) { triggerInstance: TriggerInstance ->
             triggerInstance.matches(shipSize)
         }
-    }
-
 
     class TriggerInstance(
-        composite: EntityPredicate.Composite,
+        predicate: ContextAwarePredicate,
         private val shipSize: Ints
-    ): AbstractCriterionTriggerInstance(ID, composite)
+    ): AbstractCriterionTriggerInstance(ID, predicate)
     {
         override fun serializeToJson(context: SerializationContext): JsonObject {
             val jsonObject = super.serializeToJson(context)
@@ -44,7 +42,6 @@ class ShipAssemblyTrigger
         }
 
         fun matches(shipSize: Int): Boolean = this.shipSize.matches(shipSize)
-
     }
 
 }

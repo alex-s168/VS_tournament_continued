@@ -4,8 +4,6 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "org.valkyrienskies.tournament.forge.mixin.ValkyrienForgeMixinConfigPlugin",
   "mixins": [
-    "cc.TileComputerMixin",
-    "cc.TileTurtleMixin"
   ],
   "client": [],
   "injectors": {

@@ -1,7 +1,6 @@
 package org.valkyrienskies.tournament.items
 
-import net.minecraft.Util
-import net.minecraft.network.chat.TranslatableComponent
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.Item
@@ -9,13 +8,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.context.UseOnContext
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
-import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.util.extension.delete
 
-class ShipDeleteWandItem:Item(
-        Properties()
-            .stacksTo(1)
-            .tab(TournamentItems.TAB)
+class ShipDeleteWandItem : Item(
+    Properties().stacksTo(1)
 ) {
 
     override fun getRarity(stack: ItemStack) =
@@ -36,7 +32,7 @@ class ShipDeleteWandItem:Item(
 
         ship.delete(level)
 
-        context.player?.sendMessage(TranslatableComponent("chat.vs_tournament.delete_wand.deleted"), Util.NIL_UUID)
+        context.player?.sendSystemMessage(Component.translatable("chat.vs_tournament.delete_wand.deleted"))
 
         return super.useOn(context)
     }

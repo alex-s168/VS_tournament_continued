@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import org.joml.Vector3f
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.blockentity.SensorBlockEntity
@@ -32,7 +33,7 @@ class SensorBlockEntityRender:
                 .normal
 
             val start = Helper3d.getShipRenderPosition(mc.level!!, be.blockPos.toJOMLD())
-            val startBlaze3D = com.mojang.math.Vector3f(
+            val startBlaze3D = Vector3f(
                 start.x.toFloat(),
                 start.y.toFloat(),
                 start.z.toFloat()
@@ -43,7 +44,7 @@ class SensorBlockEntityRender:
                 mc.level!!,
                 be.blockPos.toJOMLD().add(normal.toJOMLD().mul(TournamentConfig.SERVER.sensorDistance))
             )
-            val endBlaze3D = com.mojang.math.Vector3f(
+            val endBlaze3D = Vector3f(
                 end.x.toFloat(),
                 end.y.toFloat(),
                 end.z.toFloat()

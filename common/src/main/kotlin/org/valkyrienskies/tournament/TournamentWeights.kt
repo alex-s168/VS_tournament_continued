@@ -15,22 +15,13 @@ import org.valkyrienskies.physics_api.voxel.Lod1LiquidBlockState
 import org.valkyrienskies.physics_api.voxel.Lod1SolidBlockState
 
 object TournamentWeights  {
-
     fun register() {
         Registry.register(BlockStateInfo.REGISTRY, ResourceLocation(TournamentMod.MOD_ID, "ballast"), Ballast)
     }
+
     object Ballast: BlockStateInfoProvider {
-        override val blockStateData: List<Triple<Lod1SolidBlockStateId, Lod1LiquidBlockStateId, Lod1BlockStateId>>
-            get() = emptyList()
-
-        override val liquidBlockStates: List<Lod1LiquidBlockState>
-            get() = emptyList()
-
         override val priority: Int
             get() = 200
-
-        override val solidBlockStates: List<Lod1SolidBlockState>
-            get() = emptyList()
 
         override fun getBlockStateMass(blockState: BlockState): Double? =
             if (blockState.block == TournamentBlocks.BALLAST.get())
@@ -44,5 +35,14 @@ object TournamentWeights  {
 
         override fun getBlockStateType(blockState: BlockState): BlockType? =
             null
+
+        override val solidBlockStates =
+            emptyList<Lod1SolidBlockState>()
+
+        override val liquidBlockStates =
+            emptyList<Lod1LiquidBlockState>()
+
+        override val blockStateData =
+            emptyList<Triple<Lod1SolidBlockStateId, Lod1LiquidBlockStateId, Lod1BlockStateId>>()
     }
 }

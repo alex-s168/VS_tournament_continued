@@ -1,7 +1,6 @@
 package org.valkyrienskies.tournament.items.old
 
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.TranslatableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
@@ -46,7 +45,7 @@ class OldItem(
         tooltipComponents: MutableList<Component>,
         isAdvanced: TooltipFlag
     ) {
-        tooltipComponents.add(TranslatableComponent("tooltip.vs_tournament.old_item"))
+        tooltipComponents.add(Component.translatable("tooltip.vs_tournament.old_item"))
     }
 
 }

@@ -1,16 +1,15 @@
 package org.valkyrienskies.tournament
 
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Registry
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.item.BlockItem
-import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
-import net.minecraft.world.level.Explosion
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraft.world.level.material.Material
+import net.minecraft.world.level.material.MapColor
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.blockentity.BigPropellerBlockEntity
 import org.valkyrienskies.tournament.blockentity.SmallPropellerBlockEntity
@@ -18,13 +17,12 @@ import org.valkyrienskies.tournament.util.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
 import org.valkyrienskies.tournament.blocks.explosive.AbstractExplosiveBlock
 import org.valkyrienskies.tournament.blocks.explosive.SimpleExplosiveStagedBlock
-import org.valkyrienskies.tournament.blocks.explosive.TestExplosiveBlock
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
 
 @Suppress("unused")
 object TournamentBlocks {
-    private val BLOCKS = DeferredRegister.create(TournamentMod.MOD_ID, Registry.BLOCK_REGISTRY)
+    private val BLOCKS = DeferredRegister.create(TournamentMod.MOD_ID, Registries.BLOCK)
     private val ITEMS = ArrayList<Pair<String, ()->Item>>()
 
 
@@ -49,15 +47,13 @@ object TournamentBlocks {
 
     lateinit var EXPLOSIVE_STAGED_SMALL   : RegistrySupplier<AbstractExplosiveBlock>
 
-    // lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
-
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
         BALLAST                  = register("ballast", ::BallastBlock)
         POWERED_BALLOON          = register("balloon", ::PoweredBalloonBlock)
         BALLOON                  = register("balloon_unpowered", ::BalloonBlock)
         FLOATER                  = register("floater") { Block(
-            BlockBehaviour.Properties.of(Material.WOOD)
+            BlockBehaviour.Properties.of().mapColor(MapColor.WOOD)
                 .sound(SoundType.WOOD)
                 .strength(1.0f, 2.0f)
         )}
@@ -105,17 +101,17 @@ object TournamentBlocks {
 
         EXPLOSIVE_INSTANT_SMALL  = register("explosive_instant_small") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
-                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 3.0f, Explosion.BlockInteraction.BREAK)
+                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 3.0f, Level.ExplosionInteraction.TNT)
             }}
         }
         EXPLOSIVE_INSTANT_MEDIUM = register("explosive_instant_medium") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
-                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 6.0f, Explosion.BlockInteraction.BREAK)
+                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 6.0f, Level.ExplosionInteraction.TNT)
             }}
         }
         EXPLOSIVE_INSTANT_LARGE  = register("explosive_instant_large") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
-                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 12.0f, Explosion.BlockInteraction.BREAK)
+                level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 12.0f, Level.ExplosionInteraction.TNT)
             }}
         }
         EXPLOSIVE_STAGED_SMALL   = register("explosive_staged_small") {
@@ -125,7 +121,7 @@ object TournamentBlocks {
                 (-10..10),
                 (-2..2),
                 (-10..10),
-                Explosion.BlockInteraction.BREAK
+                Level.ExplosionInteraction.TNT
             ) {}
         }
         // EXPLOSIVE_TEST           = register("explosive_test", ::TestExplosiveBlock)
@@ -140,11 +136,11 @@ object TournamentBlocks {
 
 
         // old:
-        register("shipifier", null) { OldBlock(SHIP_ASSEMBLER.get()) }
-        register("instantexplosive", null) { OldBlock(EXPLOSIVE_INSTANT_MEDIUM.get()) }
-        register("instantexplosive_big", null) { OldBlock(EXPLOSIVE_INSTANT_LARGE.get()) }
-        register("stagedexplosive", null) { OldBlock(EXPLOSIVE_STAGED_SMALL.get()) }
-        register("stagedexplosive_big", null) { OldBlock(Blocks.AIR) }
+        register("shipifier") { OldBlock(SHIP_ASSEMBLER.get()) }
+        register("instantexplosive") { OldBlock(EXPLOSIVE_INSTANT_MEDIUM.get()) }
+        register("instantexplosive_big") { OldBlock(EXPLOSIVE_INSTANT_LARGE.get()) }
+        register("stagedexplosive") { OldBlock(EXPLOSIVE_STAGED_SMALL.get()) }
+        register("stagedexplosive_big") { OldBlock(Blocks.AIR) }
 
         BLOCKS.applyAll()
         VSGameEvents.registriesCompleted.on { _, _ ->
@@ -154,15 +150,7 @@ object TournamentBlocks {
 
     private fun <T: Block> register(name: String, block: () -> T): RegistrySupplier<T> {
         val supplier = BLOCKS.register(name, block)
-        ITEMS.add(name to { BlockItem(supplier.get(), Item.Properties().tab(TournamentItems.TAB)) })
-        return supplier
-    }
-
-    private fun <T: Block> register(name: String, tab: CreativeModeTab?, block: () -> T): RegistrySupplier<T> {
-        val supplier = BLOCKS.register(name, block)
-        tab?.let {
-            ITEMS.add(name to { BlockItem(supplier.get(), Item.Properties().tab(tab)) })
-        }
+        ITEMS.add(name to { BlockItem(supplier.get(), Item.Properties()) })
         return supplier
     }
 

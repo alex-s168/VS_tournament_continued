@@ -2,6 +2,7 @@ package org.valkyrienskies.tournament.fabric;
 
 import kotlin.jvm.functions.Function0;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -17,10 +18,9 @@ public class DeferredRegisterImpl<T> implements DeferredRegister<T> {
     private final Registry<T> registry;
     private final List<RegistrySupplier<T>> everMade = new ArrayList<>();
 
-    @SuppressWarnings("all")
-    public DeferredRegisterImpl(String modId, ResourceKey<Registry<T>> registry) {
+    public DeferredRegisterImpl(final String modId, final ResourceKey<Registry<T>> registry) {
         this.modId = modId;
-        this.registry = (Registry<T>) Registry.REGISTRY.get(registry.location());
+        this.registry = (Registry<T>) BuiltInRegistries.REGISTRY.get(registry.location());
     }
 
     @NotNull

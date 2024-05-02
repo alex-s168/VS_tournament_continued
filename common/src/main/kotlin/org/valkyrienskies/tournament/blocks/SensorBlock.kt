@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING
-import net.minecraft.world.level.material.Material
+import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.tournament.blockentity.SensorBlockEntity
@@ -24,8 +24,10 @@ import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 
 class SensorBlock: BaseEntityBlock(
-    Properties.of(Material.STONE)
-        .sound(SoundType.STONE).strength(1.0f, 2.0f)
+    Properties.of()
+        .mapColor(MapColor.STONE)
+        .sound(SoundType.STONE)
+        .strength(1.0f, 2.0f)
 ), RedstoneConnectingBlock {
 
     companion object {

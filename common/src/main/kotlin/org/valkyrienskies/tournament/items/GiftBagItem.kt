@@ -2,7 +2,6 @@ package org.valkyrienskies.tournament.items
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.TranslatableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
@@ -13,13 +12,13 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.storage.loot.LootContext
+import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import org.valkyrienskies.tournament.TournamentItems
 
 class GiftBagItem : Item(
-    Properties().stacksTo(1).tab(TournamentItems.TAB)
+    Properties().stacksTo(1)
 ) {
 
     companion object {
@@ -76,7 +75,6 @@ class GiftBagItem : Item(
                     cont.stopOpen(player)
                 })
             }
-
              */
             return InteractionResultHolder.success(stack)
         }
@@ -94,11 +92,11 @@ class GiftBagItem : Item(
 
         stack.getTagElement("loot")?.let {
             val table = ResourceLocation.of(it.getString("table"), ':')
-            val ctx = LootContext.Builder(level)
+            val ctx = LootParams.Builder(level)
                 .withLuck(player.luck)
                 .withParameter(LootContextParams.THIS_ENTITY, player)
                 .create(LootContextParamSets.PIGLIN_BARTER)
-            val loot = level.server.lootTables.get(table).getRandomItems(ctx)
+            val loot = level.server.lootData.getLootTable(table).getRandomItems(ctx)
 
             loot.forEach { itemStack ->
                 if (!player.inventory.add(itemStack)) {
@@ -119,10 +117,10 @@ class GiftBagItem : Item(
     ) {
         val tag = stack.getTagElement("tooltip")
         if (tag == null) {
-            tooltipComponents.add(TranslatableComponent("tooltip.vs_tournament.gift.none"))
+            tooltipComponents.add(Component.translatable("tooltip.vs_tournament.gift.none"))
         }
         else {
-            tooltipComponents.add(TranslatableComponent(tag.getString("tooltip")))
+            tooltipComponents.add(Component.translatable(tag.getString("tooltip")))
         }
     }
 

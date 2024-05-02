@@ -15,7 +15,7 @@ class ExplosiveBlockEntity(pos: BlockPos, state: BlockState)
     var explosionTicks = 0;
 
     companion object {
-        final fun tick(level: Level, pos: BlockPos, state: BlockState, be: BlockEntity) {
+        fun tick(level: Level, pos: BlockPos, state: BlockState, be: BlockEntity) {
             be as ExplosiveBlockEntity
             if(level.isClientSide)
                 return
