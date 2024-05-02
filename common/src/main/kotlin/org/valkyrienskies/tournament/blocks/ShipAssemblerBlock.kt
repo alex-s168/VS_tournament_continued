@@ -1,6 +1,5 @@
 package org.valkyrienskies.tournament.blocks
 
-import net.minecraft.Util
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
@@ -68,7 +67,7 @@ class ShipAssemblerBlock : DirectionalBlock (
         } else if (!state.isAir) {
             val structure = ShipAssembler.findStructure(level, pos, blacklist)
             println(structure.size)
-            //val shipData = createNewShipWithBlocks(pos, structure, level) // TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            val shipData = createNewShipWithBlocks(pos, structure, level)
 
             player?.let {
                 TournamentTriggers.SHIP_ASSEMBLY_TRIGGER.trigger(player, structure.size)
