@@ -61,3 +61,10 @@ publishing {
         }
     }
 }
+
+tasks.register("genDoc", JavaExec) {
+    group = ApplicationPlugin.APPLICATION_GROUP
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.valkyrienskies.tournament.doc.DocumentedKt'
+    args = [rootDir.path]
+}
