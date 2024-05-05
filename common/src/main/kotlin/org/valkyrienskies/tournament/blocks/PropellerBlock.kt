@@ -22,6 +22,9 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
@@ -149,4 +152,13 @@ class PropellerBlock(
     override fun canConnectTo(state: BlockState, direction: Direction): Boolean =
         direction in Direction.entries - state.getValue(FACING)
 
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Propeller")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Redstone-powered ship propeller.")
+                .summary("There is a small propeller (designed to look like a torpedo propeller) and a large (3x3) propeller.")
+                .summary("Popellers take a bit of time to spin up (reach their maximum force), which makes them unsuitable for steering and similar.")
+        }
+    }
 }

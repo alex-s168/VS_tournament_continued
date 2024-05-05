@@ -50,10 +50,10 @@ object TournamentConfig {
         @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
         var thrusterShutoffSpeed = 80.0
 
-        @JsonSchema(description = "The weight of a ballast when not redstone powered")
+        @JsonSchema(description = "The weight of a ballast when redstone powered")
         var ballastWeight = 10000.0
 
-        @JsonSchema(description = "The weight of a ballast when redstone powered")
+        @JsonSchema(description = "The weight of a ballast when not redstone powered")
         var ballastNoWeight = 800.0
 
         @JsonSchema(description = "The force the pulse gun applies to a ship")

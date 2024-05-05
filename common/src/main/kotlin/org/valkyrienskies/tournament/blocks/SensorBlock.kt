@@ -19,7 +19,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties.FAC
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.blockentity.SensorBlockEntity
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 
@@ -116,4 +120,13 @@ class SensorBlock: BaseEntityBlock(
     override fun canConnectTo(state: BlockState, direction: Direction): Boolean =
         direction == state.getValue(FACING)
 
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Distance Sensor")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Redstone distance sensor that measures the distance to the block in front of it.")
+                .summary("The sensor has a default range of ${TournamentConfig.SERVER.sensorDistance} blocks. " +
+                        "If the target is closer, it outputs a higher redstone signal.")
+        }
+    }
 }

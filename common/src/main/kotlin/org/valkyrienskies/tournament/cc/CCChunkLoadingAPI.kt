@@ -12,6 +12,9 @@ import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.chunk.ChunkLoader
 import org.valkyrienskies.tournament.chunk.ChunkLoaderManager
 import org.valkyrienskies.tournament.chunk.ChunkLoadingTicket
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.util.extension.toChunkPos
 
 class CCChunkLoadingAPI(
@@ -79,4 +82,26 @@ class CCChunkLoadingAPI(
 
     override fun getFutureChunk(): ChunkPos =
         getCurrPos().toChunkPos(frontOff!!)
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Chunk Loading API")
+                .kind(Doc.Kind.CC_API)
+                .summary("A simple API for loading chunks around the computer")
+                .summary("This API is still experimental and might not be functional")
+                .section("vst_chunks.start") {
+                    content("`start(priority: number, chunkVec: {x: number, z: number})`")
+                    content("Starts chunk-loading")
+                    content("Will load all chunks in the rectangle of the computer's position and the given `chunkVec` (relative to the computer's position) every tick")
+                    content("The `priority` specifies the priority of the chunk-loading. The higher this integer is, the higher the priority")
+                }
+                .section("vst_chunks.stop") {
+                    content("`stop()`")
+                }
+                .section("vst_chunks.help") {
+                    content("`help()`")
+                    content("Returns a short summary of the API")
+                }
+        }
+    }
 }

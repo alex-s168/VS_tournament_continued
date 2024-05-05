@@ -22,6 +22,9 @@ import org.joml.Vector3d
 import org.joml.Vector3dc
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod
 import org.valkyrienskies.mod.common.util.toDoubles
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 
 class SeatBlock :
         HorizontalDirectionalBlock(Properties.of(Material.WOOL)
@@ -71,5 +74,13 @@ class SeatBlock :
         level.addFreshEntity(seatEntity)
         player.startRiding(seatEntity)
         return InteractionResult.CONSUME
+    }
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Seat")
+                .kind(Doc.Kind.BLOCK)
+                .summary("A seat that players can use")
+        }
     }
 }

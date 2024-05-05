@@ -117,7 +117,7 @@ class DocumentationContext {
 
                     when (fmt) {
                         Format.MEDIAWIKI -> when (kind) {
-                            Section.ContentKind.TEXT -> sb.append(text)
+                            Section.ContentKind.TEXT -> sb.appendLine(text)
                             Section.ContentKind.CODE -> {
                                 sb.append("<nowiki>")
                                 sb.append(text)
@@ -125,7 +125,7 @@ class DocumentationContext {
                             }
                         }
                         Format.GH_MARKDOWN -> when (kind) {
-                            Section.ContentKind.TEXT -> sb.append(text)
+                            Section.ContentKind.TEXT -> sb.appendLine(text)
                             Section.ContentKind.CODE -> {
                                 sb.appendLine("```")
                                 sb.appendLine(text)

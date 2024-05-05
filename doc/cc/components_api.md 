@@ -1,0 +1,11 @@
+# Components API
+A simple API for getting a list of all the thrusters on the current ship
+
+It is recommended to use CC: VS with this API
+
+## vst_components.get_thrusters
+`get_thrusters()`
+
+Returns a list of all the thrusters on the current ship
+
+Every element in that list looks similar to this: {pos:{x,y,z}, force:{x,y,z}}

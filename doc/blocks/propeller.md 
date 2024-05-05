@@ -1,0 +1,7 @@
+# Propeller
+Redstone-powered ship propeller.
+
+There is a small propeller (designed to look like a torpedo propeller) and a large (3x3) propeller.
+
+Popellers take a bit of time to spin up (reach their maximum force), which makes them unsuitable for steering and similar.
+

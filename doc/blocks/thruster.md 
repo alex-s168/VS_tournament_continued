@@ -1,0 +1,15 @@
+# Thruster
+Redstone-powered, upgradable thruster.
+
+There are two variants. A small thruster and a "normal" thruster.
+
+The thruster is only active when redstone powered. It can be upgraded by right-clicking on it with a thruster upgrade.
+
+## Config
+The maximum thruster tier is 4 for the normal thruster, and 2 for the small thruster.
+
+The normal thruster has a force of 10000.0 N, which gets multiplied by the tier / level of the thruster.
+
+The small thruster is 0.2x as powerful as the normal thruster => 2000.0 N
+
+Thrusters shut off at a speed of 80.0 m/s

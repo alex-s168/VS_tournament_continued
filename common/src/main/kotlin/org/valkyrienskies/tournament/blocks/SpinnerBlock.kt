@@ -17,6 +17,9 @@ import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
@@ -110,4 +113,12 @@ class SpinnerBlock : DirectionalBlock(
         reader: BlockGetter,
         pos: BlockPos
     ): VoxelShape = RotShapes.cube().makeMcShape()
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Spinner")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Applies rotational force around its Y-axis.")
+        }
+    }
 }

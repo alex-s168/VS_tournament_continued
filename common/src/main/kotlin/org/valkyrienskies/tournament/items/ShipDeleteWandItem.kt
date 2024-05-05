@@ -10,6 +10,9 @@ import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.context.UseOnContext
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentItems
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.util.extension.delete
 
 class ShipDeleteWandItem:Item(
@@ -39,5 +42,14 @@ class ShipDeleteWandItem:Item(
         context.player?.sendMessage(TranslatableComponent("chat.vs_tournament.delete_wand.deleted"), Util.NIL_UUID)
 
         return super.useOn(context)
+    }
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Ship Deletion Tool")
+                .kind(Doc.Kind.ITEM)
+                .summary("Deletes right-clicked ships")
+                .summary("Creative only")
+        }
     }
 }

@@ -11,6 +11,9 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
 
 class PulseGunItem: Item(
@@ -46,5 +49,13 @@ class PulseGunItem: Item(
         TournamentShips.getOrCreate(ship).addPulse(blockLocation.toJOML(), pulseForce!!)
 
         return super.useOn(context)
+    }
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Pulse Gun")
+                .kind(Doc.Kind.ITEM)
+                .summary("Applies a force impulse onto a ship when right-clicked")
+        }
     }
 }

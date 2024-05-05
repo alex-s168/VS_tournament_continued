@@ -27,8 +27,12 @@ import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.TournamentProperties
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
@@ -210,4 +214,23 @@ class ThrusterBlock(
         }
     }
 
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Thruster")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Redstone-powered, upgradable thruster.")
+                .summary("There are two variants. A small thruster and a \"normal\" thruster.")
+                .summary("The thruster is only active when redstone powered. " +
+                         "It can be upgraded by right-clicking on it with a thruster upgrade.")
+                .section("Config") {
+                    content("The maximum thruster tier is ${TournamentConfig.SERVER.thrusterTiersNormal} for the normal thruster, " +
+                            "and ${TournamentConfig.SERVER.thrusterTiersTiny} for the small thruster.")
+                    content("The normal thruster has a force of ${TournamentConfig.SERVER.thrusterSpeed} N, " +
+                            "which gets multiplied by the tier / level of the thruster.")
+                    content("The small thruster is ${TournamentConfig.SERVER.thrusterTinyForceMultiplier}x as powerful as the normal thruster " +
+                            "=> ${TournamentConfig.SERVER.thrusterTinyForceMultiplier * TournamentConfig.SERVER.thrusterSpeed} N")
+                    content("Thrusters shut off at a speed of ${TournamentConfig.SERVER.thrusterShutoffSpeed} m/s")
+                }
+        }
+    }
 }

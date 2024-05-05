@@ -9,6 +9,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.Material
 import org.valkyrienskies.tournament.blockentity.ChunkLoaderBlockEntity
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.util.block.GlassBaseEntityBlock
 
 class ChunkLoaderBlock: GlassBaseEntityBlock(
@@ -35,5 +38,16 @@ class ChunkLoaderBlock: GlassBaseEntityBlock(
         }
 
         super.onRemove(state, level, pos, newState, isMoving)
+    }
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Chunk Loader")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Loads ships when players are not near.")
+                .section("Notice") {
+                    content("Experimental feature!")
+                }
+        }
     }
 }
