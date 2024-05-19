@@ -34,7 +34,7 @@ class TournamentModForge {
             TickScheduler.tickServer(event.server)
         }
 
-        MOD_BUS.addListener { event: FMLCommonSetupEvent ->
+        MOD_BUS.addListener { _: FMLCommonSetupEvent ->
             Registry.register(
                 BuiltInRegistries.CREATIVE_MODE_TAB,
                 TAB,
@@ -47,10 +47,12 @@ class TournamentModForge {
                 event
             )
         }
-        FORGE_BUS.addListener { event: ModelEvent? ->
-            onModelRegistry(
-                event
-            )
+        MOD_BUS.addListener { event: ModelEvent.RegisterAdditional ->
+            println("[Tournament] Registering models")
+            TournamentModels.MODELS.forEach { rl ->
+                println("[Tournament] Registering model $rl")
+                event.register(rl)
+            }
         }
         MOD_BUS.addListener { event: RegisterRenderers ->
             entityRenderers(
@@ -77,14 +79,6 @@ class TournamentModForge {
                 ) = event.registerBlockEntityRenderer(t, r)
             }
         )
-    }
-
-    private fun onModelRegistry(event: ModelEvent?) {
-        println("[Tournament] Registering models")
-        TournamentModels.MODELS.forEach { rl ->
-            println("[Tournament] Registering model $rl")
-            // ForgeModelBakery.addSpecialModel(rl)
-        }
     }
 
     companion object {
