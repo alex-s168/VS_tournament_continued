@@ -24,6 +24,10 @@ object TournamentBlockEntities {
     private val renderers = mutableListOf<RendererEntry<*>>()
 
     /* ================================================================== */
+    val CONNECTOR           = TournamentBlocks.CONNECTOR
+        .withBE(::ConnectorBlockEntity)
+        .byName ("connector")
+    /* ================================================================== */
     val SENSOR              = TournamentBlocks.SENSOR
         .withBE(::SensorBlockEntity)
         .byName ("sensor")

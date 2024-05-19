@@ -42,6 +42,7 @@ object TournamentBlocks {
     lateinit var PROP_BIG                 : RegistrySupplier<PropellerBlock>
     lateinit var PROP_SMALL               : RegistrySupplier<PropellerBlock>
     lateinit var CHUNK_LOADER             : RegistrySupplier<ChunkLoaderBlock>
+    lateinit var CONNECTOR                : RegistrySupplier<ConnectorBlock>
 
     lateinit var EXPLOSIVE_INSTANT_SMALL  : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_MEDIUM : RegistrySupplier<AbstractExplosiveBlock>
@@ -102,6 +103,7 @@ object TournamentBlocks {
             )
         }
         CHUNK_LOADER             = register("chunk_loader", ::ChunkLoaderBlock)
+        CONNECTOR                = register("connector", ::ConnectorBlock)
 
         EXPLOSIVE_INSTANT_SMALL  = register("explosive_instant_small") { object : AbstractExplosiveBlock() {
             override fun explode(level: ServerLevel, pos: BlockPos) {
