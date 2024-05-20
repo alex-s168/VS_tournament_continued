@@ -122,13 +122,19 @@ class ConnectorBlockEntity(pos: BlockPos, state: BlockState):
         return constraint != null
     }
 
-    fun disconnect() {
+    fun disconnect(recursed: Boolean = false) {
         val level = level as? ServerLevel ?: return
-        constraintData?.let {
-            val other = constraintData!!.localPos0.sub(0.5, 0.5, 0.5, Vector3d()).toBlock()
-            val otherBe = level.getBlockEntity(other) as ConnectorBlockEntity
-            if (otherBe != this)
-                otherBe.disconnect()
+        if (!recursed) {
+            constraintData?.let {
+                fun doo(pos: Vector3dc) {
+                    val other = pos.sub(0.5, 0.5, 0.5, Vector3d()).toBlock()
+                    val otherBe = level.getBlockEntity(other) as? ConnectorBlockEntity?
+                    if (otherBe != this)
+                        otherBe?.disconnect(true)
+                }
+                doo(constraintData!!.localPos0)
+                doo(constraintData!!.localPos1)
+            }
         }
         constraint?.let {
             level.shipObjectWorld.removeConstraint(constraint!!)
@@ -136,10 +142,12 @@ class ConnectorBlockEntity(pos: BlockPos, state: BlockState):
             constraintData = null
             this.setChanged()
         }
-        otherbesec?.let {
-            val otherBe = level.getBlockEntity(it) as ConnectorBlockEntity
-            if (otherBe != this)
-                otherBe.disconnect()
+        if (!recursed) {
+            otherbesec?.let {
+                val otherBe = level.getBlockEntity(it) as ConnectorBlockEntity
+                if (otherBe != this)
+                    otherBe.disconnect(true)
+            }
         }
     }
 
