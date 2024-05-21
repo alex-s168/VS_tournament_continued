@@ -95,7 +95,7 @@ class GiftBagItem : Item(
             val ctx = LootParams.Builder(level)
                 .withLuck(player.luck)
                 .withParameter(LootContextParams.THIS_ENTITY, player)
-                .create(LootContextParamSets.PIGLIN_BARTER)
+                .create(LootContextParamSets.EMPTY)
             val loot = level.server.lootData.getLootTable(table).getRandomItems(ctx)
 
             loot.forEach { itemStack ->
