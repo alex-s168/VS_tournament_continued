@@ -66,7 +66,7 @@ open class BalloonBlock : Block(
             val table = TournamentLootTables.BALLOON_POP
             val ctx = LootParams.Builder(level)
                 .withLuck(shooter?.luck ?: 0f)
-                .create(LootContextParamSets.PIGLIN_BARTER)
+                .create(LootContextParamSets.EMPTY)
             val loot = level.server.lootData.getLootTable(table).getRandomItems(ctx)
 
             loot.forEach { itemStack ->
