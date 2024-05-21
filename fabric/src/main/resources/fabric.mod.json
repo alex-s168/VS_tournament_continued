@@ -37,7 +37,7 @@
     "vs_tournament-optional.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.18.2",
+    "minecraft": "=1.18.2",
     "valkyrienskies": ">=${vs2_version}",
     "fabricloader": ">=0.14.21"
   }
