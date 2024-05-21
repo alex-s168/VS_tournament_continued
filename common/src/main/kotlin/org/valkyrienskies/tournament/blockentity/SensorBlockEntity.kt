@@ -8,9 +8,8 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.phys.HitResult
-import org.joml.Vector3d
+import net.minecraft.world.phys.Vec3
 import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.common.world.clipIncludeShips
 import org.valkyrienskies.tournament.TournamentBlockEntities
@@ -26,21 +25,22 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState):
     var lastVal = 0
 
     fun getResult(level: ServerLevel): Int {
-        val lookingTowards = blockState
+        val facing = blockState
             .getValue(BlockStateProperties.FACING)
             .normal
-            .toJOMLD()
 
-        val start = Helper3d.convertShipToWorldSpace(level, blockPos)
-            .add(0.5, 0.5,0.5)
-            .add(lookingTowards.mul(0.5, Vector3d()))
+        val start = Helper3d.convertShipToWorldSpace(
+            level,
+            Vec3.atCenterOf(blockPos)
+                .add(Vec3.atLowerCornerOf(facing)
+                    .scale(0.5))
+        )
 
         val end = Helper3d.convertShipToWorldSpace(
             level,
-            blockPos
-                .toJOMLD()
-                .add(0.5, 0.5,0.5)
-                .add(lookingTowards.mul(TournamentConfig.SERVER.sensorDistance))
+            Vec3.atCenterOf(blockPos)
+                .add(Vec3.atLowerCornerOf(facing)
+                    .scale(TournamentConfig.SERVER.sensorDistance + 0.5))
         )
 
         val clipResult = level.clipIncludeShips(
@@ -57,9 +57,6 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState):
         val hit = clipResult
             .location
             .toJOML()
-
-        println("start to end distance: ${start.distance(end)}")
-        println("start to hit distance: ${start.distance(hit)}")
 
         return if (clipResult.type != HitResult.Type.MISS) {
             ceil(lerp(15.0, 1.0, start.distance(hit) / TournamentConfig.SERVER.sensorDistance)).toInt()

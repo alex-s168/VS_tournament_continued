@@ -5,9 +5,12 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 import org.joml.Vector3d
+import org.joml.Vector3dc
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
+import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.tournament.util.extension.toBlock
@@ -26,13 +29,15 @@ object Helper3d {
             else -> pos
         }
 
-    fun convertShipToWorldSpace(level: Level, pos: BlockPos): Vector3d =
-        level.getShipObjectManagingPos(pos) ?.shipToWorld ?.transformPosition(pos.toJOMLD())
-            ?: pos.toJOMLD()
+    fun convertShipToWorldSpace(level: Level, pos: Vector3d): Vector3d =
+        level.getShipObjectManagingPos(pos) ?.shipToWorld ?.transformPosition(pos)
+            ?: pos
 
-    fun convertShipToWorldSpace(level: Level, vec: Vector3d) : Vector3d {
-        return convertShipToWorldSpace(level, vec.toBlock())
-    }
+    fun convertShipToWorldSpace(level: Level, pos: BlockPos): Vector3d =
+        convertShipToWorldSpace(level, pos.toJOMLD())
+
+    fun convertShipToWorldSpace(level: Level, pos: Vec3): Vector3d =
+        convertShipToWorldSpace(level, pos.toJOML())
 
     fun drawParticleLine(a: Vector3d, b: Vector3d, level: Level, particle: ParticleOptions) {
         val le = a.distance(b) * 3
