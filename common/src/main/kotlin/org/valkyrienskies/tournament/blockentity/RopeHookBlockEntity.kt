@@ -34,8 +34,8 @@ class RopeHookBlockEntity(pos: BlockPos, state: BlockState):
     fun setRopeID(rope: ConstraintId, mainIn: Vector3d?, otherIn: Vector3d?, level: Level) {
         println("Block>> $rope")
 
-        val main = Helper3d.convertShipToWorldSpace(level, mainIn!!).add(Vector3d(0.5, 0.5, 0.5))
-        val other = Helper3d.convertShipToWorldSpace(level, otherIn!!).add(Vector3d(0.5, 0.5, 0.5))
+        val main = Helper3d.convertShipToWorldSpace(level, mainIn!!.add(0.5, 0.5, 0.5, Vector3d()))
+        val other = Helper3d.convertShipToWorldSpace(level, otherIn!!.add(0.5, 0.5, 0.5, Vector3d()))
 
         ropeId = rope
         otherPos = other
