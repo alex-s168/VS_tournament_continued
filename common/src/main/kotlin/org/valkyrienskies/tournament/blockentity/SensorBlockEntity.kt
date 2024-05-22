@@ -54,9 +54,12 @@ class SensorBlockEntity(pos: BlockPos, state: BlockState):
             true
         )
 
-        val hit = clipResult
+        val hit = Helper3d.convertShipToWorldSpace(
+            level,
+            clipResult
             .location
             .toJOML()
+        )
 
         return if (clipResult.type != HitResult.Type.MISS) {
             ceil(lerp(15.0, 1.0, start.distance(hit) / TournamentConfig.SERVER.sensorDistance)).toInt()
