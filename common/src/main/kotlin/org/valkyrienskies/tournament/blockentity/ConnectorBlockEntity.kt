@@ -8,13 +8,14 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import org.joml.Vector3d
 import org.joml.Vector3dc
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.properties.ShipId
 import org.valkyrienskies.core.apigame.constraints.VSAttachmentConstraint
 import org.valkyrienskies.mod.common.*
-import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.physics_api.ConstraintId
 import org.valkyrienskies.tournament.TournamentBlockEntities
@@ -40,7 +41,7 @@ class ConnectorBlockEntity(pos: BlockPos, state: BlockState):
             if (redstoneLevel == 0) {
                 println("restoring constraint")
                 constraint = level.shipObjectWorld.createNewConstraint(constraintData!!)
-                val other = constraintData!!.localPos1.sub(0.5, 0.5, 0.5, Vector3d()).toBlock()
+                val other = Vector3d(constraintData!!.localPos1).toBlock()
                 val otherBe = level.getBlockEntity(other) as ConnectorBlockEntity
                 assert(otherBe.constraintData == null)
                 otherBe.constraint = constraint
@@ -59,11 +60,12 @@ class ConnectorBlockEntity(pos: BlockPos, state: BlockState):
 
         if (redstoneLevel == 0) {
             val currentShip = level.getShipObjectManagingPos(blockPos)
+            val blockPosCentered = Vec3.atCenterOf(blockPos).toJOML()
             val transform = currentShip
                 ?.transform
                 ?.shipToWorld
-                ?.transformPosition(blockPos.toJOMLD())
-                ?: blockPos.toJOMLD()
+                ?.transformPosition(blockPosCentered)
+                ?: blockPosCentered
 
             val off = Vector3d(2.0)
             val aabb = AABB(transform.sub(off).toMinecraft(), transform.add(off).toMinecraft())
@@ -99,15 +101,18 @@ class ConnectorBlockEntity(pos: BlockPos, state: BlockState):
     private fun connect(other: BlockPos, otherBe: ConnectorBlockEntity): Boolean {
         val level = level as ServerLevel
 
-        val (idA, posA) = transform(blockPos.toJOMLD())
-        val (idB, posB) = transform(other.toJOMLD())
+        val centerA = Vec3.atCenterOf(blockPos).toJOML()
+        val centerB = Vec3.atCenterOf(other).toJOML()
+
+        val (idA, posA) = transform(centerA)
+        val (idB, posB) = transform(centerB)
 
         val cfg = VSAttachmentConstraint(
             idA,
             idB,
             compliance,
-            blockPos.toJOMLD().add(0.5, 0.5, 0.5),
-            other.toJOMLD().add(0.5, 0.5, 0.5),
+            centerA,
+            centerB,
             maxForce,
             min(posA.distance(posB), 1.4),
         )
@@ -144,9 +149,9 @@ class ConnectorBlockEntity(pos: BlockPos, state: BlockState):
         }
         if (!recursed) {
             otherbesec?.let {
-                val otherBe = level.getBlockEntity(it) as ConnectorBlockEntity
+                val otherBe = level.getBlockEntity(it) as? ConnectorBlockEntity?
                 if (otherBe != this)
-                    otherBe.disconnect(true)
+                    otherBe?.disconnect(true)
             }
         }
     }
