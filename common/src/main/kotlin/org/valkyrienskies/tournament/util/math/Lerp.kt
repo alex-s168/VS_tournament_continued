@@ -1,13 +1,14 @@
 package org.valkyrienskies.tournament.util.math
 
-fun lerp(a: Double, b: Double, t: Double): Double =
-    a + (b - a) * t
+import kotlin.math.max
+import kotlin.math.min
 
-fun lerp(a: Float, b: Float, t: Float): Float =
-    a + (b - a) * t
+fun clamp(v: Double, minv: Double, maxv: Double): Double =
+    if (minv > maxv) clamp(v, maxv, minv)
+    else min(max(v, minv), maxv)
+
+fun lerp(a: Double, b: Double, t: Double): Double =
+    clamp(a + (b - a) * t, a, b)
 
 fun invLerp(a: Double, b: Double, v: Double): Double =
-    (v - a) / (b - a)
-
-fun invLerp(a: Float, b: Float, v: Float): Float =
     (v - a) / (b - a)
