@@ -52,6 +52,11 @@ object TournamentBlocks {
 
     // lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
 
+    lateinit var FUEL_TANK_FULL_SOLID       : RegistrySupplier<FuelTankBlockFull>
+    lateinit var FUEL_TANK_FULL_TRANSPARENT : RegistrySupplier<FuelTankBlockFull>
+    lateinit var FUEL_TANK_HALF_SOLID       : RegistrySupplier<FuelTankBlockHalf>
+
+
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
         BALLAST                  = register("ballast", ::BallastBlock)
@@ -69,7 +74,7 @@ object TournamentBlocks {
             ) {
                 val t = TournamentConfig.SERVER.thrusterTiersNormal
                 if (t !in 1..5) {
-                    throw IllegalStateException("Thruster tier must be in range 1..5")
+                    throw IllegalStateException("Thruster tiers (tournament config) must be in range 1..5")
                 }
                 t
             }
@@ -81,7 +86,7 @@ object TournamentBlocks {
             ) {
                 val t = TournamentConfig.SERVER.thrusterTiersTiny
                 if (t !in 1..5) {
-                    throw IllegalStateException("Thruster tier must be in range 1..5")
+                    throw IllegalStateException("Thruster tiers (tournament config) must be in range 1..5")
                 }
                 t
             }
@@ -131,6 +136,9 @@ object TournamentBlocks {
             ) {}
         }
         // EXPLOSIVE_TEST           = register("explosive_test", ::TestExplosiveBlock)
+        FUEL_TANK_FULL_SOLID       = register("fuel_tank_full_solid") { FuelTankBlockFull(false) }
+        FUEL_TANK_FULL_TRANSPARENT = register("fuel_tank_full_transparent") { FuelTankBlockFull(true) }
+        FUEL_TANK_HALF_SOLID       = register("fuel_tank_half_solid") { FuelTankBlockHalf() }
 
         /*
         register("ore_phynite") {

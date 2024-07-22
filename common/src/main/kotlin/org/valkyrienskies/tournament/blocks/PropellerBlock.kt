@@ -70,11 +70,6 @@ class PropellerBlock(
                 .add(FACING)
         )
 
-    private fun getShipControl(level: Level, pos: BlockPos)  =
-        ((level.getShipObjectManagingPos(pos)
-            ?: level.getShipManagingPos(pos))
-                as? ServerShip)?.let { TournamentShips.getOrCreate(it) }
-
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
 
@@ -89,7 +84,7 @@ class PropellerBlock(
 
         be.update()
 
-        getShipControl(level, pos)?.addPropeller(
+        TournamentShips.get(level, pos)?.addPropeller(
             pos.toJOML(),
             state.getValue(FACING)
                 .normal
@@ -101,7 +96,7 @@ class PropellerBlock(
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         if (level !is ServerLevel) return
 
-        getShipControl(level, pos)?.removePropeller(pos.toJOML())
+        TournamentShips.get(level, pos)?.removePropeller(pos.toJOML())
 
         super.onRemove(state, level, pos, newState, isMoving)
     }

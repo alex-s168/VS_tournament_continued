@@ -1,7 +1,0 @@
-# Balloon
-Increases lift of the ship.
-
-There are two variants: powered- and unpowered- balloon. The powered balloon has higher lift but requires a redstone signal.
-
-The powered balloon will be 3x stronger when powered than the unpowered balloon.
-

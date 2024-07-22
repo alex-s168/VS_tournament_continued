@@ -1,5 +1,0 @@
-# Distance Sensor
-Redstone distance sensor that measures the distance to the block in front of it.
-
-The sensor has a default range of 10.0 blocks. If the target is closer, it outputs a higher redstone signal.
-

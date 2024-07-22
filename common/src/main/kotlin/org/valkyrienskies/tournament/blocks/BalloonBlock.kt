@@ -35,16 +35,11 @@ open class BalloonBlock : Block(
         entity.causeFallDamage(f, 0.2f, DamageSource.FALL)
     }
 
-    protected fun getShipControl(level: ServerLevel, pos: BlockPos) =
-        (level.getShipObjectManagingPos(pos)
-            ?: level.getShipManagingPos(pos))
-            ?.let { TournamentShips.getOrCreate(it) }
-
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         if (level.isClientSide) return
         level as ServerLevel
 
-        getShipControl(level, pos)?.addBalloon(
+        TournamentShips.get(level, pos)?.addBalloon(
             pos,
             TournamentConfig.SERVER.unpoweredBalloonMul * TournamentConfig.SERVER.balloonAnalogStrength
         )
@@ -56,7 +51,7 @@ open class BalloonBlock : Block(
         if (level.isClientSide) return
         level as ServerLevel
 
-        getShipControl(level, pos)?.removeBalloon(pos)
+        TournamentShips.get(level, pos)?.removeBalloon(pos)
     }
 
     override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {

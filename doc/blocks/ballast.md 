@@ -1,7 +1,0 @@
-# Ballast
-A block that has a redstone adjustable weight
-
-## Usage
-Power with redstone to increase weight
-## Config
-The on and off weight of the ballast is configurable. The default off weight is 800.0, and the default on weight is 10000.0.
