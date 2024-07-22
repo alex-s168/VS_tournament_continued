@@ -34,7 +34,7 @@ class FuelTankBlockEntity(
     state
 ) {
 
-    // TODO: do differently later when custom networking
+    // TODO: do using custom networking instead
 
     @Volatile
     var wholeShipFillLevelSynced = 0.0f

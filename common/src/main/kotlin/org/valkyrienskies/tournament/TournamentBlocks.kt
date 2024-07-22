@@ -68,10 +68,7 @@ object TournamentBlocks {
                 .strength(1.0f, 2.0f)
         )}
         THRUSTER                 = register("thruster") {
-            ThrusterBlock(
-                { 1.0 },
-                ParticleTypes.CAMPFIRE_SIGNAL_SMOKE
-            ) {
+            ThrusterBlock({ 1.0 }) {
                 val t = TournamentConfig.SERVER.thrusterTiersNormal
                 if (t !in 1..5) {
                     throw IllegalStateException("Thruster tiers (tournament config) must be in range 1..5")
@@ -80,10 +77,7 @@ object TournamentBlocks {
             }
         }
         THRUSTER_TINY            = register("tiny_thruster") {
-            ThrusterBlock(
-                { TournamentConfig.SERVER.thrusterTinyForceMultiplier },
-                ParticleTypes.CAMPFIRE_COSY_SMOKE
-            ) {
+            ThrusterBlock(TournamentConfig.SERVER::thrusterTinyForceMultiplier) {
                 val t = TournamentConfig.SERVER.thrusterTiersTiny
                 if (t !in 1..5) {
                     throw IllegalStateException("Thruster tiers (tournament config) must be in range 1..5")
