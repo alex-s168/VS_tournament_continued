@@ -138,26 +138,21 @@ class ThrusterBlock(
         return drops
     }
 
-    private fun getShipControl(level: Level, pos: BlockPos)  =
-        ((level.getShipObjectManagingPos(pos)
-            ?: level.getShipManagingPos(pos))
-            as? ServerShip)?.let { TournamentShips.getOrCreate(it) }
-
     private fun enableThruster(level: ServerLevel, pos: BlockPos, state: BlockState) {
-        getShipControl(level, pos)?.let {
+        TournamentShips.get(level, pos)?.let {
             it.stopThruster(pos)
-            it.addThruster(
+            it.addThrusterV2(
                 pos,
-                state.getValue(TournamentProperties.TIER).toDouble(),
+                state.getValue(TournamentProperties.TIER) *
+                        state.getValue(BlockStateProperties.POWER) *
+                        mult().toFloat(),
                 state.getValue(FACING).normal.toJOMLD()
-                    .mul(state.getValue(BlockStateProperties.POWER).toDouble()
-                            * mult())
             )
         }
     }
 
     private fun disableThruster(level: ServerLevel, pos: BlockPos) {
-        getShipControl(level, pos)?.stopThruster(pos)
+        TournamentShips.get(level, pos)?.stopThruster(pos)
     }
 
     override fun neighborChanged(
@@ -194,6 +189,8 @@ class ThrusterBlock(
 
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)
+
+        // TODO: custom networking stuff
 
         val rp = Helper3d.getShipRenderPosition(level, pos.toJOMLD())
         if (level.isWaterAt(rp.toBlock())) {

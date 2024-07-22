@@ -7,8 +7,6 @@ import org.valkyrienskies.core.api.ships.getAttachment
 import org.valkyrienskies.core.api.ships.saveAttachment
 import org.valkyrienskies.core.impl.config.VSConfigClass
 import org.valkyrienskies.core.impl.hooks.VSEvents
-import org.valkyrienskies.tournament.blockentity.render.PropellerBlockEntityRender
-import org.valkyrienskies.tournament.blockentity.render.SensorBlockEntityRender
 import org.valkyrienskies.tournament.ship.*
 import org.valkyrienskies.tournament.util.extension.with
 
@@ -17,6 +15,8 @@ object TournamentMod {
 
     @JvmStatic
     fun init() {
+        TournamentFuelManager.registerTournamentConfigDir()
+
         VSConfigClass.registerConfig("vs_tournament", TournamentConfig::class.java)
         TournamentBlocks.register()
         TournamentBlockEntities.register()
@@ -39,7 +39,7 @@ object TournamentMod {
             else {
                 val thrusterShipCtrl = ship.getAttachment<ThrusterShipControl>()
                 if (thrusterShipCtrl != null) {
-                    TournamentShips.getOrCreate(ship).addThrusters(thrusterShipCtrl.Thrusters.with(thrusterShipCtrl.thrusters))
+                    TournamentShips.getOrCreate(ship).addThrustersV1(thrusterShipCtrl.Thrusters.with(thrusterShipCtrl.thrusters))
                     ship.saveAttachment<ThrusterShipControl>(null)
                 }
 

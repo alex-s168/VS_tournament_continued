@@ -3,7 +3,8 @@
   "package": "org.valkyrienskies.tournament.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "client.MixinDebugRenderer"
+    "client.MixinDebugRenderer",
+    "client.MixinItemTooltips"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -4,15 +4,19 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.common.util.concurrent.AtomicDouble
 import net.minecraft.core.BlockPos
-import net.minecraft.world.phys.AABB
+import net.minecraft.server.MinecraftServer
+import net.minecraft.world.level.Level
 import org.joml.Vector3d
 import org.joml.Vector3i
-import org.joml.primitives.AABBd
 import org.valkyrienskies.core.api.ships.*
 import org.valkyrienskies.core.apigame.world.properties.DimensionId
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
+import org.valkyrienskies.mod.common.getShipManagingPos
+import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toBlockPos
 import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.tournament.FuelType
 import org.valkyrienskies.tournament.TickScheduler
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
@@ -20,6 +24,7 @@ import org.valkyrienskies.tournament.util.extension.toBlock
 import org.valkyrienskies.tournament.util.extension.toDimensionKey
 import org.valkyrienskies.tournament.util.extension.toDouble
 import org.valkyrienskies.tournament.util.helper.Helper3d
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 @JsonAutoDetect(
@@ -31,6 +36,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 class TournamentShips: ShipForcesInducer {
 
     var level: DimensionId = "minecraft:overworld"
+        private set
 
     data class ThrusterData(
         val pos: Vector3i,
@@ -39,8 +45,22 @@ class TournamentShips: ShipForcesInducer {
         var submerged: Boolean
     )
 
+    data class ThrusterDataV2(
+        val dir: Vector3d,
+        // for normal thruster between 0 and 15 * max tier
+        @Volatile
+        var throttle: Float,
+        @Volatile
+        var submerged: Boolean,
+        @Volatile
+        var lastPower: Float,
+    )
+
     val thrusters =
         CopyOnWriteArrayList<ThrusterData>()
+
+    val thrustersV2 =
+        ConcurrentHashMap<Vector3d, ThrusterDataV2>()
 
     private val balloons =
         CopyOnWriteArrayList<Pair<Vector3i, Double>>()
@@ -50,6 +70,31 @@ class TournamentShips: ShipForcesInducer {
 
     private val pulses =
         CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
+
+    @Volatile
+    var fuelType: FuelType? =
+        null
+
+    @Volatile
+    var fuelCount = 0.0f
+
+    @Volatile
+    var fuelCap = 0.0f
+
+    fun useFuel(count: Float): FuelType? =
+        if (count <= fuelCount) {
+            fuelCount -= count
+            fuelType
+        } else {
+            fuelType = null
+            null
+        }
+
+    fun useFuelThrottle(throttle: Float, mult: Int = 1): Float =
+        fuelType?.let {
+            useFuel(it.calcBurnRate(throttle) * mult)
+            it.calcPower(throttle)
+        } ?: 0.0f
 
     data class PropellerData(
         val pos: Vector3i,
@@ -68,40 +113,35 @@ class TournamentShips: ShipForcesInducer {
         physShip as PhysShipImpl
 
         if (ticker == null) {
-            ticker = TickScheduler.serverTickPerm { server ->
-                val lvl = server.getLevel(level.toDimensionKey())
-                    ?: return@serverTickPerm
-
-                thrusters.forEach { t ->
-                    val water = lvl.isWaterAt(
-                        Helper3d
-                            .convertShipToWorldSpace(lvl, t.pos.toDouble())
-                            .toBlock()
-                    )
-                    t.submerged = water
-                }
-
-                propellers.forEach { p ->
-                    // TODO: check if water is on the outside if big propeller
-                    val water = lvl.isWaterAt(
-                        Helper3d
-                            .convertShipToWorldSpace(lvl, p.pos.toDouble())
-                            .toBlock()
-                    )
-                    p.touchingWater = water
-
-                    val be = lvl.getBlockEntity(
-                        p.pos.toBlockPos()
-                    ) as PropellerBlockEntity<*>?
-
-                    if (be != null) {
-                        p.speed.set(be.speed)
-                    }
-                }
-            }
+            ticker = TickScheduler.serverTickPerm(::tickfn)
         }
 
         val vel = physShip.poseVel.vel
+
+        val notShutOff = TournamentConfig.SERVER.thrusterShutoffSpeed == -1.0 ||
+                         physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
+
+        thrustersV2.forEach { (pos, t) ->
+            if (t.submerged) {
+                t.lastPower = 0.0f
+                return@forEach
+            }
+
+            val force = useFuelThrottle(t.throttle)
+
+            if (force == 0.0f || !force.isFinite() || !notShutOff) {
+                t.lastPower = 0.0f
+                return@forEach
+            }
+
+            t.lastPower = force
+
+            val tForce = physShip.transform.shipToWorld.transformDirection(t.dir, Vector3d())
+            tForce.mul(force.toDouble())
+            val tPos = pos.add(0.5, 0.5, 0.5, Vector3d()).sub(physShip.transform.positionInShip)
+
+            physShip.applyInvariantForceToPos(tForce, tPos)
+        }
 
         thrusters.forEach { data ->
             val (pos, force, tier, submerged) = data
@@ -113,11 +153,7 @@ class TournamentShips: ShipForcesInducer {
             val tForce = physShip.transform.shipToWorld.transformDirection(force, Vector3d())
             val tPos = pos.toDouble().add(0.5, 0.5, 0.5).sub(physShip.transform.positionInShip)
 
-            if (force.isFinite && (
-                TournamentConfig.SERVER.thrusterShutoffSpeed == -1.0
-                    || physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
-                )
-            ) {
+            if (force.isFinite && notShutOff) {
                 physShip.applyInvariantForceToPos(tForce.mul(TournamentConfig.SERVER.thrusterSpeed * tier), tPos)
             }
         }
@@ -177,15 +213,61 @@ class TournamentShips: ShipForcesInducer {
         }
     }
 
-    fun addThruster(
-        pos: BlockPos,
-        tier: Double,
-        force: Vector3d
-    ) {
-        thrusters += ThrusterData(pos.toJOML(), force, tier, false)
+    private fun tickfn(server: MinecraftServer) {
+        val lvl = server.getLevel(level.toDimensionKey()) ?: return
+
+        if (fuelCount > fuelCap)
+            fuelCount = fuelCap
+
+        thrusters.forEach { t ->
+            val water = lvl.isWaterAt(
+                Helper3d
+                    .convertShipToWorldSpace(lvl, t.pos.toDouble())
+                    .toBlock()
+            )
+            t.submerged = water
+        }
+
+        thrustersV2.forEach { (pos, t) ->
+            val water = lvl.isWaterAt(
+                Helper3d
+                    .convertShipToWorldSpace(lvl, Vector3d(pos))
+                    .toBlock()
+            )
+            t.submerged = water
+        }
+
+        propellers.forEach { p ->
+            // TODO: check if water is on the outside if big propeller
+            val water = lvl.isWaterAt(
+                Helper3d
+                    .convertShipToWorldSpace(lvl, p.pos.toDouble())
+                    .toBlock()
+            )
+            p.touchingWater = water
+
+            val be = lvl.getBlockEntity(
+                p.pos.toBlockPos()
+            ) as PropellerBlockEntity<*>?
+
+            if (be != null) {
+                p.speed.set(be.speed)
+            }
+        }
     }
 
-    fun addThrusters(
+    fun addThrusterV2(
+        pos: BlockPos,
+        throttle: Float,
+        dir: Vector3d
+    ) {
+        thrustersV2[pos.toJOMLD()] = ThrusterDataV2(dir, throttle, false, 0.0f)
+    }
+
+    fun thrusterLastPowerV2(pos: BlockPos) =
+        thrustersV2[pos.toJOMLD()]!!.lastPower
+
+    fun addThrustersV1(
         list: Iterable<Triple<Vector3i, Vector3d, Double>>
     ) {
         list.forEach { (pos, force, tier) ->
@@ -197,6 +279,7 @@ class TournamentShips: ShipForcesInducer {
         pos: BlockPos
     ) {
         thrusters.removeIf { pos.toJOML() == it.pos }
+        thrustersV2.remove(pos.toJOMLD())
     }
 
     fun addBalloon(pos: BlockPos, pow: Double) {
@@ -249,5 +332,10 @@ class TournamentShips: ShipForcesInducer {
 
         fun getOrCreate(ship: ServerShip): TournamentShips =
             getOrCreate(ship, ship.chunkClaimDimension)
+
+        fun get(level: Level, pos: BlockPos)  =
+            ((level.getShipObjectManagingPos(pos)
+                ?: level.getShipManagingPos(pos))
+                    as? ServerShip)?.let { getOrCreate(it) }
     }
 }

@@ -35,7 +35,7 @@ object TournamentConfig {
         @JsonSchema(description = "Base height of a balloon")
         var balloonBaseHeight = 100.0
 
-        @JsonSchema(description = "The force a thruster applies to a ship * tier")
+        @JsonSchema(description = "only for old thrusters: the force a thruster applies to a ship * tier")
         var thrusterSpeed = 10000.0
 
         @JsonSchema(description = "The maximum amount of tiers a normal thruster can have (1-5)")
@@ -44,11 +44,14 @@ object TournamentConfig {
         @JsonSchema(description = "The maximum amount of tiers a tiny thruster can have (1-5)")
         var thrusterTiersTiny = 2
 
-        @JsonSchema(description = "The force multiplier of a tiny thruster")
+        @JsonSchema(description = "for new thrusters: throttle / fuel usage mult of tiny thrusters ; for old thrusters: force multiplier of tiny thruster")
         var thrusterTinyForceMultiplier = 0.2
 
         @JsonSchema(description = "The speed at which the thruster will stop applying force. (-1 means that it always applies force)")
         var thrusterShutoffSpeed = 80.0
+
+        @JsonSchema(description = "Amount of fuel items a fuel container can hold ; halfed for slab fuel tanks")
+        var fuelContainerCap = 100.0
 
         @JsonSchema(description = "The weight of a ballast when redstone powered")
         var ballastWeight = 10000.0

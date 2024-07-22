@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.ship.TournamentShips
 
 class PoweredBalloonBlock: BalloonBlock() {
 
@@ -55,7 +56,7 @@ class PoweredBalloonBlock: BalloonBlock() {
 
         val signal = level.getBestNeighborSignal(pos)
 
-        getShipControl(level, pos)?.addBalloon(
+        TournamentShips.get(level, pos)?.addBalloon(
             pos,
             signal.toDouble() * TournamentConfig.SERVER.balloonAnalogStrength
         )

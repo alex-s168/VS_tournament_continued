@@ -49,7 +49,7 @@ class tournamentShipControl : ShipForcesInducer {
         tournamentShips.addBalloons(Balloons)
         Balloons.clear()
 
-        tournamentShips.addThrusters(Thrusters)
+        tournamentShips.addThrustersV1(Thrusters)
         Thrusters.clear()
 
         tournamentShips.addSpinners(Spinners)

@@ -134,6 +134,7 @@ allprojects {
                 includeGroup "curse.maven"
             }
         }
+        maven { url = "https://api.modrinth.com/maven" }
     }
 
     tasks.withType(JavaCompile) {
