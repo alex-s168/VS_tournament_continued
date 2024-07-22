@@ -3,12 +3,15 @@ package org.valkyrienskies.tournament.ship
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.common.util.concurrent.AtomicDouble
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.Level
 import org.joml.Vector3d
 import org.joml.Vector3i
 import org.valkyrienskies.core.api.ships.*
+import org.valkyrienskies.core.api.ships.properties.ShipId
 import org.valkyrienskies.core.apigame.world.properties.DimensionId
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
 import org.valkyrienskies.mod.common.getShipManagingPos
@@ -16,9 +19,7 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toBlockPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
-import org.valkyrienskies.tournament.FuelType
-import org.valkyrienskies.tournament.TickScheduler
-import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.*
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
 import org.valkyrienskies.tournament.util.extension.toBlock
 import org.valkyrienskies.tournament.util.extension.toDimensionKey
@@ -82,7 +83,7 @@ class TournamentShips: ShipForcesInducer {
     var fuelCap = 0.0f
 
     fun useFuel(count: Float): FuelType? =
-        if (count <= fuelCount) {
+        if (fuelCount > 0) {
             fuelCount -= count
             fuelType
         } else {
@@ -109,8 +110,17 @@ class TournamentShips: ShipForcesInducer {
     @JsonIgnore
     private var ticker: TickScheduler.Ticking? = null
 
+    private var lastFuelType = fuelType
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
+
+        if (fuelType != lastFuelType) {
+            TournamentNetworking.ShipFuelTypeChange(
+                physShip.id,
+                TournamentFuelManager.getKey(fuelType)
+            ).send()
+            lastFuelType = fuelType
+        }
 
         if (ticker == null) {
             ticker = TickScheduler.serverTickPerm(::tickfn)
@@ -218,6 +228,11 @@ class TournamentShips: ShipForcesInducer {
 
         if (fuelCount > fuelCap)
             fuelCount = fuelCap
+
+        if (fuelCount <= 0) {
+            fuelCount = 0.0f
+            fuelType = null
+        }
 
         thrusters.forEach { t ->
             val water = lvl.isWaterAt(
@@ -337,5 +352,23 @@ class TournamentShips: ShipForcesInducer {
             ((level.getShipObjectManagingPos(pos)
                 ?: level.getShipManagingPos(pos))
                     as? ServerShip)?.let { getOrCreate(it) }
+    }
+
+    @Environment(EnvType.CLIENT)
+    object Client {
+        private val ships = mutableMapOf<ShipId, Data>()
+
+        operator fun get(ship: ShipId) =
+            ships.computeIfAbsent(ship) {
+                Data(null)
+            }
+
+        operator fun get(ship: Ship) =
+            get(ship.id)
+
+        data class Data(
+            @Volatile
+            var fuelType: FuelType?
+        )
     }
 }

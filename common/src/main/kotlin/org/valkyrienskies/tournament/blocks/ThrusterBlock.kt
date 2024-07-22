@@ -42,7 +42,6 @@ import java.util.*
 
 class ThrusterBlock(
     private val mult: () -> Double,
-    private val particle: ParticleOptions,
     private val maxTier: () -> Int
 ) : DirectionalBlock(
     Properties.of(Material.STONE)
@@ -189,25 +188,34 @@ class ThrusterBlock(
 
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)
+        val ship = level.getShipObjectManagingPos(pos) ?: return
 
-        // TODO: custom networking stuff
+        val rp = pos.toJOMLD()
+        ship.transform.shipToWorld.transformPosition(rp)
 
-        val rp = Helper3d.getShipRenderPosition(level, pos.toJOMLD())
-        if (level.isWaterAt(rp.toBlock())) {
-            return
-        }
+        val fuel = TournamentShips.Client[ship].fuelType
 
-        if (state.getValue(BlockStateProperties.POWER) > 0) {
+        if (fuel != null && state.getValue(BlockStateProperties.POWER) > 0 && fuel.particles != null) {
             val dir = state.getValue(FACING)
+
+            val vel = fuel.particleVelocity.toDouble()
 
             val x = rp.x + (0.5 * (dir.stepX + 1))
             val y = rp.y + (0.5 * (dir.stepY + 1))
             val z = rp.z + (0.5 * (dir.stepZ + 1))
-            val speedX = dir.stepX * -0.4
-            val speedY = dir.stepY * -0.4
-            val speedZ = dir.stepZ * -0.4
+            val speedX = dir.stepX * -vel
+            val speedY = dir.stepY * -vel
+            val speedZ = dir.stepZ * -vel
 
-            level.addParticle(particle, x, y, z, speedX, speedY, speedZ)
+            fun rand() = (random.nextFloat() * 2 - 1) * fuel.particleSpread
+
+            repeat(fuel.particleCount) {
+                level.addParticle(
+                    fuel.particles,
+                    x + rand(), y + rand(), z + rand(),
+                    speedX, speedY, speedZ
+                )
+            }
         }
     }
 

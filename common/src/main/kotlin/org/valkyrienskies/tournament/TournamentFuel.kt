@@ -86,6 +86,14 @@ object TournamentFuelManager {
 
     val fuels = mutableMapOf<ResourceLocation, FuelType>()
 
+    fun getKey(fuelType: FuelType?): ResourceLocation? =
+        fuelType?.let { ty ->
+            fuels
+            .filterValues { it == ty }
+            .keys
+            .firstOrNull()
+        }
+
     init {
         fuelConfigDir.mkdirs()
         val noupdate = File(fuelConfigDir, "noupdate")
