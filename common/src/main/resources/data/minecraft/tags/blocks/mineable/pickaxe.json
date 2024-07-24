@@ -7,6 +7,10 @@
     "vs_tournament:tiny_thruster",
     "vs_tournament:prop_big",
     "vs_tournament:prop_small",
-    "vs_tournament:chunk_loader"
+    "vs_tournament:chunk_loader",
+    "vs_tournament:connector",
+    "vs_tournament:fuel_tank_full_solid",
+    "vs_tournament:fuel_tank_full_transparent",
+    "vs_tournament:fuel_tank_half_solid"
   ]
 }

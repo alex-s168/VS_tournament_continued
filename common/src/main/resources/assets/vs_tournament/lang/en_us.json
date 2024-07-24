@@ -16,6 +16,7 @@
   "block.vs_tournament.prop_small": "Propeller (small)",
   "block.vs_tournament.chunk_loader": "Chunk Loader",
   "block.vs_tournament.connector": "Connector",
+
   "block.vs_tournament.fuel_tank_half_solid": "Fuel Tank 1x0.5x1 (solid)",
   "block.vs_tournament.fuel_tank_full_solid": "Fuel Tank 1x1x1 (solid)",
   "block.vs_tournament.fuel_tank_full_transparent": "Fuel Tank 1x1x1 (transparent)",
@@ -33,10 +34,13 @@
   "item.vs_tournament.rope": "Rope",
   "item.vs_tournament.gift_bag": "Gift Bag",
   "item.vs_tournament.iron_cube": "Iron Cube",
-  "item.vs_tournament.basic_fuel_powder": "Basic Fuel Powder",
-  "item.vs_tournament.basic_fuel_paste": "Basic Fuel Paste",
   "item.vs_tournament.coal_dust": "Coal Dust",
   "item.vs_tournament.hammer": "Hammer",
+
+  "item.vs_tournament.basic_fuel_powder": "Basic Fuel Powder",
+  "item.vs_tournament.basic_fuel_paste": "Basic Fuel Paste",
+  "item.vs_tournament.creative_fuel_0": "Creative Fuel (Variant 1)",
+  "item.vs_tournament.creative_fuel_1": "Creative Fuel (Variant 2)",
 
   "item.vs_tournament.old_item": "OLD ITEM",
 
