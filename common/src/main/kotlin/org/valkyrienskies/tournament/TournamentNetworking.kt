@@ -11,8 +11,19 @@ import org.valkyrienskies.tournament.ship.TournamentShips
 object TournamentNetworking {
     data class ShipFuelTypeChange(
         val ship: ShipId,
-        val fuel: ResourceLocation?
+        val fuel: String?
     ) : SimplePacket {
+        constructor(
+            ship: ShipId,
+            fuel: ResourceLocation?
+        ): this(ship, fuel?.toString())
+
+        fun fuelKey() =
+            fuel?.let(::ResourceLocation)
+
+        fun fuelFuel() =
+            fuelKey()?.let(TournamentFuelManager.fuels::get)
+
         fun send() {
             // TODO after vs update
             // with(vsCore.simplePacketNetworking) {
@@ -20,6 +31,7 @@ object TournamentNetworking {
             // }
         }
     }
+
     fun register() {
         // TODO after vs update
         // with(vsCore.simplePacketNetworking) {
@@ -29,7 +41,7 @@ object TournamentNetworking {
         // TODO after vs update
         // with(vsCore.simplePacketNetworking) {
         ShipFuelTypeChange::class.registerClientHandler {
-            TournamentShips.Client[it.ship].fuelType = it.fuel?.let { TournamentFuelManager.fuels[it] }
+            TournamentShips.Client[it.ship].fuelType = it.fuelFuel()
         }
         // }
     }
