@@ -15,6 +15,7 @@ object TournamentMod {
 
     @JvmStatic
     fun init() {
+        TournamentNetworking.register()
         TournamentFuelManager.registerTournamentConfigDir()
 
         VSConfigClass.registerConfig("vs_tournament", TournamentConfig::class.java)

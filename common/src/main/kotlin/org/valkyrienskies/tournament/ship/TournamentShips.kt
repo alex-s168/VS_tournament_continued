@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.AtomicDouble
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.Level
 import org.joml.Vector3d
@@ -61,7 +62,10 @@ class TournamentShips: ShipForcesInducer {
         CopyOnWriteArrayList<ThrusterData>()
 
     val thrustersV2 =
-        ConcurrentHashMap<Vector3d, ThrusterDataV2>()
+        CopyOnWriteArrayList<Pair<Vector3d, ThrusterDataV2>>()
+
+    fun thrusterV2(pos: Vector3d): ThrusterDataV2? =
+        thrustersV2.firstOrNull { it.first == pos }?.second
 
     private val balloons =
         CopyOnWriteArrayList<Pair<Vector3i, Double>>()
@@ -73,8 +77,14 @@ class TournamentShips: ShipForcesInducer {
         CopyOnWriteArrayList<Pair<Vector3d, Vector3d>>()
 
     @Volatile
-    var fuelType: FuelType? =
-        null
+    var fuelTypeKey: String? = null
+
+    var fuelType: FuelType?
+        set(v) {
+            fuelTypeKey = v?.let { TournamentFuelManager.getKey(it) }?.toString()
+        }
+        get() =
+            fuelTypeKey?.let { TournamentFuelManager.fuels[ResourceLocation(it)] }
 
     @Volatile
     var fuelCount = 0.0f
@@ -110,6 +120,7 @@ class TournamentShips: ShipForcesInducer {
     @JsonIgnore
     private var ticker: TickScheduler.Ticking? = null
 
+    @JsonIgnore
     private var lastFuelType = fuelType
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
@@ -124,6 +135,10 @@ class TournamentShips: ShipForcesInducer {
 
         if (ticker == null) {
             ticker = TickScheduler.serverTickPerm(::tickfn)
+            TournamentNetworking.ShipFuelTypeChange(
+                physShip.id,
+                TournamentFuelManager.getKey(fuelType)
+            ).send()
         }
 
         val vel = physShip.poseVel.vel
@@ -276,11 +291,11 @@ class TournamentShips: ShipForcesInducer {
         throttle: Float,
         dir: Vector3d
     ) {
-        thrustersV2[pos.toJOMLD()] = ThrusterDataV2(dir, throttle, false, 0.0f)
+        thrustersV2 += pos.toJOMLD() to ThrusterDataV2(dir, throttle, false, 0.0f)
     }
 
     fun thrusterLastPowerV2(pos: BlockPos) =
-        thrustersV2[pos.toJOMLD()]!!.lastPower
+        thrusterV2(pos.toJOMLD())!!.lastPower
 
     fun addThrustersV1(
         list: Iterable<Triple<Vector3i, Vector3d, Double>>
@@ -293,8 +308,9 @@ class TournamentShips: ShipForcesInducer {
     fun stopThruster(
         pos: BlockPos
     ) {
-        thrusters.removeIf { pos.toJOML() == it.pos }
-        thrustersV2.remove(pos.toJOMLD())
+        val joml = pos.toJOMLD()
+        thrusters.removeIf { it.pos == joml }
+        thrustersV2.removeIf { it.first == joml }
     }
 
     fun addBalloon(pos: BlockPos, pow: Double) {
@@ -306,7 +322,8 @@ class TournamentShips: ShipForcesInducer {
     }
 
     fun removeBalloon(pos: BlockPos) {
-        balloons.removeAll { it.first == pos.toJOML() }
+        val joml = pos.toJOMLD()
+        balloons.removeAll { it.first == joml }
     }
 
     fun addSpinner(pos: Vector3i, torque: Vector3d) {

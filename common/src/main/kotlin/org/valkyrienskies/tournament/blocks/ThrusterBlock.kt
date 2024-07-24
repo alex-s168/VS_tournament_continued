@@ -188,12 +188,15 @@ class ThrusterBlock(
 
     override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: Random) {
         super.animateTick(state, level, pos, random)
-        val ship = level.getShipObjectManagingPos(pos) ?: return
+        val ship = level.getShipManagingPos(pos)
+            ?: level.getShipObjectManagingPos(pos)
+            ?: return
 
         val rp = pos.toJOMLD()
         ship.transform.shipToWorld.transformPosition(rp)
 
         val fuel = TournamentShips.Client[ship].fuelType
+        println(fuel)
 
         if (fuel != null && state.getValue(BlockStateProperties.POWER) > 0 && fuel.particles != null) {
             val dir = state.getValue(FACING)

@@ -22,6 +22,7 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.min
 
 class FuelTankBlockEntity(
     pos: BlockPos,
@@ -72,7 +73,7 @@ class FuelTankBlockEntity(
     val cap = ceil(TournamentConfig.SERVER.fuelContainerCap * capf).toInt()
 
     @OptIn(ExperimentalContracts::class)
-    private fun <R> ship(fn: (TournamentShips) -> R): R? {
+    fun <R> ship(fn: (TournamentShips) -> R): R? {
         contract {
             callsInPlace(fn, InvocationKind.AT_MOST_ONCE)
         }
@@ -99,7 +100,7 @@ class FuelTankBlockEntity(
         ship {
             val fuel = stack.tournamentFuel()
             if (fuel != null && it.fuelType?.let { it == fuel } != false)
-                max(it.fuelCap - it.fuelCount, 0.0f).toInt()
+                min(stack.count, max(it.fuelCap - it.fuelCount, 0.0f).toInt())
             else 0
         } ?: 0
 

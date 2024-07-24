@@ -56,12 +56,14 @@
   "tooltip.vs_tournament.gift.grab_gun": "The pieces of your old gravity gun. Right click to get a compensation.",
 
   "tooltip.vs_tournament.fuel.title": "Solid Fuel",
-  "tooltip.vs_tournament.fuel.standbyBurnRate": "Burn rate when off: %0/t (%1/s)",
-  "tooltip.vs_tournament.fuel.baseBurnRate": "Burn rate when powered: %0/t (%1/s)",
-  "tooltip.vs_tournament.fuel.burnRatePerThrottle": "Additional burn rate per throttle: %0/t (%1/s)",
-  "tooltip.vs_tournament.fuel.basePower": "Thrust: %0 N",
-  "tooltip.vs_tournament.fuel.powerPerThrottle": "Additional thrust per throttle: %0 N",
+  "tooltip.vs_tournament.fuel.standbyBurnRate": "Burn rate when off: %s/t (%s/s)",
+  "tooltip.vs_tournament.fuel.baseBurnRate": "Burn rate when powered: %s/t (%s/s)",
+  "tooltip.vs_tournament.fuel.burnRatePerThrottle": "Additional burn rate per throttle: %s/t (%s/s)",
+  "tooltip.vs_tournament.fuel.basePower": "Thrust: %s N",
+  "tooltip.vs_tournament.fuel.powerPerThrottle": "Additional thrust per throttle: %s N",
   "tooltip.vs_tournament.fuel.infoThrottle": "throttle = thruster redstone level * thruster tier",
+
+  "misc.vs_tournament.fuel.level": "Total (ship) fuel level: %s / %s",
 
   "description.vs_tournament.old_block": "OLD BLOCK. Place and break to get new one."
 }

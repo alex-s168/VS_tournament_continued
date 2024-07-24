@@ -1,6 +1,8 @@
 package org.valkyrienskies.tournament.blocks
 
 import net.minecraft.core.BlockPos
+import net.minecraft.network.chat.TranslatableComponent
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.WorldlyContainer
@@ -17,7 +19,9 @@ import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.BlockHitResult
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.blockentity.FuelTankBlockEntity
+import org.valkyrienskies.tournament.util.TitleType
 import org.valkyrienskies.tournament.util.block.SlabBaseEntityBlock
+import org.valkyrienskies.tournament.util.sendTitle
 
 private fun useCommon(
     state: BlockState,
@@ -27,19 +31,37 @@ private fun useCommon(
     hand: InteractionHand,
     hit: BlockHitResult
 ): InteractionResult {
-    if (level.isClientSide) return InteractionResult.FAIL
-    val be = level.getBlockEntity(pos)!! as FuelTankBlockEntity
+    if (level !is ServerLevel)
+        return InteractionResult.FAIL
+
+    val be = level.getBlockEntity(pos)
+            as? FuelTankBlockEntity
+        ?: return InteractionResult.FAIL
 
     val stack = player.getItemInHand(hand)
+
+    var result = InteractionResult.FAIL
 
     val canStore = be.canStoreCount(stack)
     if (canStore > 0) {
         be.forceStore(stack, canStore)
         stack.shrink(canStore)
-        return InteractionResult.SUCCESS
+        result = InteractionResult.SUCCESS
     }
 
-    return InteractionResult.FAIL
+    be.ship { mngr ->
+        level.sendTitle(
+            player,
+            TitleType.ACTION_BAR_TEXT,
+            TranslatableComponent(
+                "misc.vs_tournament.fuel.level",
+                mngr.fuelCount,
+                mngr.fuelCap
+            )
+        )
+    }
+
+    return result
 }
 
 class FuelTankBlockFull(
@@ -51,7 +73,7 @@ class FuelTankBlockFull(
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
         if (level.isClientSide) return
-        val be = level.getBlockEntity(pos)!! as FuelTankBlockEntity
+        val be = level.getBlockEntity(pos) as? FuelTankBlockEntity? ?: return
 
         be.onAdded()
     }
@@ -59,7 +81,7 @@ class FuelTankBlockFull(
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         super.onRemove(state, level, pos, newState, isMoving)
         if (level.isClientSide) return
-        val be = level.getBlockEntity(pos)!! as FuelTankBlockEntity
+        val be = level.getBlockEntity(pos) as? FuelTankBlockEntity? ?: return
 
         be.onRemoved()
     }
@@ -92,7 +114,7 @@ class FuelTankBlockHalf: SlabBaseEntityBlock(
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
         if (level.isClientSide) return
-        val be = level.getBlockEntity(pos)!! as FuelTankBlockEntity
+        val be = level.getBlockEntity(pos) as? FuelTankBlockEntity? ?: return
 
         be.onAdded()
     }
@@ -100,7 +122,7 @@ class FuelTankBlockHalf: SlabBaseEntityBlock(
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         super.onRemove(state, level, pos, newState, isMoving)
         if (level.isClientSide) return
-        val be = level.getBlockEntity(pos)!! as FuelTankBlockEntity
+        val be = level.getBlockEntity(pos) as? FuelTankBlockEntity? ?: return
 
         be.onRemoved()
     }
