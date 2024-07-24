@@ -79,10 +79,10 @@ data class FuelType(
 }
 
 object TournamentFuelManager {
-    private val fuelConfigDir: File = Platform.getConfigFolder()
-        .resolveSibling("vs_tournament")
-        .resolveSibling("fuels")
-        .toFile()
+    private val fuelConfigDir = File(
+        Platform.getConfigFolder().toFile(),
+        "vs_tournament/fuels"
+    )
 
     val fuels = mutableMapOf<ResourceLocation, FuelType>()
 
@@ -217,4 +217,28 @@ private val defaultFuels = mapOf(
         particleSpread = 0f,
         particleVelocity = 0.25f,
     ),
+
+    "creative_fuel_0" to FuelType(
+        standbyBurnRate = 0.0f,
+        baseBurnRate = 0.0f,
+        burnRatePerThrottle = 0.0f,
+        basePower = 0.0f,
+        powerPerThrottle = 1_200.0f,
+        particles = ParticleTypes.CAMPFIRE_COSY_SMOKE,
+        particleCount = 2,
+        particleSpread = 0f,
+        particleVelocity = 0.25f,
+    ),
+
+    "creative_fuel_1" to FuelType(
+        standbyBurnRate = 0.0f,
+        baseBurnRate = 0.0f,
+        burnRatePerThrottle = 0.0f,
+        basePower = 0.0f,
+        powerPerThrottle = 2_400.0f,
+        particles = ParticleTypes.CAMPFIRE_COSY_SMOKE,
+        particleCount = 3,
+        particleSpread = 0f,
+        particleVelocity = 0.35f,
+    )
 )

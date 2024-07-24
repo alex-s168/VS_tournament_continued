@@ -1,12 +1,4 @@
 {
-  "fabric:load_conditions":[
-    {
-      "condition":"fabric:all_mods_loaded",
-      "values":[
-        "create"
-      ]
-    }
-  ],
   "type":"create:crushing",
   "ingredients":[
     {
@@ -19,5 +11,5 @@
       "count":3
     }
   ],
-  "processingTime":100
+  "processingTime":60
 }

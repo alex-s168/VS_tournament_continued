@@ -125,6 +125,14 @@ class TournamentShips: ShipForcesInducer {
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
+        if (fuelCount > fuelCap)
+            fuelCount = fuelCap
+
+        if (fuelCount <= 0) {
+            fuelCount = 0.0f
+            fuelType = null
+        }
+
         if (fuelType != lastFuelType) {
             TournamentNetworking.ShipFuelTypeChange(
                 physShip.id,
@@ -240,14 +248,6 @@ class TournamentShips: ShipForcesInducer {
 
     private fun tickfn(server: MinecraftServer) {
         val lvl = server.getLevel(level.toDimensionKey()) ?: return
-
-        if (fuelCount > fuelCap)
-            fuelCount = fuelCap
-
-        if (fuelCount <= 0) {
-            fuelCount = 0.0f
-            fuelType = null
-        }
 
         thrusters.forEach { t ->
             val water = lvl.isWaterAt(

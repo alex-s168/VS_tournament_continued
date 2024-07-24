@@ -192,11 +192,9 @@ class ThrusterBlock(
             ?: level.getShipObjectManagingPos(pos)
             ?: return
 
-        val rp = pos.toJOMLD()
-        ship.transform.shipToWorld.transformPosition(rp)
+        val rp = ship.transform.shipToWorld.transformPosition(pos.toJOMLD())
 
         val fuel = TournamentShips.Client[ship].fuelType
-        println(fuel)
 
         if (fuel != null && state.getValue(BlockStateProperties.POWER) > 0 && fuel.particles != null) {
             val dir = state.getValue(FACING)

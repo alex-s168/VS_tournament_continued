@@ -48,5 +48,17 @@
   {
     "tag": "vs_tournament:explosives",
     "mass": 1200.0
+  },
+  {
+    "block": "vs_tournament:fuel_tank_full_solid",
+    "mass": 500.0
+  },
+  {
+    "block": "vs_tournament:fuel_tank_full_transparent",
+    "mass": 400.0
+  },
+  {
+    "block": "vs_tournament:fuel_tank_half_solid",
+    "mass": 250.0
   }
 ]

@@ -18,7 +18,7 @@ object TournamentItems {
 
     lateinit var ROPE              :  RegistrySupplier<RopeItem>
     lateinit var TOOL_PULSEGUN     :  RegistrySupplier<PulseGunItem>
-    lateinit var TOOL_DELETEWAND   : RegistrySupplier<ShipDeleteWandItem>
+    lateinit var TOOL_DELETEWAND   :  RegistrySupplier<ShipDeleteWandItem>
     lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
     lateinit var GIFT_BAG          :  RegistrySupplier<GiftBagItem>
 
@@ -37,6 +37,9 @@ object TournamentItems {
         }
         ITEMS.register("coal_dust") {
             Item(Properties().stacksTo(64).tab(TAB))
+        }
+        ITEMS.register("hammer") {
+            Item(Properties().stacksTo(8).tab(TAB))
         }
 
         fuelItems.forEach { ITEMS.register(it.first) { Item(Properties().stacksTo(64).tab(TAB)) } }

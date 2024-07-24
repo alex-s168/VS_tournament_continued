@@ -79,11 +79,12 @@ class FuelTankBlockFull(
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
-        super.onRemove(state, level, pos, newState, isMoving)
         if (level.isClientSide) return
         val be = level.getBlockEntity(pos) as? FuelTankBlockEntity? ?: return
 
         be.onRemoved()
+
+        super.onRemove(state, level, pos, newState, isMoving)
     }
 
     override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult)
@@ -120,11 +121,12 @@ class FuelTankBlockHalf: SlabBaseEntityBlock(
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
-        super.onRemove(state, level, pos, newState, isMoving)
         if (level.isClientSide) return
         val be = level.getBlockEntity(pos) as? FuelTankBlockEntity? ?: return
 
         be.onRemoved()
+
+        super.onRemove(state, level, pos, newState, isMoving)
     }
 
     override fun use(state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult)
