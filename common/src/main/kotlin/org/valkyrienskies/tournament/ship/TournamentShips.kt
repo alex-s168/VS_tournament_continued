@@ -1,5 +1,8 @@
 package org.valkyrienskies.tournament.ship
 
+import blitz.Either
+import blitz.collections.remove
+import blitz.flatten
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.common.util.concurrent.AtomicDouble
@@ -15,6 +18,7 @@ import org.valkyrienskies.core.api.ships.*
 import org.valkyrienskies.core.api.ships.properties.ShipId
 import org.valkyrienskies.core.apigame.world.properties.DimensionId
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl
+import org.valkyrienskies.core.util.pollUntilEmpty
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toBlockPos
@@ -22,12 +26,16 @@ import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.*
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
+import org.valkyrienskies.tournament.util.BlockMap
+import org.valkyrienskies.tournament.util.SyncBlockMap
 import org.valkyrienskies.tournament.util.extension.toBlock
 import org.valkyrienskies.tournament.util.extension.toDimensionKey
 import org.valkyrienskies.tournament.util.extension.toDouble
 import org.valkyrienskies.tournament.util.helper.Helper3d
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.atomic.AtomicReference
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -44,6 +52,7 @@ class TournamentShips: ShipForcesInducer {
         val pos: Vector3i,
         val force: Vector3d,
         val mult: Double,
+        @Volatile
         var submerged: Boolean
     )
 
@@ -53,19 +62,36 @@ class TournamentShips: ShipForcesInducer {
         @Volatile
         var throttle: Float,
         @Volatile
-        var submerged: Boolean,
+        var submerged: Boolean = false,
         @Volatile
-        var lastPower: Float,
+        var lastPower: Float = 0.0f,
     )
 
-    val thrusters =
+    @JsonIgnore
+    private val toUpdateV2 = ConcurrentLinkedQueue<BlockPos>()
+
+    fun updateThrusterV2(pos: BlockPos) {
+        toUpdateV2.add(pos)
+    }
+
+    fun allThrusters() =
+        mutableListOf<Pair<BlockPos, Either<ThrusterData, ThrusterDataV2>>>().also { res ->
+            res += thrusters.map { it.pos.toBlockPos() to Either.ofA(it) }
+            res += thrustersV2.map { (pos, data) -> pos.toBlock() to Either.ofB(data) }
+            res += thrustersV2_2.contents.map { (pos, data) -> pos to Either.ofB(data) }
+        }
+
+    private val thrusters =
         CopyOnWriteArrayList<ThrusterData>()
 
-    val thrustersV2 =
+    private val thrustersV2 =
         CopyOnWriteArrayList<Pair<Vector3d, ThrusterDataV2>>()
 
-    fun thrusterV2(pos: Vector3d): ThrusterDataV2? =
-        thrustersV2.firstOrNull { it.first == pos }?.second
+    private val thrustersV2_2 =
+        SyncBlockMap(BlockMap<ThrusterDataV2>())
+
+    fun thrusterV2(pos: BlockPos): ThrusterDataV2? =
+        thrustersV2_2[thrustersV2_2.index(pos)]
 
     private val balloons =
         CopyOnWriteArrayList<Pair<Vector3i, Double>>()
@@ -101,6 +127,10 @@ class TournamentShips: ShipForcesInducer {
             null
         }
 
+    fun useFuelThrottlePreview(throttle: Float): Float =
+        fuelType?.calcPower(throttle)
+            ?: 0.0f
+
     fun useFuelThrottle(throttle: Float, mult: Int = 1): Float =
         fuelType?.let {
             useFuel(it.calcBurnRate(throttle) * mult)
@@ -120,10 +150,52 @@ class TournamentShips: ShipForcesInducer {
     @JsonIgnore
     private var ticker: TickScheduler.Ticking? = null
 
+    @Volatile
+    var wasLastShutOff = false
+
+    fun dryForce(thruster: ThrusterDataV2): Vector3d {
+        // actual fuel is used at game tick
+        val force = useFuelThrottlePreview(thruster.throttle)
+
+        var fact = 1.0
+        if (!force.isFinite() || wasLastShutOff || thruster.submerged) {
+            fact = 0.0
+        }
+
+        return thruster.dir.mul(force.toDouble()).mul(fact)
+    }
+
+    fun dryForce(thruster: ThrusterData): Vector3d {
+        var fact = 1.0
+        if (wasLastShutOff || thruster.submerged) {
+            fact = 0.0
+        }
+
+        return thruster.force.mul(thruster.mult * TournamentConfig.SERVER.thrusterSpeed * fact)
+    }
+
+    fun dryForce(thruster: Either<ThrusterData, ThrusterDataV2>) =
+        thruster
+            .mapA { dryForce(it) }
+            .mapB { dryForce(it) }
+            .flatten()
+
     @JsonIgnore
     private var lastFuelType = fuelType
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
+
+        toUpdateV2.pollUntilEmpty {
+            val throttle = thrusterV2(it)
+                ?.throttle
+                ?: -1.0f // remove
+
+            TournamentNetworking.ShipThrusterChange(
+                physShip.id,
+                it.x, it.y, it.z,
+                throttle
+            ).send()
+        }
 
         if (fuelCount > fuelCap)
             fuelCount = fuelCap
@@ -154,13 +226,21 @@ class TournamentShips: ShipForcesInducer {
         val notShutOff = TournamentConfig.SERVER.thrusterShutoffSpeed == -1.0 ||
                          physShip.poseVel.vel.length() < TournamentConfig.SERVER.thrusterShutoffSpeed
 
+        wasLastShutOff = !notShutOff
+
         thrustersV2.forEach { (pos, t) ->
+            thrustersV2_2[thrustersV2_2.index(pos.toBlock())] = t
+        }
+        thrustersV2.clear()
+
+        thrustersV2_2.contents.forEach { (pos, t) ->
             if (t.submerged) {
                 t.lastPower = 0.0f
                 return@forEach
             }
 
-            val force = useFuelThrottle(t.throttle)
+            // actual fuel is used at game tick
+            val force = useFuelThrottlePreview(t.throttle)
 
             if (force == 0.0f || !force.isFinite() || !notShutOff) {
                 t.lastPower = 0.0f
@@ -171,7 +251,9 @@ class TournamentShips: ShipForcesInducer {
 
             val tForce = physShip.transform.shipToWorld.transformDirection(t.dir, Vector3d())
             tForce.mul(force.toDouble())
-            val tPos = pos.add(0.5, 0.5, 0.5, Vector3d()).sub(physShip.transform.positionInShip)
+            val tPos = pos.toJOMLD()
+                .add(0.5, 0.5, 0.5, Vector3d())
+                .sub(physShip.transform.positionInShip)
 
             physShip.applyInvariantForceToPos(tForce, tPos)
         }
@@ -258,13 +340,17 @@ class TournamentShips: ShipForcesInducer {
             t.submerged = water
         }
 
-        thrustersV2.forEach { (pos, t) ->
+        thrustersV2_2.contents.forEach { (pos, t) ->
             val water = lvl.isWaterAt(
                 Helper3d
-                    .convertShipToWorldSpace(lvl, Vector3d(pos))
+                    .convertShipToWorldSpace(lvl, pos.toJOMLD())
                     .toBlock()
             )
             t.submerged = water
+
+            if (!water) {
+                useFuelThrottle(t.throttle)
+            }
         }
 
         propellers.forEach { p ->
@@ -288,14 +374,16 @@ class TournamentShips: ShipForcesInducer {
 
     fun addThrusterV2(
         pos: BlockPos,
-        throttle: Float,
-        dir: Vector3d
+        data: ThrusterDataV2
     ) {
-        thrustersV2 += pos.toJOMLD() to ThrusterDataV2(dir, throttle, false, 0.0f)
+        thrustersV2_2[thrustersV2_2.index(pos)] = data
     }
 
-    fun thrusterLastPowerV2(pos: BlockPos) =
-        thrusterV2(pos.toJOMLD())!!.lastPower
+    fun removeThrusterV2(
+        pos: BlockPos
+    ) {
+        thrustersV2_2.remove(thrustersV2_2.index(pos))
+    }
 
     fun addThrustersV1(
         list: Iterable<Triple<Vector3i, Vector3d, Double>>
@@ -303,14 +391,6 @@ class TournamentShips: ShipForcesInducer {
         list.forEach { (pos, force, tier) ->
             thrusters += ThrusterData(pos, force, tier, false)
         }
-    }
-
-    fun stopThruster(
-        pos: BlockPos
-    ) {
-        val joml = pos.toJOMLD()
-        thrusters.removeIf { it.pos == joml }
-        thrustersV2.removeIf { it.first == joml }
     }
 
     fun addBalloon(pos: BlockPos, pow: Double) {
@@ -373,19 +453,26 @@ class TournamentShips: ShipForcesInducer {
 
     @Environment(EnvType.CLIENT)
     object Client {
-        private val ships = mutableMapOf<ShipId, Data>()
+        private val ships = ConcurrentHashMap<ShipId, Data>()
 
         operator fun get(ship: ShipId) =
             ships.computeIfAbsent(ship) {
-                Data(null)
+                Data(
+                    AtomicReference(null),
+                    SyncBlockMap(BlockMap())
+                )
             }
 
         operator fun get(ship: Ship) =
             get(ship.id)
 
         data class Data(
-            @Volatile
-            var fuelType: FuelType?
-        )
+            val fuelType: AtomicReference<FuelType?>,
+            val thrusters: SyncBlockMap<Thruster>,
+        ) {
+            data class Thruster(
+                val throttle: Float,
+            )
+        }
     }
 }

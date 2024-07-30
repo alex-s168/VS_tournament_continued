@@ -21,7 +21,7 @@ public class RedStoneWireBlockMixin {
             BlockState state,
             Direction direction,
             CallbackInfoReturnable<Boolean> cir) {
-        if (state.getBlock() instanceof RedstoneConnectingBlock cb) {
+        if (state != null && state.getBlock() instanceof RedstoneConnectingBlock cb && direction != null) {
             cir.setReturnValue(cb.canConnectTo(state, direction));
         }
     }
