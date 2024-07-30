@@ -16,7 +16,6 @@ authors = [
 description = '''
 
 '''
-logoFile = "../../../../../common/src/main/resources/icon.png"
 
 [[dependencies.vs_tournament]]
 modId = "forge"

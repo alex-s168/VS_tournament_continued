@@ -5,14 +5,14 @@ import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.shared.computer.core.ServerComputer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.phys.Vec3
 import org.joml.Vector3d
 import org.valkyrienskies.core.api.ships.ServerShip
-import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.tournament.doc.Doc
 import org.valkyrienskies.tournament.doc.Documented
 import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
-import org.valkyrienskies.tournament.util.extension.toDouble
 
 class CCComponentsAPI(
     private val computer: ServerComputer,
@@ -38,12 +38,14 @@ class CCComponentsAPI(
     fun get_thrusters(): Array<Map<*, *>> {
         requireShip()
         val ctrl = TournamentShips.getOrCreate(ship!!)
-        return Array(ctrl.thrusters.size) {
-            val t = ctrl.thrusters[it]
-            val force = t.force.mul(t.mult * TournamentConfig.SERVER.thrusterSpeed * if (t.submerged) 0 else 1, Vector3d())
-            val pos = t.pos.toDouble().add(0.5, 0.5, 0.5).sub(ship.inertiaData.centerOfMassInShip)
+        val all = ctrl.allThrusters()
+        return Array(all.size) {
+            val (pos, data) = all[it]
+            val force = ctrl.dryForce(data)
+            val apos = Vec3.atCenterOf(pos).toJOML()
+                .sub(ship.inertiaData.centerOfMassInShip)
             mapOf(
-                "pos" to pos.toMap(),
+                "pos" to apos.toMap(),
                 "force" to force.toMap(),
             )
         }

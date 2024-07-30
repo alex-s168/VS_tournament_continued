@@ -26,12 +26,14 @@ public class RedStoneWireBlockMixin {
             Direction direction,
             boolean nonNormalCubeAbove,
             CallbackInfoReturnable<RedstoneSide> cir) {
-        BlockPos blockpos = pos.relative(direction);
-        BlockState blockstate = level.getBlockState(blockpos);
+        if (pos != null && direction != null) {
+            BlockPos blockpos = pos.relative(direction);
+            BlockState blockstate = level.getBlockState(blockpos);
 
-        if (blockstate.getBlock() instanceof RedstoneConnectingBlock cb) {
-            boolean c = cb.canConnectTo(blockstate, direction);
-            cir.setReturnValue(c ? RedstoneSide.SIDE : RedstoneSide.NONE);
+            if (blockstate.getBlock() instanceof RedstoneConnectingBlock cb) {
+                boolean c = cb.canConnectTo(blockstate, direction);
+                cir.setReturnValue(c ? RedstoneSide.SIDE : RedstoneSide.NONE);
+            }
         }
     }
 }

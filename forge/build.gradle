@@ -58,6 +58,9 @@ dependencies {
 
     implementation "thedarkcolour:kotlinforforge:$forge_kotlin_version"
 
+    implementation("me.alex_s168:blitz:${rootProject.blitz_version}")
+    forgeRuntimeLibrary shadowCommon("me.alex_s168:blitz:${rootProject.blitz_version}") { transitive = false }
+
     modImplementation("curse.maven:cc-tweaked-282001:4630521")
 }
 
