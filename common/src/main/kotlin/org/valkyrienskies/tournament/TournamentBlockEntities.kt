@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState
 import org.valkyrienskies.tournament.blockentity.*
 import org.valkyrienskies.tournament.blockentity.explosive.ExplosiveBlockEntity
 import org.valkyrienskies.tournament.blockentity.render.PropellerBlockEntityRender
+import org.valkyrienskies.tournament.blockentity.render.RotatorBlockEntityRender
 import org.valkyrienskies.tournament.blockentity.render.SensorBlockEntityRender
 import org.valkyrienskies.tournament.blockentity.render.TransparentFuelTankBlockEntityRender
 import org.valkyrienskies.tournament.registry.DeferredRegister
@@ -34,6 +35,7 @@ object TournamentBlockEntities {
     lateinit var FUEL_TANK_FULL_SOLID: RegistrySupplier<BlockEntityType<FuelTankBlockEntity>>
     lateinit var FUEL_TANK_FULL_TRANSPARENT: RegistrySupplier<BlockEntityType<FuelTankBlockEntity>>
     lateinit var FUEL_TANK_HALF_SOLID: RegistrySupplier<BlockEntityType<FuelTankBlockEntity>>
+    lateinit var ROTATOR: RegistrySupplier<BlockEntityType<RotatorBlockEntity>>
 
     init {
         /* ================================================================== */
@@ -90,6 +92,11 @@ object TournamentBlockEntities {
         FUEL_TANK_HALF_SOLID = TournamentBlocks.FUEL_TANK_HALF_SOLID
             .withBE { p, s -> FuelTankBlockEntity(p, s, capf = 0.5f, FUEL_TANK_HALF_SOLID::get) }
             .byName("fuel_tank_half_solid")
+        /* ================================================================== */
+        ROTATOR              = TournamentBlocks.ROTATOR
+            .withBE(::RotatorBlockEntity)
+            .byName("rotator")
+            .withRenderer(::RotatorBlockEntityRender)
         /* ================================================================== */
 
     }

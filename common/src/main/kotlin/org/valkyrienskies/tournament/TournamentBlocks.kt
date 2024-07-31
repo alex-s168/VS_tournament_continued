@@ -56,6 +56,8 @@ object TournamentBlocks {
     lateinit var FUEL_TANK_FULL_TRANSPARENT : RegistrySupplier<FuelTankBlockFull>
     lateinit var FUEL_TANK_HALF_SOLID       : RegistrySupplier<FuelTankBlockHalf>
 
+    lateinit var ROTATOR                  : RegistrySupplier<RotatorBlock>
+
 
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
@@ -133,6 +135,8 @@ object TournamentBlocks {
         FUEL_TANK_FULL_SOLID       = register("fuel_tank_full_solid") { FuelTankBlockFull(false) }
         FUEL_TANK_FULL_TRANSPARENT = register("fuel_tank_full_transparent") { FuelTankBlockFull(true) }
         FUEL_TANK_HALF_SOLID       = register("fuel_tank_half_solid") { FuelTankBlockHalf() }
+
+        ROTATOR                    = register("rotator") { RotatorBlock() }
 
         /*
         register("ore_phynite") {

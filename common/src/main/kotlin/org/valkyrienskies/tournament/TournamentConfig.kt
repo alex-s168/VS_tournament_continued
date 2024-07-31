@@ -92,6 +92,12 @@ object TournamentConfig {
         @JsonSchema(description = "After how many ticks to error when loading chunk still not finished? (throws error when double this amount of ticks has passed)")
         var chunkLoadTimeout = 40
 
+        @JsonSchema(description = "a")
+        var rotatorSpeed = 70.0f
+
+        @JsonSchema(description = "a")
+        var rotatorAccel = 1.8f
+
         // TODO: add stuff idk
         @JsonSchema(description = "The list of blocks that don't get assembled by the ship assembler")
         var blockBlacklist = setOf(

@@ -16,6 +16,7 @@
   "block.vs_tournament.prop_small": "Propeller (small)",
   "block.vs_tournament.chunk_loader": "Chunk Loader",
   "block.vs_tournament.connector": "Connector",
+  "block.vs_tournament.rotator": "Engine",
 
   "block.vs_tournament.fuel_tank_half_solid": "Fuel Tank 1x0.5x1 (solid)",
   "block.vs_tournament.fuel_tank_full_solid": "Fuel Tank 1x1x1 (solid)",

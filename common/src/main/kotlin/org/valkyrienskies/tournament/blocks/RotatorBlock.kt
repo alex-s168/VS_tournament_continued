@@ -17,20 +17,13 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.shapes.CollisionContext
 import org.valkyrienskies.mod.common.util.toJOML
-import org.valkyrienskies.mod.common.util.toJOMLD
-import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
-import org.valkyrienskies.tournament.doc.Doc
-import org.valkyrienskies.tournament.doc.Documented
-import org.valkyrienskies.tournament.doc.documentation
+import org.valkyrienskies.tournament.blockentity.RotatorBlockEntity
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
 
-class PropellerBlock(
-    val mult: Double,
-    val beConstr: (BlockPos, BlockState) -> PropellerBlockEntity<*>,
-): DirectionalBaseEntityBlock(
+class RotatorBlock: DirectionalBaseEntityBlock(
     Properties.of(Material.STONE)
         .sound(SoundType.STONE)
         .strength(1.0f, 2.0f)
@@ -40,7 +33,7 @@ class PropellerBlock(
 
         private val DIRECTIONAL_SHAPE = DirectionalShape.south(SHAPE)
 
-        fun getPropSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+        fun getRotatorSignal(state: BlockState, level: Level, pos: BlockPos): Int {
             val sides = Direction.entries - state.getValue(FACING).opposite
             val best = sides.maxOf {
                 level.getSignal(pos.relative(it), it)
@@ -72,22 +65,14 @@ class PropellerBlock(
 
         if (level !is ServerLevel) return
 
-        val signal = getPropSignal(state, level, pos)
+        val signal = getRotatorSignal(state, level, pos)
 
-        val be = level.getBlockEntity(pos) as? PropellerBlockEntity<*>
+        val be = level.getBlockEntity(pos) as? RotatorBlockEntity
             ?: return
 
         be.signal = signal
 
         be.update()
-
-        TournamentShips.get(level, pos)?.addPropeller(
-            pos.toJOML(),
-            state.getValue(FACING)
-                .normal
-                .toJOMLD()
-                .mul(mult)
-        )
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -110,9 +95,9 @@ class PropellerBlock(
 
         if (level !is ServerLevel) return
 
-        val signal = getPropSignal(state, level, pos)
+        val signal = getRotatorSignal(state, level, pos)
 
-        val be = level.getBlockEntity(pos) as? PropellerBlockEntity<*>
+        val be = level.getBlockEntity(pos) as? RotatorBlockEntity
             ?: return
 
         be.signal = signal
@@ -131,7 +116,7 @@ class PropellerBlock(
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity =
-        beConstr(pos, state)
+        RotatorBlockEntity(pos, state)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T: BlockEntity> getTicker(
@@ -139,18 +124,8 @@ class PropellerBlock(
         state: BlockState,
         blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T> =
-        PropellerBlockEntity.ticker as BlockEntityTicker<T>
+        RotatorBlockEntity.ticker as BlockEntityTicker<T>
 
     override fun canConnectTo(state: BlockState, direction: Direction): Boolean =
         direction in Direction.entries - state.getValue(FACING)
-
-    class DocImpl: Documented {
-        override fun getDoc() = documentation {
-            page("Propeller")
-                .kind(Doc.Kind.BLOCK)
-                .summary("Redstone-powered ship propeller.")
-                .summary("There is a small propeller (designed to look like a torpedo propeller) and a large (3x3) propeller.")
-                .summary("Popellers take a bit of time to spin up (reach their maximum force), which makes them unsuitable for steering and similar.")
-        }
-    }
 }

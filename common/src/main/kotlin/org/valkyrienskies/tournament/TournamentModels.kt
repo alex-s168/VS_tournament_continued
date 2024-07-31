@@ -80,5 +80,7 @@ object TournamentModels {
     val PROP_BIG = model("block/prop_big_prop")
     val PROP_SMALL = model("block/prop_small_prop")
     val SOLID_FUEL = model("block/solid_fuel")
+    val ROTATOR_ROTARY = model("block/rotator_rotary")
+    val FUEL_TANK_FULL_TRANSPARENT = model("block/fuel_tank_full_transparent")
 
 }

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.RenderShape
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -106,6 +107,9 @@ class FuelTankBlockFull(
         blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T> = FuelTankBlockEntity.ticker as BlockEntityTicker<T>
 
+    override fun getRenderShape(blockState: BlockState) =
+        if (transparent) RenderShape.INVISIBLE else RenderShape.MODEL
+
 }
 
 class FuelTankBlockHalf: SlabBaseEntityBlock(
@@ -146,5 +150,8 @@ class FuelTankBlockHalf: SlabBaseEntityBlock(
         state: BlockState,
         blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T> = FuelTankBlockEntity.ticker as BlockEntityTicker<T>
+
+    override fun getRenderShape(blockState: BlockState) =
+        RenderShape.MODEL
 
 }
