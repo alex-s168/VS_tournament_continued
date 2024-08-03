@@ -1,5 +1,6 @@
 package org.valkyrienskies.tournament.blockentity
 
+import blitz.caching
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
@@ -17,6 +18,7 @@ import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.tournamentFuel
 import org.valkyrienskies.tournament.util.extension.void
+import java.util.BitSet
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -27,15 +29,13 @@ import kotlin.math.min
 class FuelTankBlockEntity(
     pos: BlockPos,
     state: BlockState,
-    val capf: Float,
+    var capf: Float,
     src: () -> BlockEntityType<FuelTankBlockEntity>
 ): BlockEntity(
     src(),
     pos,
     state
 ) {
-
-    // TODO: do using custom networking instead
 
     @Volatile
     var wholeShipFillLevelSynced = 0.0f
@@ -51,15 +51,21 @@ class FuelTankBlockEntity(
 
     override fun saveAdditional(tag: CompoundTag) {
         tag.putFloat("ship_fill_synced", wholeShipFillLevelSynced)
+        tag.putByteArray("neighbors", neighborsTransparent.toByteArray())
         super.saveAdditional(tag)
     }
 
     override fun load(tag: CompoundTag) {
         wholeShipFillLevelSynced = tag.getFloat("ship_fill_synced")
+
+        neighborsTransparent = if (tag.contains("neighbors"))
+            BitSet.valueOf(tag.getByteArray("neighbors"))
+        else BitSet(6)
+
         super.load(tag)
     }
 
-    private fun update() {
+    fun update() {
         level?.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_ALL_IMMEDIATE)
     }
 
@@ -70,7 +76,9 @@ class FuelTankBlockEntity(
         }
     }
 
-    val cap = ceil(TournamentConfig.SERVER.fuelContainerCap * capf).toInt()
+    val cap by caching(::capf) {
+        ceil(TournamentConfig.SERVER.fuelContainerCap * capf).toInt()
+    }
 
     @OptIn(ExperimentalContracts::class)
     fun <R> ship(fn: (TournamentShips) -> R): R? {
@@ -92,6 +100,15 @@ class FuelTankBlockEntity(
         }
     }
 
+    fun updateCapf(new: Float) {
+        val old = cap
+        capf = new
+        val diff = cap - old
+        ship {
+            it.fuelCap += diff
+        }
+    }
+
     fun getContainer(): CustomContainer {
         return CustomContainer(this)
     }
@@ -110,6 +127,11 @@ class FuelTankBlockEntity(
             it.fuelType = fuel
             it.fuelCount += count
         }.void()
+
+    var neighborsTransparent = BitSet(6)
+
+    fun isNeighborTransparent(direction: Direction) =
+        neighborsTransparent[direction.ordinal]
 
     class CustomContainer(
         val be: FuelTankBlockEntity

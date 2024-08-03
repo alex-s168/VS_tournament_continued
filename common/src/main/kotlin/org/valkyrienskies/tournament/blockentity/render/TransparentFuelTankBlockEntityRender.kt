@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import net.minecraft.core.Direction
 import org.valkyrienskies.tournament.TournamentModels
 import org.valkyrienskies.tournament.blockentity.FuelTankBlockEntity
 import org.valkyrienskies.tournament.util.extension.pose
@@ -20,12 +21,34 @@ class TransparentFuelTankBlockEntityRender:
         packedLight: Int,
         packedOverlay: Int
     ) {
-        // TODO: back faces of fuel tank not visible
+        RenderSystem.disableCull()
 
         if (be.wholeShipFillLevelSynced > 0.05f) {
+            val byDir = List(Direction.entries.size) { index ->
+                if (be.neighborsTransparent[index]) {
+                    0.0
+                } else {
+                    0.01
+                }
+            }
+
+            val x = byDir[Direction.WEST.ordinal]
+            val y = byDir[Direction.DOWN.ordinal]
+            val z = byDir[Direction.NORTH.ordinal]
+
+            val nx = byDir[Direction.EAST.ordinal]
+            val ny = byDir[Direction.UP.ordinal]
+            val nz = byDir[Direction.SOUTH.ordinal]
+
             pose.pose {
-                translate(0.1, 0.1, 0.1)
-                scale(0.8f, 0.8f * be.wholeShipFillLevelSynced, 0.8f)
+                translate(x, y, z)
+
+                scale(
+                    1.0f - (x + nx).toFloat(),
+                    (1.0f - (y + ny).toFloat()) * be.wholeShipFillLevelSynced,
+                    1.0f - (z + nz).toFloat()
+                )
+
                 TournamentModels.SOLID_FUEL.renderer.render(
                     pose,
                     be,
@@ -43,6 +66,8 @@ class TransparentFuelTankBlockEntityRender:
             packedLight,
             packedOverlay
         )
+
+        RenderSystem.enableCull()
     }
 
 }

@@ -159,10 +159,14 @@ class ThrusterBlock(
 
         val ships = TournamentShips.get(level, pos)
 
-        ships?.thrusterV2(pos)
-            ?.throttle = getThrottle(state, signal)
+        ships?.thrusterV2(pos)?.let {
+            val new = getThrottle(state, signal)
 
-        ships?.updateThrusterV2(pos)
+            if (it.throttle != new) {
+                it.throttle = new
+                ships.updateThrusterV2(pos)
+            }
+        }
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {

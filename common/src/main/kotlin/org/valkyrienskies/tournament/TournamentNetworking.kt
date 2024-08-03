@@ -4,13 +4,29 @@ import blitz.collections.remove
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import org.valkyrienskies.core.api.ships.properties.ShipId
+import org.valkyrienskies.core.impl.game.ships.ShipObjectServerWorld
 import org.valkyrienskies.core.impl.networking.simple.SimplePacket
 import org.valkyrienskies.core.impl.networking.simple.register
 import org.valkyrienskies.core.impl.networking.simple.registerClientHandler
 import org.valkyrienskies.core.impl.networking.simple.sendToAllClients
+import org.valkyrienskies.mod.common.vsCore
 import org.valkyrienskies.tournament.ship.TournamentShips
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 object TournamentNetworking {
+    @OptIn(ExperimentalContracts::class)
+    private fun <R: Any> runIfServer(fn: () -> R): R? {
+        contract {
+            callsInPlace(fn, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return if (vsCore.dummyShipWorldServer is ShipObjectServerWorld) {
+            fn()
+        } else null
+    }
+
     data class ShipFuelTypeChange(
         val ship: ShipId,
         val fuel: String?,
@@ -27,10 +43,12 @@ object TournamentNetworking {
             fuelKey()?.let(TournamentFuelManager.fuels::get)
 
         fun send() {
-            // TODO after vs update
-            // with(vsCore.simplePacketNetworking) {
-            this.sendToAllClients()
-            // }
+            runIfServer {
+                // TODO after vs update
+                // with(vsCore.simplePacketNetworking) {
+                this.sendToAllClients()
+                // }
+            }
         }
     }
 
@@ -45,10 +63,12 @@ object TournamentNetworking {
             throttle < 0.0f
 
         fun send() {
-            // TODO after vs update
-            // with(vsCore.simplePacketNetworking) {
-            this.sendToAllClients()
-            // }
+            runIfServer {
+                // TODO after vs update
+                // with(vsCore.simplePacketNetworking) {
+                this.sendToAllClients()
+                // }
+            }
         }
     }
 

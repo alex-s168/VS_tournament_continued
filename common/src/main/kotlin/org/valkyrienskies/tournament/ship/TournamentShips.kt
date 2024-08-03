@@ -68,10 +68,10 @@ class TournamentShips: ShipForcesInducer {
     )
 
     @JsonIgnore
-    private val toUpdateV2 = ConcurrentLinkedQueue<BlockPos>()
+    private val toUpdateV2 = ConcurrentLinkedQueue<Long>()
 
     fun updateThrusterV2(pos: BlockPos) {
-        toUpdateV2.add(pos)
+        toUpdateV2.add(pos.asLong())
     }
 
     fun allThrusters() =
@@ -182,17 +182,25 @@ class TournamentShips: ShipForcesInducer {
 
     @JsonIgnore
     private var lastFuelType = fuelType
+    @JsonIgnore
+    private val filteredUpdates = mutableSetOf<Long>() // TODO: replace with faster long set
     override fun applyForces(physShip: PhysShip) {
         physShip as PhysShipImpl
 
         toUpdateV2.pollUntilEmpty {
-            val throttle = thrusterV2(it)
+            filteredUpdates.add(it)
+        }
+
+        filteredUpdates.forEach { packed ->
+            val pos = BlockPos.of(packed)
+
+            val throttle = thrusterV2(pos)
                 ?.throttle
                 ?: -1.0f // remove
 
             TournamentNetworking.ShipThrusterChange(
                 physShip.id,
-                it.x, it.y, it.z,
+                pos.x, pos.y, pos.z,
                 throttle
             ).send()
         }
