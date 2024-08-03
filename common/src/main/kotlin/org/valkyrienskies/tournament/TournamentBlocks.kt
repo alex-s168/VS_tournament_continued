@@ -138,13 +138,11 @@ object TournamentBlocks {
 
         ROTATOR                    = register("rotator") { RotatorBlock() }
 
-        /*
         register("ore_phynite") {
             OreBlock(BlockBehaviour.Properties.of(TournamentMaterials.PHYNITE)
                 .strength(3.0f, 3.0f)
             )
         }
-         */
 
 
         // old:
@@ -190,6 +188,10 @@ object TournamentBlocks {
         flammableBlock(POWERED_BALLOON.get(), 30, 60)
         flammableBlock(BALLOON.get(), 30, 60)
         flammableBlock(FLOATER.get(), 30, 60)
+
+        flammableBlock(FUEL_TANK_FULL_SOLID.get(), 30, 60)
+        flammableBlock(FUEL_TANK_FULL_TRANSPARENT.get(), 30, 60)
+        flammableBlock(FUEL_TANK_HALF_SOLID.get(), 30, 60)
     }
 
     fun registerItems(items: DeferredRegister<Item>) {

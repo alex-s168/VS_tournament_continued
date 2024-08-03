@@ -9,13 +9,12 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.WorldlyContainer
 import net.minecraft.world.WorldlyContainerHolder
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Explosion
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
-import net.minecraft.world.level.block.BaseEntityBlock
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.RenderShape
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -23,14 +22,17 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.SlabType
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.shapes.CollisionContext
-import net.minecraft.world.phys.shapes.Shapes
-import net.minecraft.world.phys.shapes.VoxelShape
+import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.blockentity.FuelTankBlockEntity
+import org.valkyrienskies.tournament.neighborBlocks
+import org.valkyrienskies.tournament.util.LazyWithLateParam
 import org.valkyrienskies.tournament.util.TitleType
 import org.valkyrienskies.tournament.util.block.SlabBaseEntityBlock
 import org.valkyrienskies.tournament.util.block.WithExRenderInfo
+import org.valkyrienskies.tournament.util.blockGroup
+import org.valkyrienskies.tournament.util.extension.toBlock
+import org.valkyrienskies.tournament.util.helper.Helper3d
 import org.valkyrienskies.tournament.util.sendTitle
 import java.util.BitSet
 
@@ -75,6 +77,36 @@ private fun useCommon(
     return result
 }
 
+private fun onCatchFire(level: Level, pos: BlockPos) {
+    if (level !is ServerLevel) return
+
+    val connectedTanks = level.blockGroup(pos, shouldCancel = { it > 30 }) {
+        it.block is FuelTankBlockFull || it.block is FuelTankBlockHalf
+    }
+
+    val fillLevel = LazyWithLateParam { bp: BlockPos ->
+        val be = level.getBlockEntity(bp) as FuelTankBlockEntity
+        be.wholeShipFillLevelSynced
+    }
+
+    connectedTanks.forEachSet { _, x, y, z ->
+        val bp = BlockPos(x, y, z)
+        val fill = fillLevel.get { bp }
+        println(fill)
+        if (fill > 0.1) {
+            val radius = fill * 4 // at max fill radius
+            level.explode(null, x + 0.5, y + 0.5, z + 0.5, radius, true, Explosion.BlockInteraction.BREAK)
+        }
+        level.setBlockAndUpdate(bp, Blocks.FIRE.defaultBlockState())
+    }
+}
+
+private fun checkFire(level: Level, pos: BlockPos, fromPos: BlockPos) {
+    if (level.getBlockState(fromPos).block is FireBlock) {
+        onCatchFire(level, pos)
+    }
+}
+
 class FuelTankBlockFull(
     val transparent: Boolean
 ): BaseEntityBlock(
@@ -84,6 +116,12 @@ class FuelTankBlockFull(
         .isViewBlocking { _,_,_ -> !transparent }
 ), WorldlyContainerHolder, WithExRenderInfo {
 
+    override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {
+        if (level is ServerLevel && projectile.isOnFire) {
+            onCatchFire(level, hit.blockPos)
+        }
+    }
+
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
         if (level.isClientSide) return
@@ -92,6 +130,9 @@ class FuelTankBlockFull(
         be.onAdded()
 
         updateNeighborTransparent(level, pos)
+        pos.neighborBlocks().forEach {
+            checkFire(level, pos, it)
+        }
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -170,6 +211,7 @@ class FuelTankBlockFull(
         super.neighborChanged(state, level, pos, block, fromPos, isMoving)
 
         updateNeighborTransparent(level, pos)
+        checkFire(level, pos, fromPos)
     }
 
     override fun getFaceRenderType(
@@ -191,12 +233,17 @@ class FuelTankBlockFull(
 
         return WithExRenderInfo.FaceRenderType.FORCE_RENDER
     }
-
 }
 
 class FuelTankBlockHalf: SlabBaseEntityBlock(
     Properties.of(Material.METAL)
 ), WorldlyContainerHolder {
+
+    override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {
+        if (level is ServerLevel && projectile.isOnFire) {
+            onCatchFire(level, hit.blockPos)
+        }
+    }
 
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
@@ -204,6 +251,9 @@ class FuelTankBlockHalf: SlabBaseEntityBlock(
         val be = level.getBlockEntity(pos) as? FuelTankBlockEntity? ?: return
 
         be.onAdded()
+        pos.neighborBlocks().forEach {
+            checkFire(level, pos, it)
+        }
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
@@ -238,5 +288,17 @@ class FuelTankBlockHalf: SlabBaseEntityBlock(
 
     override fun getRenderShape(blockState: BlockState) =
         RenderShape.MODEL
+
+    override fun neighborChanged(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        block: Block,
+        fromPos: BlockPos,
+        isMoving: Boolean
+    ) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving)
+        checkFire(level, pos, fromPos)
+    }
 
 }

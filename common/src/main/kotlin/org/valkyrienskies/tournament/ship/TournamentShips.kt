@@ -78,7 +78,7 @@ class TournamentShips: ShipForcesInducer {
         mutableListOf<Pair<BlockPos, Either<ThrusterData, ThrusterDataV2>>>().also { res ->
             res += thrusters.map { it.pos.toBlockPos() to Either.ofA(it) }
             res += thrustersV2.map { (pos, data) -> pos.toBlock() to Either.ofB(data) }
-            res += thrustersV2_2.contents.map { (pos, data) -> pos to Either.ofB(data) }
+            res += thrustersV2_2.contents().map { (pos, data) -> pos to Either.ofB(data) }
         }
 
     private val thrusters =
@@ -242,7 +242,7 @@ class TournamentShips: ShipForcesInducer {
         }
         thrustersV2.clear()
 
-        thrustersV2_2.contents.forEach { (pos, t) ->
+        thrustersV2_2.contents().forEach { (pos, t) ->
             if (t.submerged) {
                 t.lastPower = 0.0f
                 return@forEach
@@ -349,7 +349,7 @@ class TournamentShips: ShipForcesInducer {
             t.submerged = water
         }
 
-        thrustersV2_2.contents.forEach { (pos, t) ->
+        thrustersV2_2.contents().forEach { (pos, t) ->
             val water = lvl.isWaterAt(
                 Helper3d
                     .convertShipToWorldSpace(lvl, pos.toJOMLD())
