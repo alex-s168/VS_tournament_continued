@@ -1,7 +1,9 @@
 package org.valkyrienskies.tournament
 
 import blitz.collections.remove
+import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import org.valkyrienskies.core.api.ships.properties.ShipId
 import org.valkyrienskies.core.impl.game.ships.ShipObjectServerWorld
@@ -50,15 +52,21 @@ object TournamentNetworking {
                 // }
             }
         }
+
+        fun clientHandler() {
+            val client = TournamentShips.Client[ship]
+            client.fuelType.set(fuelFuel())
+        }
     }
 
     data class ShipThrusterChange(
         val ship: ShipId,
-        val posX: Int,
-        val posY: Int,
-        val posZ: Int,
+        val pos: Long,
         val throttle: Float,
     ): SimplePacket {
+        fun unpackPos() =
+            BlockPos.of(pos)
+
         fun removed() =
             throttle < 0.0f
 
@@ -70,6 +78,82 @@ object TournamentNetworking {
                 // }
             }
         }
+
+        fun clientHandler() {
+            val client = TournamentShips.Client[ship]
+            val idx = client.thrusters.index(unpackPos())
+            if (removed()) {
+                client.thrusters.remove(idx)
+            } else {
+                client.thrusters[idx] = TournamentShips.Client.Data.Thruster(throttle)
+            }
+        }
+    }
+
+    // add or delete blocks inside shaft or delete shaft (if blocks contains shaftpos)
+    data class ShaftBlockChange(
+        val shaftPos: Long,
+        val newBlocks: List<Long>,
+        val remove: Boolean
+    ): SimplePacket {
+        fun send() {
+            runIfServer {
+                // TODO after vs update
+                // with(vsCore.simplePacketNetworking) {
+                this.sendToAllClients()
+                // }
+            }
+        }
+
+        fun clientHandler() {
+            val level = Minecraft.getInstance().level!!
+            val man = ClientShaftMan.get(level)
+            if (shaftPos in newBlocks) {
+                if (!remove) error("no.")
+                man.eraseShaft(BlockPos.of(shaftPos))
+            } else {
+                val shaft = man.shaftAt(BlockPos.of(shaftPos))!!
+                if (remove) {
+                    newBlocks.forEach { shaft.removeShaftBlock(BlockPos.of(it)) }
+                } else {
+                    newBlocks.forEach { shaft.addShaftBlock(BlockPos.of(it)) }
+                }
+            }
+        }
+    }
+
+    // change shaft speed or add shaft
+    data class ShaftSpeedChange(
+        val shaftPos: Long, // blockPos
+        val axis: Byte,
+        val speed: Float,
+    ): SimplePacket {
+        fun unpackPos() =
+            BlockPos.of(shaftPos)
+
+        fun axis() =
+            Direction.Axis.entries[axis.toInt()]
+
+        companion object {
+            fun getAxis(axis: Direction.Axis) =
+                axis.ordinal.toByte()
+        }
+
+        fun send() {
+            runIfServer {
+                // TODO after vs update
+                // with(vsCore.simplePacketNetworking) {
+                this.sendToAllClients()
+                // }
+            }
+        }
+
+        fun clientHandler() {
+            val level = Minecraft.getInstance().level!!
+            val man = ClientShaftMan.get(level)
+            val pos = unpackPos()
+            man.getOrCreateShaft(pos, axis()).speed = speed
+        }
     }
 
     fun register() {
@@ -77,23 +161,16 @@ object TournamentNetworking {
         // with(vsCore.simplePacketNetworking) {
         ShipFuelTypeChange::class.register()
         ShipThrusterChange::class.register()
+        ShaftSpeedChange::class.register()
+        ShaftBlockChange::class.register()
         // }
 
         // TODO after vs update
         // with(vsCore.simplePacketNetworking) {
-        ShipFuelTypeChange::class.registerClientHandler {
-            val client = TournamentShips.Client[it.ship]
-            client.fuelType.set(it.fuelFuel())
-        }
-        ShipThrusterChange::class.registerClientHandler {
-            val client = TournamentShips.Client[it.ship]
-            val idx = client.thrusters.index(BlockPos(it.posX, it.posY, it.posZ))
-            if (it.removed()) {
-                client.thrusters.remove(idx)
-            } else {
-                client.thrusters[idx] = TournamentShips.Client.Data.Thruster(it.throttle)
-            }
-        }
+        ShipFuelTypeChange::class.registerClientHandler(ShipFuelTypeChange::clientHandler)
+        ShipThrusterChange::class.registerClientHandler(ShipThrusterChange::clientHandler)
+        ShaftSpeedChange::class.registerClientHandler(ShaftSpeedChange::clientHandler)
+        ShaftBlockChange::class.registerClientHandler(ShaftBlockChange::clientHandler)
         // }
     }
 }

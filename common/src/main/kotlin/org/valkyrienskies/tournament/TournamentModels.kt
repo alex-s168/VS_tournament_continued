@@ -8,6 +8,7 @@ import net.minecraft.client.resources.model.BakedModel
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.entity.BlockEntity
 import org.valkyrienskies.tournament.services.TournamentPlatformHelper
+import org.valkyrienskies.tournament.util.rend.DefinitelyNotCopiedFromCreateSuperRenderTypeBuffer
 
 object TournamentModels {
 
@@ -43,6 +44,26 @@ object TournamentModels {
     ) {
         val bakedModel: BakedModel by lazy {
             getModel(resourceLocation)
+        }
+
+        fun renderNow(matrixStack: PoseStack, blockEntity: BlockEntity, packedOverlay: Int) {
+            val level = blockEntity.level ?: return
+            val modRend = Minecraft.getInstance().blockRenderer.modelRenderer
+
+            val buf = DefinitelyNotCopiedFromCreateSuperRenderTypeBuffer.getInstance()
+            modRend.tesselateWithAO(
+                level,
+                bakedModel,
+                blockEntity.blockState,
+                blockEntity.blockPos,
+                matrixStack,
+                buf.getBuffer(RenderType.cutout()),
+                checkSides,
+                level.random,
+                42L, // Used in ModelBlockRenderer.class in renderModel, not sure what the right number is but this seems to work
+                packedOverlay
+            )
+            buf.draw()
         }
 
         val renderer = object : Renderer {

@@ -1,10 +1,10 @@
 package org.valkyrienskies.tournament.blockentity.render
 
-import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.core.Direction
+import org.lwjgl.opengl.GL11
 import org.valkyrienskies.tournament.TournamentModels
 import org.valkyrienskies.tournament.blockentity.FuelTankBlockEntity
 import org.valkyrienskies.tournament.util.extension.pose
@@ -21,8 +21,6 @@ class TransparentFuelTankBlockEntityRender:
         packedLight: Int,
         packedOverlay: Int
     ) {
-        RenderSystem.disableCull()
-
         if (be.wholeShipFillLevelSynced > 0.05f) {
             val byDir = List(Direction.entries.size) { index ->
                 if (be.neighborsTransparent[index]) {
@@ -59,15 +57,22 @@ class TransparentFuelTankBlockEntityRender:
             }
         }
 
-        TournamentModels.FUEL_TANK_FULL_TRANSPARENT.renderer.render(
-            pose,
-            be,
-            bufferSource,
-            packedLight,
-            packedOverlay
-        )
+        val oldCull = GL11.glIsEnabled(GL11.GL_CULL_FACE)
+        GL11.glEnable(GL11.GL_CULL_FACE)
 
-        RenderSystem.enableCull()
+        val old = GL11.glGetInteger(GL11.GL_FRONT_FACE)
+
+        GL11.glFrontFace(GL11.GL_CCW)
+        TournamentModels.FUEL_TANK_FULL_TRANSPARENT.renderNow(pose, be, packedOverlay)
+
+        GL11.glFrontFace(GL11.GL_CW)
+        TournamentModels.FUEL_TANK_FULL_TRANSPARENT.renderNow(pose, be, packedOverlay)
+
+        GL11.glFrontFace(old)
+
+        if (!oldCull) {
+            GL11.glDisable(GL11.GL_CULL_FACE)
+        }
     }
 
 }

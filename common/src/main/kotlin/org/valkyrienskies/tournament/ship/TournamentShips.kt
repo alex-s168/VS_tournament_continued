@@ -87,6 +87,7 @@ class TournamentShips: ShipForcesInducer {
     private val thrustersV2 =
         CopyOnWriteArrayList<Pair<Vector3d, ThrusterDataV2>>()
 
+    // todo: use longs as keys?
     private val thrustersV2_2 =
         SyncBlockMap(BlockMap<ThrusterDataV2>())
 
@@ -200,7 +201,7 @@ class TournamentShips: ShipForcesInducer {
 
             TournamentNetworking.ShipThrusterChange(
                 physShip.id,
-                pos.x, pos.y, pos.z,
+                packed,
                 throttle
             ).send()
         }

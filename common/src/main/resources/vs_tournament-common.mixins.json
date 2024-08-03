@@ -3,9 +3,10 @@
   "package": "org.valkyrienskies.tournament.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.MixinBlockClient",
     "client.MixinDebugRenderer",
     "client.MixinItemTooltips",
-    "client.MixinBlockClient"
+    "client.MixinMinecraft"
   ],
   "injectors": {
     "defaultRequire": 1

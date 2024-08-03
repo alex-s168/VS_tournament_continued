@@ -8,6 +8,7 @@ import org.valkyrienskies.core.impl.util.events.EventEmitterImpl
 
 object TournamentEvents {
     val itemHoverText = EventEmitterImpl<ItemHoverText>()
+    val clientTick = EventEmitterImpl<Unit>()
 
     data class ItemHoverText(
         val stack: ItemStack,

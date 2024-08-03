@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.RenderShape
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
@@ -22,6 +23,9 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.SlabType
 import net.minecraft.world.level.material.Material
 import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.Shapes
+import net.minecraft.world.phys.shapes.VoxelShape
 import org.valkyrienskies.tournament.TournamentBlockEntities
 import org.valkyrienskies.tournament.blockentity.FuelTankBlockEntity
 import org.valkyrienskies.tournament.util.TitleType
@@ -77,6 +81,7 @@ class FuelTankBlockFull(
     Properties
         .of(Material.METAL)
         .noOcclusion()
+        .isViewBlocking { _,_,_ -> !transparent }
 ), WorldlyContainerHolder, WithExRenderInfo {
 
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
