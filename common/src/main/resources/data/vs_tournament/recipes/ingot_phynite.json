@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "vs_tournament:raw_phynite"
+  },
+  "result": "vs_tournament:ingot_phynite",
+  "experience": 0.15,
+  "cookingtime": 200
+}

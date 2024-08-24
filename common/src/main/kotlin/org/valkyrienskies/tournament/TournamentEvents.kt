@@ -10,10 +10,7 @@ import org.valkyrienskies.core.impl.util.events.EventEmitterImpl
 object TournamentEvents {
     val itemHoverText = EventEmitterImpl<ItemHoverText>()
     val clientTick = EventEmitterImpl<Unit>()
-
-    object WorldGenFeatures {
-        val defaultOres = EventEmitterImpl<BiomeGenerationSettings.Builder>()
-    }
+    val worldGenFeatures = EventEmitterImpl<BiomeGenerationSettings.Builder>()
 
     data class ItemHoverText(
         val stack: ItemStack,

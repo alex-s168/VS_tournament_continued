@@ -42,6 +42,18 @@ object TournamentItems {
             Item(Properties().stacksTo(8).tab(TAB))
         }
 
+        ITEMS.register("raw_phynite") {
+            Item(Properties().stacksTo(64).tab(TAB))
+        }
+
+        ITEMS.register("ingot_phynite") {
+            Item(Properties().stacksTo(64).tab(TAB))
+        }
+
+        ITEMS.register("physics_shard") {
+            Item(Properties().stacksTo(64).tab(TAB))
+        }
+
         fuelItems.forEach { ITEMS.register(it.first) { Item(Properties().stacksTo(64).tab(TAB)) } }
 
         // old:

@@ -10,16 +10,31 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature
 import net.minecraft.world.level.levelgen.feature.Feature
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration
 import net.minecraft.world.level.levelgen.placement.*
+import org.valkyrienskies.tournament.util.FutureList
 
-object TournamentOres {
+object TournamentWorldGen {
 
     lateinit var ORE_PHYNITE: Holder<ConfiguredFeature<OreConfiguration, *>>
 
+    private var registered = false
+
     fun register() {
+        if (registered) return
+        registered = true
+
+        val ORE_PHYNITE_TARGET_LIST = FutureList(listOf(
+            {OreConfiguration.target(
+                OreFeatures.STONE_ORE_REPLACEABLES, TournamentBlocks.ORE_PHYNITE.get().defaultBlockState()
+            )},
+            {OreConfiguration.target(
+                OreFeatures.DEEPSLATE_ORE_REPLACEABLES, TournamentBlocks.ORE_PHYNITE_DEEPSLATE.get().defaultBlockState()
+            )}
+        ))
+
         ORE_PHYNITE = FeatureUtils.register(
             "vs_tournament:ore_phynite",
             Feature.ORE,
-            OreConfiguration(OreFeatures.ORE_IRON_TARGET_LIST, 9)
+            OreConfiguration(ORE_PHYNITE_TARGET_LIST, 9)
         )
 
         val ores = mutableListOf<Holder<PlacedFeature>>()
@@ -46,8 +61,7 @@ object TournamentOres {
             )
         )
 
-        TournamentEvents.WorldGenFeatures.defaultOres.on { builder ->
-            println("aaaaaa")
+        TournamentEvents.worldGenFeatures.on { builder ->
             ores.forEach {
                 builder.addFeature(Decoration.UNDERGROUND_ORES, it)
             }

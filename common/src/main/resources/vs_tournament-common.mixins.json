@@ -14,7 +14,7 @@
   "minVersion": "0.8",
   "mixins": [
     "advancements.MixinCriteriaTriggers",
-    "level.MixinBiomeDefaultFeatures",
+    "level.MixinBiomeGenerationSettingsBuilder",
     "level.MixinServerLevel"
   ]
 }

@@ -24,7 +24,6 @@ object TournamentMod {
         TournamentItems.register()
         TournamentWeights.register()
         TournamentTriggers.init()
-        TournamentOres.register()
 
         VSEvents.shipLoadEvent.on { e ->
             val ship = e.ship

@@ -43,6 +43,8 @@ object TournamentBlocks {
     lateinit var PROP_SMALL               : RegistrySupplier<PropellerBlock>
     lateinit var CHUNK_LOADER             : RegistrySupplier<ChunkLoaderBlock>
     lateinit var CONNECTOR                : RegistrySupplier<ConnectorBlock>
+    lateinit var ORE_PHYNITE              : RegistrySupplier<OreBlock>
+    lateinit var ORE_PHYNITE_DEEPSLATE    : RegistrySupplier<OreBlock>
 
     lateinit var EXPLOSIVE_INSTANT_SMALL  : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_MEDIUM : RegistrySupplier<AbstractExplosiveBlock>
@@ -138,9 +140,15 @@ object TournamentBlocks {
 
         ROTATOR                    = register("rotator") { RotatorBlock() }
 
-        register("ore_phynite") {
+        ORE_PHYNITE                = register("ore_phynite") {
             OreBlock(BlockBehaviour.Properties.of(TournamentMaterials.PHYNITE)
                 .strength(3.0f, 3.0f)
+            )
+        }
+
+        ORE_PHYNITE_DEEPSLATE      = register("ore_phynite_deepslate") {
+            OreBlock(BlockBehaviour.Properties.of(TournamentMaterials.PHYNITE)
+                .strength(4.5f, 4.0f)
             )
         }
 
