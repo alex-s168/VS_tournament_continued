@@ -4,11 +4,20 @@ import net.minecraft.core.Registry
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Item.Properties
-import org.valkyrienskies.tournament.items.*
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.SwordItem
+import net.minecraft.world.item.Tier
+import net.minecraft.world.item.crafting.Ingredient
+import net.minecraft.world.level.ItemLike
+import org.valkyrienskies.tournament.items.GiftBagItem
+import org.valkyrienskies.tournament.items.PulseGunItem
+import org.valkyrienskies.tournament.items.RopeItem
+import org.valkyrienskies.tournament.items.ShipDeleteWandItem
 import org.valkyrienskies.tournament.items.old.OldItem
 import org.valkyrienskies.tournament.items.old.UpdateItem
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
+import org.valkyrienskies.tournament.util.TierD
 
 
 @Suppress("unused")
@@ -21,8 +30,12 @@ object TournamentItems {
     lateinit var TOOL_DELETEWAND   :  RegistrySupplier<ShipDeleteWandItem>
     lateinit var UPGRADE_THRUSTER  :  RegistrySupplier<Item>
     lateinit var GIFT_BAG          :  RegistrySupplier<GiftBagItem>
+    lateinit var INGOT_PHYNITE     :  RegistrySupplier<Item>
+    lateinit var PHYGOLD_SWORD     :  RegistrySupplier<SwordItem>
 
     lateinit var TAB: CreativeModeTab
+
+    lateinit var TIER_PHYGOLD      : Tier
 
     fun register() {
         ROPE                    = ITEMS.register("rope", ::RopeItem)
@@ -46,12 +59,18 @@ object TournamentItems {
             Item(Properties().stacksTo(64).tab(TAB))
         }
 
-        ITEMS.register("ingot_phynite") {
+        INGOT_PHYNITE = ITEMS.register("ingot_phynite") {
             Item(Properties().stacksTo(64).tab(TAB))
         }
 
         ITEMS.register("physics_shard") {
             Item(Properties().stacksTo(64).tab(TAB))
+        }
+
+        TIER_PHYGOLD = TierD(3, 1561, 8.0f, 3.5f, 20, Ingredient.of(INGOT_PHYNITE.get()))
+
+        PHYGOLD_SWORD = ITEMS.register("phygold_sword") {
+            SwordItem(TIER_PHYGOLD, 3, -2.4f, Properties().tab(TAB))
         }
 
         fuelItems.forEach { ITEMS.register(it.first) { Item(Properties().stacksTo(64).tab(TAB)) } }
