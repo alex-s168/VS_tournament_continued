@@ -15,7 +15,7 @@
   "mixins": [
     "advancements.MixinCriteriaTriggers",
     "level.MixinAbstractCauldronBlock",
-    "level.MixinBiomeGenerationSettingsBuilder",
+    "level.MixinBiomeDefaultFeatures",
     "level.MixinServerLevel"
   ]
 }

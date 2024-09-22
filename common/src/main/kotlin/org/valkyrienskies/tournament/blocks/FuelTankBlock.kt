@@ -92,7 +92,6 @@ private fun onCatchFire(level: Level, pos: BlockPos) {
     connectedTanks.forEachSet { _, x, y, z ->
         val bp = BlockPos(x, y, z)
         val fill = fillLevel.get { bp }
-        println(fill)
         if (fill > 0.1) {
             val radius = fill * 4 // at max fill radius
             level.explode(null, x + 0.5, y + 0.5, z + 0.5, radius, true, Explosion.BlockInteraction.BREAK)

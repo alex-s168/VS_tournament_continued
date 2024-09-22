@@ -19,9 +19,15 @@ object CauldronRecipes {
 
     @JvmStatic
     fun craftOnce(main: ItemStack, sources: MutableMap<Item, Int>, output: (ItemStack) -> Unit, env: Env): Boolean {
-        if (main.item == Items.GOLDEN_SWORD && env.heat >= 8 && sources.craft(mapOf(TournamentItems.INGOT_PHYNITE.get() to 4))) {
+        if (main.item == Items.GOLDEN_SWORD && env.heat >= 6 && sources.craft(mapOf(TournamentItems.INGOT_PHYNITE.get() to 4))) {
             main.count --
             output(ItemStack(TournamentItems.PHYGOLD_SWORD.get(), 1))
+            return true
+        }
+
+        if (main.item == Items.IRON_INGOT && env.heat >= 8 && sources.craft(mapOf(Items.COAL to 2))) {
+            main.count --
+            output(ItemStack(TournamentItems.STEEL_INGOT.get(), 1))
             return true
         }
 

@@ -2,25 +2,32 @@ package org.valkyrienskies.tournament
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.Explosion
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties
 import net.minecraft.world.level.material.Material
+import net.minecraft.world.level.material.MaterialColor
+import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.Vec3
 import org.valkyrienskies.mod.common.hooks.VSGameEvents
 import org.valkyrienskies.tournament.blockentity.BigPropellerBlockEntity
 import org.valkyrienskies.tournament.blockentity.SmallPropellerBlockEntity
 import org.valkyrienskies.tournament.util.extension.explodeShip
 import org.valkyrienskies.tournament.blocks.*
 import org.valkyrienskies.tournament.blocks.explosive.AbstractExplosiveBlock
+import org.valkyrienskies.tournament.blocks.explosive.AbstractReactiveExplosiveBlock
 import org.valkyrienskies.tournament.blocks.explosive.SimpleExplosiveStagedBlock
-import org.valkyrienskies.tournament.blocks.explosive.TestExplosiveBlock
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
+import org.valkyrienskies.tournament.util.extension.with
+import org.valkyrienskies.tournament.util.getHeat
 
 @Suppress("unused")
 object TournamentBlocks {
@@ -49,7 +56,7 @@ object TournamentBlocks {
     lateinit var EXPLOSIVE_INSTANT_SMALL  : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_MEDIUM : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_INSTANT_LARGE  : RegistrySupplier<AbstractExplosiveBlock>
-
+    lateinit var EXPLOSIVE_XUS            : RegistrySupplier<AbstractExplosiveBlock>
     lateinit var EXPLOSIVE_STAGED_SMALL   : RegistrySupplier<AbstractExplosiveBlock>
 
     // lateinit var EXPLOSIVE_TEST           : RegistrySupplier<TestExplosiveBlock>
@@ -59,7 +66,8 @@ object TournamentBlocks {
     lateinit var FUEL_TANK_HALF_SOLID       : RegistrySupplier<FuelTankBlockHalf>
 
     lateinit var ROTATOR                  : RegistrySupplier<RotatorBlock>
-
+    lateinit var MECHANICAL_PRESS         : RegistrySupplier<MechanicalPressBlock>
+    lateinit var MAGIC_CHAMBER            : RegistrySupplier<MagicChamberBlock>
 
     fun register() {
         SHIP_ASSEMBLER           = register("ship_assembler", ::ShipAssemblerBlock)
@@ -123,6 +131,34 @@ object TournamentBlocks {
                 level.explodeShip(pos.x+0.5, pos.y+0.5, pos.z+0.5, 12.0f, Explosion.BlockInteraction.BREAK)
             }}
         }
+
+        EXPLOSIVE_XUS            = register("explosive_experimental_unstable_shrapnel") { object : AbstractReactiveExplosiveBlock() {
+            override fun explode(level: ServerLevel, pos: BlockPos) {
+                val center = Vec3.atCenterOf(pos)
+                val dmgRadius = 7.0
+                level.getEntities(null, AABB.ofSize(center, dmgRadius, dmgRadius, dmgRadius)).forEach {
+                    it.hurt(DamageSource.GENERIC, 13.0f)
+                }
+                level.explodeShip(center.x, center.y, center.z, 1.5f, Explosion.BlockInteraction.BREAK)
+            }
+
+            override fun shouldExplode(level: ServerLevel, pos: BlockPos): Boolean {
+                val rand = level.random.nextFloat()
+
+                return when (rand) {
+                    in 0.0f..0.3f -> {
+                        (pos.neighborBlocks() + pos).forEach {
+                            level.setBlockAndUpdate(it, Blocks.FIRE.defaultBlockState())
+                        }
+
+                        false
+                    }
+
+                    else -> true
+                }
+            }
+        }}
+
         EXPLOSIVE_STAGED_SMALL   = register("explosive_staged_small") {
             object : SimpleExplosiveStagedBlock(
                 (3..7),
@@ -152,6 +188,20 @@ object TournamentBlocks {
             )
         }
 
+        register("steel_block") {
+            Block(Properties.of(Material.METAL, MaterialColor.METAL)
+                .requiresCorrectToolForDrops()
+                .strength(7.0F, 8.0F)
+                .sound(SoundType.METAL))
+        }
+
+        MECHANICAL_PRESS = register("mechanical_press") {
+            MechanicalPressBlock()
+        }
+
+        MAGIC_CHAMBER = register("magic_chamber") {
+            MagicChamberBlock()
+        }
 
         // old:
         register("shipifier", null) { OldBlock(SHIP_ASSEMBLER.get()) }
