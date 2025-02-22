@@ -1,19 +1,19 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        " # ",
-        "ODO",
+        "#*#",
+        "O*O",
         "OCO"
     ],
     "key": {
+        "*": {
+            "item": "vs_tournament:physics_shard"
+        },
         "#": {
             "item": "minecraft:redstone"
         },
         "O": {
             "tag": "minecraft:planks"
-        },
-        "D": {
-            "item": "minecraft:diamond_block"
         },
         "C": {
             "item": "minecraft:cobblestone"

@@ -2,7 +2,6 @@ package org.valkyrienskies.tournament.blocks
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
@@ -25,22 +24,22 @@ import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOMLD
+import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentItems
 import org.valkyrienskies.tournament.TournamentProperties
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
-import org.valkyrienskies.tournament.util.extension.toBlock
-import org.valkyrienskies.tournament.util.helper.Helper3d
 import java.util.*
 
 class ThrusterBlock(
     private val mult: () -> Double,
-    private val particle: ParticleOptions,
     private val maxTier: () -> Int
 ) : DirectionalBlock(
     Properties.of()
@@ -56,7 +55,6 @@ class ThrusterBlock(
     init {
         registerDefaultState(defaultBlockState()
             .setValue(FACING, Direction.NORTH)
-            .setValue(BlockStateProperties.POWER, 0)
             .setValue(TournamentProperties.TIER, 1)
         )
     }
@@ -82,7 +80,6 @@ class ThrusterBlock(
         if (player.mainHandItem.item.asItem() == TournamentItems.UPGRADE_THRUSTER.get() && hand == InteractionHand.OFF_HAND) {
             val tier = state.getValue(TournamentProperties.TIER)
             if (tier < maxTier()) {
-                disableThruster(level, pos)
                 level.setBlockAndUpdate(pos, state.setValue(TournamentProperties.TIER, tier + 1))
 
                 if (!player.isCreative) {
@@ -97,10 +94,14 @@ class ThrusterBlock(
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
-        builder.add(BlockStateProperties.POWER)
         builder.add(TournamentProperties.TIER)
         super.createBlockStateDefinition(builder)
     }
+
+    fun getThrottle(state: BlockState, signal: Int) =
+        state.getValue(TournamentProperties.TIER) *
+            signal *
+            mult().toFloat()
 
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
@@ -108,20 +109,28 @@ class ThrusterBlock(
         if (level !is ServerLevel) return
 
         val signal = level.getBestNeighborSignal(pos)
-        if (state.getValue(BlockStateProperties.POWER) != signal) {
-            level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.POWER, signal))
-            return
-        }
 
-        if (signal > 0) {
-            enableThruster(level, pos, state)
-        }
+        val ships = TournamentShips.get(level, pos)
+
+        ships?.addThrusterV2(
+            pos,
+            TournamentShips.ThrusterDataV2(
+                state.getValue(FACING).normal.toJOMLD(),
+                getThrottle(state, signal),
+                false,
+            )
+        )
+
+        ships?.updateThrusterV2(pos)
     }
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         if (level !is ServerLevel) return
 
-        disableThruster(level, pos)
+        val ships = TournamentShips.get(level, pos)
+
+        ships?.removeThrusterV2(pos)
+        ships?.updateThrusterV2(pos)
 
         super.onRemove(state, level, pos, newState, isMoving)
     }
@@ -131,32 +140,10 @@ class ThrusterBlock(
 
         val tier = state.getValue(TournamentProperties.TIER)
         if (tier > 1) {
-            drops.add(ItemStack(TournamentItems.UPGRADE_THRUSTER.get(), tier - 1))
+            drops += ItemStack(TournamentItems.UPGRADE_THRUSTER.get(), tier - 1)
         }
 
         return drops
-    }
-
-    private fun getShipControl(level: Level, pos: BlockPos)  =
-        ((level.getShipObjectManagingPos(pos)
-            ?: level.getShipManagingPos(pos))
-            as? ServerShip)?.let { TournamentShips.getOrCreate(it) }
-
-    private fun enableThruster(level: ServerLevel, pos: BlockPos, state: BlockState) {
-        getShipControl(level, pos)?.let {
-            it.stopThruster(pos)
-            it.addThruster(
-                pos,
-                state.getValue(TournamentProperties.TIER).toDouble(),
-                state.getValue(FACING).normal.toJOMLD()
-                    .mul(state.getValue(BlockStateProperties.POWER).toDouble()
-                            * mult())
-            )
-        }
-    }
-
-    private fun disableThruster(level: ServerLevel, pos: BlockPos) {
-        getShipControl(level, pos)?.stopThruster(pos)
     }
 
     override fun neighborChanged(
@@ -172,13 +159,17 @@ class ThrusterBlock(
         if (level !is ServerLevel) return
 
         val signal = level.getBestNeighborSignal(pos)
-        val prev = state.getValue(BlockStateProperties.POWER)
 
-        if (signal == prev) return
+        val ships = TournamentShips.get(level, pos)
 
-        disableThruster(level, pos)
+        ships?.thrusterV2(pos)?.let {
+            val new = getThrottle(state, signal)
 
-        level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.POWER, signal))
+            if (it.throttle != new) {
+                it.throttle = new
+                ships.updateThrusterV2(pos)
+            }
+        }
     }
 
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
@@ -191,26 +182,59 @@ class ThrusterBlock(
             .setValue(BlockStateProperties.FACING, dir)
     }
 
-    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, randomSource: RandomSource) {
-        super.animateTick(state, level, pos, randomSource)
+    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: RandomSource) {
+        super.animateTick(state, level, pos, random)
+        val ship = level.getShipManagingPos(pos)
+            ?: level.getShipObjectManagingPos(pos)
+            ?: return
 
-        val rp = Helper3d.getShipRenderPosition(level, pos.toJOMLD())
-        if (level.isWaterAt(rp.toBlock())) {
-            return
-        }
+        val rp = ship.transform.shipToWorld.transformPosition(pos.toJOMLD())
+        val client = TournamentShips.Client[ship]
+        val fuel = client.fuelType.get()
+        val thruster = client.thrusters[client.thrusters.index(pos)]
+        val throttle = thruster?.throttle ?: 0.0f
 
-        if (state.getValue(BlockStateProperties.POWER) > 0) {
+        if (fuel?.particles != null && throttle > 0.0f) {
             val dir = state.getValue(FACING)
+
+            val vel = fuel.particleVelocity.toDouble()
 
             val x = rp.x + (0.5 * (dir.stepX + 1))
             val y = rp.y + (0.5 * (dir.stepY + 1))
             val z = rp.z + (0.5 * (dir.stepZ + 1))
-            val speedX = dir.stepX * -0.4
-            val speedY = dir.stepY * -0.4
-            val speedZ = dir.stepZ * -0.4
+            val speedX = dir.stepX * -vel
+            val speedY = dir.stepY * -vel
+            val speedZ = dir.stepZ * -vel
 
-            level.addParticle(particle, x, y, z, speedX, speedY, speedZ)
+            fun rand() = (random.nextFloat() * 2 - 1) * fuel.particleSpread
+
+            repeat(fuel.particleCount) {
+                level.addParticle(
+                    fuel.particles,
+                    x + rand(), y + rand(), z + rand(),
+                    speedX, speedY, speedZ
+                )
+            }
         }
     }
 
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Thruster")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Redstone-powered, upgradable thruster.")
+                .summary("There are two variants. A small thruster and a \"normal\" thruster.")
+                .summary("The thruster is only active when redstone powered. " +
+                         "It can be upgraded by right-clicking on it with a thruster upgrade.")
+                .section("Config") {
+                    content("The maximum thruster tier is ${TournamentConfig.SERVER.thrusterTiersNormal} for the normal thruster, " +
+                            "and ${TournamentConfig.SERVER.thrusterTiersTiny} for the small thruster.")
+                    content("The normal thruster has a force of ${TournamentConfig.SERVER.thrusterSpeed} N, " +
+                            "which gets multiplied by the tier / level of the thruster.")
+                    content("The small thruster is ${TournamentConfig.SERVER.thrusterTinyForceMultiplier}x as powerful as the normal thruster " +
+                            "=> ${TournamentConfig.SERVER.thrusterTinyForceMultiplier * TournamentConfig.SERVER.thrusterSpeed} N")
+                    content("Thrusters shut off at a speed of ${TournamentConfig.SERVER.thrusterShutoffSpeed} m/s")
+                }
+        }
+    }
 }

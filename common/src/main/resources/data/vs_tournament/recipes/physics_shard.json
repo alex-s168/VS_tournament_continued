@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "PDP",
+    "PPP"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "P": {
+      "item": "vs_tournament:ingot_phynite"
+    }
+  },
+  "result": {
+    "item": "vs_tournament:physics_shard",
+    "count": 1
+  }
+}

@@ -42,6 +42,10 @@ abstract class AbstractExplosiveBlock : BaseEntityBlock(
      */
     open fun explode(level: ServerLevel, pos: BlockPos) {}
 
+    open fun shouldExplode(level: ServerLevel, pos: BlockPos): Boolean {
+        return true
+    }
+
     /**
      * how many explosion ticks it has (how often it should call explodeTick() after ignition)
      * If 0 then explode() gets called once
@@ -57,6 +61,11 @@ abstract class AbstractExplosiveBlock : BaseEntityBlock(
      * Starts ignition from outside code
      */
     final fun ignite(level: ServerLevel, pos: BlockPos) {
+        if (!shouldExplode(level, pos)) {
+            level.removeBlock(pos, false)
+            return
+        }
+
         if(explosionTicks() > 0) {
             explodeTick(level, pos)
             try {
@@ -88,6 +97,29 @@ abstract class AbstractExplosiveBlock : BaseEntityBlock(
                 )
             }
         }
+    }
+
+    open fun tickExtra(level: ServerLevel, pos: BlockPos) {}
+
+    open fun explodeUsingFlint(level: ServerLevel, pos: BlockPos): Boolean {
+        return false
+    }
+
+    override fun use(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        player: Player,
+        hand: InteractionHand,
+        hit: BlockHitResult
+    ): InteractionResult {
+        if (level is ServerLevel && player.mainHandItem.item == Items.FLINT_AND_STEEL) {
+            if (explodeUsingFlint(level, pos)) {
+                ignite(level, pos)
+            }
+        }
+
+        return InteractionResult.PASS
     }
 
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {

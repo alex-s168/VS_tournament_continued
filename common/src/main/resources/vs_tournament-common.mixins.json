@@ -3,7 +3,10 @@
   "package": "org.valkyrienskies.tournament.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "client.MixinDebugRenderer"
+    "client.MixinBlockClient",
+    "client.MixinDebugRenderer",
+    "client.MixinItemTooltips",
+    "client.MixinMinecraft"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -11,6 +14,8 @@
   "minVersion": "0.8",
   "mixins": [
     "advancements.MixinCriteriaTriggers",
+    "level.MixinAbstractCauldronBlock",
+    "level.MixinBiomeDefaultFeatures",
     "level.MixinServerLevel"
   ]
 }

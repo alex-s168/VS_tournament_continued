@@ -36,6 +36,9 @@ dependencies {
     modApi("org.valkyrienskies:valkyrienskies-$vs2_mc_version-fabric:$vs2_version")
     implementation("org.valkyrienskies.core:api:$vs_core_version") { transitive = false }
 
+    implementation("me.alex_s168:blitz:${rootProject.blitz_version}")
+    shadowCommon("me.alex_s168:blitz:${rootProject.blitz_version}")
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }

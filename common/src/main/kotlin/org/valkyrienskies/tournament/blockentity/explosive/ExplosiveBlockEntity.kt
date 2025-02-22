@@ -17,11 +17,13 @@ class ExplosiveBlockEntity(pos: BlockPos, state: BlockState)
     companion object {
         fun tick(level: Level, pos: BlockPos, state: BlockState, be: BlockEntity) {
             be as ExplosiveBlockEntity
-            if(level.isClientSide)
+            if (level !is ServerLevel)
                 return
 
+            (state.block as AbstractExplosiveBlock).tickExtra(level, pos)
+
             if(be.explosionTicks > 1) {
-                (state.block as AbstractExplosiveBlock).explodeTick(level as ServerLevel, pos)
+                (state.block as AbstractExplosiveBlock).explodeTick(level , pos)
                 be.explosionTicks--
             }
             else if(be.explosionTicks == 1) {

@@ -11,8 +11,8 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     // Remove the next line if you don't want to depend on the API
-    // modApi "me.shedaniel:architectury:${rootProject.architectury_version}"
-    modApi("org.valkyrienskies:valkyrienskies-$vs2_mc_version-common:${vs2_version}")
+    modApi("dev.architectury:architectury:${rootProject.architectury_version}")
+    modApi("org.valkyrienskies:valkyrienskies-$vs2_mc_version-common:${rootProject.vs2_version}")
 
     compileOnly("org.valkyrienskies.core:api:${vs_core_version}")
     compileOnly("org.valkyrienskies.core:api-game:${vs_core_version}")
@@ -21,6 +21,8 @@ dependencies {
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    implementation("me.alex_s168:blitz:${rootProject.blitz_version}")
 }
 
 publishing {
@@ -58,4 +60,11 @@ publishing {
             }
         }
     }
+}
+
+tasks.register("genDoc", JavaExec) {
+    group = ApplicationPlugin.APPLICATION_GROUP
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.valkyrienskies.tournament.doc.DocumentedKt'
+    args = [rootDir.path]
 }

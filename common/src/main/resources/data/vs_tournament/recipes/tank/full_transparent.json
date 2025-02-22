@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#G#",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "vs_tournament:iron_cube"
+        },
+        "G": {
+            "item": "minecraft:glass"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:fuel_tank_full_transparent",
+        "count": 1
+    }
+}

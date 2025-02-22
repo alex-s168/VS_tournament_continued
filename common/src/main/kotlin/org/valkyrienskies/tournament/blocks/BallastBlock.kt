@@ -9,6 +9,10 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties.POWER
 import net.minecraft.world.level.material.MapColor
+import org.valkyrienskies.tournament.TournamentConfig
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 
 class BallastBlock : Block(
     Properties.of()
@@ -51,5 +55,21 @@ class BallastBlock : Block(
 
         val signal = level.getBestNeighborSignal(pos)
         level.setBlock(pos, state.setValue(POWER, signal), 2)
+    }
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Ballast")
+                .kind(Doc.Kind.BLOCK)
+                .summary("A block that has a redstone adjustable weight")
+                .section("Usage") {
+                    content("Power with redstone to increase weight")
+                }
+                .section("Config") {
+                    content("The on and off weight of the ballast is configurable. " +
+                            "The default off weight is ${TournamentConfig.SERVER.ballastNoWeight}, " +
+                            "and the default on weight is ${TournamentConfig.SERVER.ballastWeight}.")
+                }
+        }
     }
 }

@@ -15,6 +15,9 @@ object TournamentMod {
 
     @JvmStatic
     fun init() {
+        TournamentNetworking.register()
+        TournamentFuelManager.registerTournamentConfigDir()
+
         VSConfigClass.registerConfig("vs_tournament", TournamentConfig::class.java)
         TournamentBlocks.register()
         TournamentBlockEntities.register()
@@ -36,7 +39,7 @@ object TournamentMod {
             else {
                 val thrusterShipCtrl = ship.getAttachment<ThrusterShipControl>()
                 if (thrusterShipCtrl != null) {
-                    TournamentShips.getOrCreate(ship).addThrusters(thrusterShipCtrl.Thrusters.with(thrusterShipCtrl.thrusters))
+                    TournamentShips.getOrCreate(ship).addThrustersV1(thrusterShipCtrl.Thrusters.with(thrusterShipCtrl.thrusters))
                     ship.saveAttachment<ThrusterShipControl>(null)
                 }
 

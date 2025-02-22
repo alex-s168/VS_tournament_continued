@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smoking",
   "ingredient": {
-    "item": "vs_tournament:raw_fuel_powder"
+    "item": "vs_tournament:basic_fuel_powder"
   },
-  "result": "vs_tournament:fuel_paste",
-  "experience": 0.1,
-  "cookingtime": 180
+  "result": "vs_tournament:basic_fuel_paste",
+  "experience": 0.05,
+  "cookingtime": 120
 }

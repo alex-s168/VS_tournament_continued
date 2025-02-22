@@ -16,12 +16,12 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.phys.shapes.CollisionContext
-import org.valkyrienskies.core.api.ships.ServerShip
-import org.valkyrienskies.mod.common.getShipManagingPos
-import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.tournament.blockentity.PropellerBlockEntity
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
@@ -68,11 +68,6 @@ class PropellerBlock(
                 .add(FACING)
         )
 
-    private fun getShipControl(level: Level, pos: BlockPos)  =
-        ((level.getShipObjectManagingPos(pos)
-            ?: level.getShipManagingPos(pos))
-                as? ServerShip)?.let { TournamentShips.getOrCreate(it) }
-
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         super.onPlace(state, level, pos, oldState, isMoving)
 
@@ -87,7 +82,7 @@ class PropellerBlock(
 
         be.update()
 
-        getShipControl(level, pos)?.addPropeller(
+        TournamentShips.get(level, pos)?.addPropeller(
             pos.toJOML(),
             state.getValue(FACING)
                 .normal
@@ -99,7 +94,7 @@ class PropellerBlock(
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, isMoving: Boolean) {
         if (level !is ServerLevel) return
 
-        getShipControl(level, pos)?.removePropeller(pos.toJOML())
+        TournamentShips.get(level, pos)?.removePropeller(pos.toJOML())
 
         super.onRemove(state, level, pos, newState, isMoving)
     }
@@ -150,4 +145,13 @@ class PropellerBlock(
     override fun canConnectTo(state: BlockState, direction: Direction): Boolean =
         direction in Direction.entries - state.getValue(FACING)
 
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Propeller")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Redstone-powered ship propeller.")
+                .summary("There is a small propeller (designed to look like a torpedo propeller) and a large (3x3) propeller.")
+                .summary("Popellers take a bit of time to spin up (reach their maximum force), which makes them unsuitable for steering and similar.")
+        }
+    }
 }

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vs_tournament:unstable_lapis"
+    },
+    {
+      "item": "vs_tournament:coal_dust"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "result": {
+    "item": "vs_tournament:unstable_powder",
+    "count": 1
+  }
+}

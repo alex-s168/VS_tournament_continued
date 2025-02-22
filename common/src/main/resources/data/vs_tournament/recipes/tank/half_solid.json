@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "   ",
+        " # ",
+        "###"
+    ],
+    "key": {
+        "#": {
+            "item": "vs_tournament:iron_cube"
+        }
+    },
+    "result": {
+        "item": "vs_tournament:fuel_tank_half_solid",
+        "count": 1
+    }
+}

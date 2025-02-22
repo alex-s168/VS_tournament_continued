@@ -21,6 +21,9 @@ import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentLootTables
 import org.valkyrienskies.tournament.TournamentTriggers
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.ship.TournamentShips
 
 open class BalloonBlock : Block(
@@ -33,16 +36,11 @@ open class BalloonBlock : Block(
         entity.causeFallDamage(f, 0.2f, DamageSources(level.registryAccess()).fall())
     }
 
-    protected fun getShipControl(level: ServerLevel, pos: BlockPos) =
-        (level.getShipObjectManagingPos(pos)
-            ?: level.getShipManagingPos(pos))
-            ?.let { TournamentShips.getOrCreate(it) }
-
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, isMoving: Boolean) {
         if (level.isClientSide) return
         level as ServerLevel
 
-        getShipControl(level, pos)?.addBalloon(
+        TournamentShips.get(level, pos)?.addBalloon(
             pos,
             TournamentConfig.SERVER.unpoweredBalloonMul * TournamentConfig.SERVER.balloonAnalogStrength
         )
@@ -54,7 +52,7 @@ open class BalloonBlock : Block(
         if (level.isClientSide) return
         level as ServerLevel
 
-        getShipControl(level, pos)?.removeBalloon(pos)
+        TournamentShips.get(level, pos)?.removeBalloon(pos)
     }
 
     override fun onProjectileHit(level: Level, state: BlockState, hit: BlockHitResult, projectile: Projectile) {
@@ -90,6 +88,16 @@ open class BalloonBlock : Block(
                 shotBalloon(neighbor)
                 level.destroyBlock(neighbor, false)
             }
+        }
+    }
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Balloon")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Increases lift of the ship.")
+                .summary("There are two variants: powered- and unpowered- balloon. The powered balloon has higher lift but requires a redstone signal.")
+                .summary("The powered balloon will be 3x stronger when powered than the unpowered balloon.")
         }
     }
 }

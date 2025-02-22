@@ -124,6 +124,12 @@ allprojects {
                 includeGroup "curse.maven"
             }
         }
+        maven { url = "https://api.modrinth.com/maven" }
+        maven {
+            name = "alex's repo"
+            url = uri("http://198.7.115.119:8080/libs")
+            allowInsecureProtocol = true
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {

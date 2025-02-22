@@ -59,6 +59,11 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    implementation "thedarkcolour:kotlinforforge:$forge_kotlin_version"
+
+    implementation("me.alex_s168:blitz:${rootProject.blitz_version}")
+    forgeRuntimeLibrary shadowCommon("me.alex_s168:blitz:${rootProject.blitz_version}") { transitive = false }
 }
 
 processResources {

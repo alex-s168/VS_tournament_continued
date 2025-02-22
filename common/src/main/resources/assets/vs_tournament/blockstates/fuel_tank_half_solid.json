@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "vs_tournament:block/fuel_tank_half_solid"
+    },
+    "type=double": {
+      "model": "vs_tournament:block/fuel_tank_full_solid"
+    },
+    "type=top": {
+      "model": "vs_tournament:block/fuel_tank_half_solid_top"
+    }
+  }
+}

@@ -29,6 +29,9 @@ import org.valkyrienskies.tournament.util.block.DirectionalBaseEntityBlock
 import org.valkyrienskies.tournament.util.debug.DebugLine
 import org.valkyrienskies.tournament.util.helper.Helper3d
 import org.valkyrienskies.tournament.blockentity.RopeHookBlockEntity
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import java.awt.Color
@@ -176,5 +179,15 @@ class RopeHookBlock : DirectionalBaseEntityBlock(
     override fun getStateForPlacement(ctx: BlockPlaceContext): BlockState {
         return defaultBlockState()
             .setValue(FACING, ctx.nearestLookingDirection.opposite)
+    }
+
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Rope Hook")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Allows for one rope connection at a time. " +
+                        "Disconnects when powered with redstone. " +
+                        "Right click two rope hooks with a rope item to connect them. ")
+        }
     }
 }

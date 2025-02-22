@@ -13,7 +13,9 @@ import net.minecraft.world.level.block.state.BlockState
 import org.valkyrienskies.tournament.blockentity.*
 import org.valkyrienskies.tournament.blockentity.explosive.ExplosiveBlockEntity
 import org.valkyrienskies.tournament.blockentity.render.PropellerBlockEntityRender
+import org.valkyrienskies.tournament.blockentity.render.RotatorBlockEntityRender
 import org.valkyrienskies.tournament.blockentity.render.SensorBlockEntityRender
+import org.valkyrienskies.tournament.blockentity.render.TransparentFuelTankBlockEntityRender
 import org.valkyrienskies.tournament.registry.DeferredRegister
 import org.valkyrienskies.tournament.registry.RegistrySupplier
 
@@ -23,60 +25,81 @@ object TournamentBlockEntities {
 
     private val renderers = mutableListOf<RendererEntry<*>>()
 
-    /* ================================================================== */
-    val CONNECTOR           = TournamentBlocks.CONNECTOR
-        .withBE(::ConnectorBlockEntity)
-        .byName ("connector")
-    /* ================================================================== */
-    val SENSOR              = TournamentBlocks.SENSOR
-        .withBE(::SensorBlockEntity)
-        .byName ("sensor")
-        .withRenderer {
-            SensorBlockEntityRender()
-        }
-    /* ================================================================== */
-    val ROPE_HOOK           = TournamentBlocks.ROPE_HOOK
-        .withBE(::RopeHookBlockEntity)
-        .byName ("rope_hook")
-    /* ================================================================== */
-    val PROP_BIG            = TournamentBlocks.PROP_BIG
-        .withBE(::BigPropellerBlockEntity)
-        .byName ("prop_big")
-        .withRenderer {
-            PropellerBlockEntityRender<BigPropellerBlockEntity>(
-                TournamentModels.PROP_BIG
-            )
-        }
-    /* ================================================================== */
-    val PROP_SMALL          = TournamentBlocks.PROP_SMALL
-        .withBE(::SmallPropellerBlockEntity)
-        .byName ("prop_small")
-        .withRenderer {
-            PropellerBlockEntityRender<SmallPropellerBlockEntity>(
-                TournamentModels.PROP_SMALL
-            )
-        }
-    /* ================================================================== */
-    val CHUNK_LOADER        = TournamentBlocks.CHUNK_LOADER
-        .withBE(::ChunkLoaderBlockEntity)
-        .byName ("chunk_loader")
-    /* ================================================================== */
-    val EXPLOSIVE           = TournamentBlocks.EXPLOSIVE_INSTANT_SMALL
-        .withBE(::ExplosiveBlockEntity)
-        .byName("explosive_instant_small")
-    /* ================================================================== */
-    val EXPLOSIVE_M         = TournamentBlocks.EXPLOSIVE_INSTANT_MEDIUM
-        .withBE(::ExplosiveBlockEntity)
-        .byName("explosive_instant_medium")
-    /* ================================================================== */
-    val EXPLOSIVE_L         = TournamentBlocks.EXPLOSIVE_INSTANT_LARGE
-        .withBE(::ExplosiveBlockEntity)
-        .byName("explosive_instant_large")
-    /* ================================================================== */
-    val EXPLOSIVE_STAGED_S  = TournamentBlocks.EXPLOSIVE_STAGED_SMALL
-        .withBE(::ExplosiveBlockEntity)
-        .byName("explosive_staged_small")
-    /* ================================================================== */
+    lateinit var CONNECTOR: RegistrySupplier<BlockEntityType<ConnectorBlockEntity>>
+    lateinit var SENSOR: RegistrySupplier<BlockEntityType<SensorBlockEntity>>
+    lateinit var ROPE_HOOK: RegistrySupplier<BlockEntityType<RopeHookBlockEntity>>
+    lateinit var PROP_BIG: RegistrySupplier<BlockEntityType<BigPropellerBlockEntity>>
+    lateinit var PROP_SMALL: RegistrySupplier<BlockEntityType<SmallPropellerBlockEntity>>
+    lateinit var CHUNK_LOADER: RegistrySupplier<BlockEntityType<ChunkLoaderBlockEntity>>
+    lateinit var EXPLOSIVE: RegistrySupplier<BlockEntityType<ExplosiveBlockEntity>>
+    lateinit var FUEL_TANK_FULL_SOLID: RegistrySupplier<BlockEntityType<FuelTankBlockEntity>>
+    lateinit var FUEL_TANK_FULL_TRANSPARENT: RegistrySupplier<BlockEntityType<FuelTankBlockEntity>>
+    lateinit var FUEL_TANK_HALF_SOLID: RegistrySupplier<BlockEntityType<FuelTankBlockEntity>>
+    lateinit var ROTATOR: RegistrySupplier<BlockEntityType<RotatorBlockEntity>>
+
+    init {
+        /* ================================================================== */
+        CONNECTOR = TournamentBlocks.CONNECTOR
+            .withBE(::ConnectorBlockEntity)
+            .byName("connector")
+        /* ================================================================== */
+        SENSOR = TournamentBlocks.SENSOR
+            .withBE(::SensorBlockEntity)
+            .byName("sensor")
+            .withRenderer {
+                SensorBlockEntityRender()
+            }
+        /* ================================================================== */
+        ROPE_HOOK = TournamentBlocks.ROPE_HOOK
+            .withBE(::RopeHookBlockEntity)
+            .byName("rope_hook")
+        /* ================================================================== */
+        PROP_BIG = TournamentBlocks.PROP_BIG
+            .withBE(::BigPropellerBlockEntity)
+            .byName("prop_big")
+            .withRenderer {
+                PropellerBlockEntityRender<BigPropellerBlockEntity>(
+                    TournamentModels.PROP_BIG
+                )
+            }
+        /* ================================================================== */
+        PROP_SMALL = TournamentBlocks.PROP_SMALL
+            .withBE(::SmallPropellerBlockEntity)
+            .byName("prop_small")
+            .withRenderer {
+                PropellerBlockEntityRender<SmallPropellerBlockEntity>(
+                    TournamentModels.PROP_SMALL
+                )
+            }
+        /* ================================================================== */
+        CHUNK_LOADER = TournamentBlocks.CHUNK_LOADER
+            .withBE(::ChunkLoaderBlockEntity)
+            .byName("chunk_loader")
+        /* ================================================================== */
+        EXPLOSIVE = TournamentBlocks.EXPLOSIVE_INSTANT_SMALL
+            .withBE(::ExplosiveBlockEntity)
+            .byName("explosive_instant_small")
+        /* ================================================================== */
+        FUEL_TANK_FULL_SOLID = TournamentBlocks.FUEL_TANK_FULL_SOLID
+            .withBE { p, s -> FuelTankBlockEntity(p, s, capf = 1.0f, FUEL_TANK_FULL_SOLID::get) }
+            .byName("fuel_tank_full_solid")
+        /* ================================================================== */
+        FUEL_TANK_FULL_TRANSPARENT = TournamentBlocks.FUEL_TANK_FULL_TRANSPARENT
+            .withBE { p, s -> FuelTankBlockEntity(p, s, capf = 1.0f, FUEL_TANK_FULL_TRANSPARENT::get) }
+            .byName("fuel_tank_full_transparent")
+            .withRenderer(::TransparentFuelTankBlockEntityRender)
+        /* ================================================================== */
+        FUEL_TANK_HALF_SOLID = TournamentBlocks.FUEL_TANK_HALF_SOLID
+            .withBE { p, s -> FuelTankBlockEntity(p, s, capf = 0.5f, FUEL_TANK_HALF_SOLID::get) }
+            .byName("fuel_tank_half_solid")
+        /* ================================================================== */
+        ROTATOR              = TournamentBlocks.ROTATOR
+            .withBE(::RotatorBlockEntity)
+            .byName("rotator")
+            .withRenderer(::RotatorBlockEntityRender)
+        /* ================================================================== */
+
+    }
 
     fun register() {
         BLOCKENTITIES.applyAll()

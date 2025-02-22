@@ -1,0 +1,15 @@
+{
+  "type":"create:crushing",
+  "ingredients":[
+    {
+      "item":"minecraft:coal"
+    }
+  ],
+  "results":[
+    {
+      "item":"vs_tournament:coal_dust",
+      "count":3
+    }
+  ],
+  "processingTime":60
+}

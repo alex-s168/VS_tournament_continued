@@ -27,6 +27,9 @@ import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.isChunkInShipyard
 import org.valkyrienskies.tournament.TournamentConfig
 import org.valkyrienskies.tournament.TournamentTriggers
+import org.valkyrienskies.tournament.doc.Doc
+import org.valkyrienskies.tournament.doc.Documented
+import org.valkyrienskies.tournament.doc.documentation
 import org.valkyrienskies.tournament.util.DirectionalShape
 import org.valkyrienskies.tournament.util.RotShapes
 import org.valkyrienskies.tournament.util.ShipAssembler
@@ -130,4 +133,15 @@ class ShipAssemblerBlock : DirectionalBlock (
             .setValue(FACING, ctx.nearestLookingDirection)
     }
 
+    class DocImpl: Documented {
+        override fun getDoc() = documentation {
+            page("Ship Assembler")
+                .kind(Doc.Kind.BLOCK)
+                .summary("Assembles ships by finding a structure of connected blocks that are not blacklisted. " +
+                        "Activated via right-click or redstone signal.")
+                .section("Notice") {
+                    content("There is a limit to how many blocks can be assembled!")
+                }
+        }
+    }
 }
