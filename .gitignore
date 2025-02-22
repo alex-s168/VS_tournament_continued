@@ -1,3 +1,5 @@
+kls_database.db
+
 build/
 *.ipr
 run/
